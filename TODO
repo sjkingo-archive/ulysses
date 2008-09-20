@@ -1,5 +1,6 @@
 (mostly) in descending order of urgency:
 
+- DESIGN
 - GCC cross-compiler (crossdev -p -s1 --binutils 2.18 --gcc 4.2.4 --target i386-pc-elf-gnu)
 - Load kernel into higher half (0xC0000000)
 - Protected mode!
