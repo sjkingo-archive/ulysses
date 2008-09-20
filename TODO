@@ -5,3 +5,5 @@
 - Protected mode!
 - Detect upper memory from BIOS (http://wiki.osdev.org/How_Do_I_Determine_The_Amount_Of_RAM)
 - Memory paging (http://wiki.osdev.org/Setting_Up_Paging)
+- PQ implementation (doubly LL)
+
