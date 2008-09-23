@@ -10,12 +10,23 @@ struct proc {
     uid_t uid;
     gid_t egid; /* effective group id */
     gid_t rgid; /* real group id */
+
+    unsigned short sched_q; /* scheduling queue this proc belongs to */
+
+    unsigned short s_ticks_left; /* number of scheduling ticks left */
+    unsigned short s_quantum_size; /* quantum size in ticks */
 };
 #define NR_PROCS 100
 struct proc proc[NR_PROCS]; /* the process table itself */
 
 #define BEG_PROC (&proc[0]) /* pointer to the start of proc table */
 #define END_PROC (&proc[NR_PROCS]) /* pointer to the end of the proc table */ 
+
+/* Core kernel proccess pids */
+#define PID_NONE -1
+#define PID_IDLE 0
+
+#define IDLE_P get_proc(PID_IDLE)
 
 /* init_proc()
  *  Initialises the process table. This needs to be called *once* by kmain(),
