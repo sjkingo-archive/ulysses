@@ -16,11 +16,11 @@
 
 #include "proc.h"
 
-#define SCHED_Q_NR 6 /* number of scheduling queues to use (IDLE_Q + 1) */
-#define IDLE_Q 5 /* lowest queue, IDLE process always stays here */
+#define SCHED_Q_NR 3 /* number of scheduling queues to use (IDLE_Q + 1) */
+#define IDLE_Q 2 /* lowest queue, IDLE process always stays here */
+#define USER_Q 1 /* user processes go here */
+#define ROOT_Q 0 /* root's processes go here so they are picked first */
 #define SCHED_QUANTUM 50 /* default quantum for processes */
-
-struct proc *pick_proc(void);
 
 #endif
 
