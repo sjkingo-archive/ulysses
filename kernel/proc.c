@@ -1,6 +1,5 @@
 
 #include "proc.h"
-#include "sched.h"
 
 #include <unistd.h>
 
