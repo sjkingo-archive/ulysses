@@ -2,7 +2,7 @@ CC=		gcc
 CFLAGS=		-Wall -isystem ../include
 CKFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
 
-OBJS=		kernel.o
+OBJS=		kernel.o proc.o
 
 .PHONY: all
 all: kernel
