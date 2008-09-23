@@ -2,7 +2,7 @@
 #include "kernel.h"
 #include "proc.h"
 
-void kmain(void *mdb, unsigned int magic)
+void _kmain(void *mdb, unsigned int magic)
 {
     unsigned char *vid = (unsigned char *)VIDMEM;
     vid[0] = 65; /* 'A' */
