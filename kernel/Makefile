@@ -1,5 +1,5 @@
 CC=		gcc
-CFLAGS=		-Wall
+CFLAGS=		-Wall -isystem ../include
 CKFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
 
 OBJS=		kernel.o
