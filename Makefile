@@ -13,7 +13,7 @@ kernel:
 
 .PHONY: link
 link: kernel
-	ld -T $(BOOTDIR)/linker.ld -o $(KERNEL) $(BOOTDIR)/loader.o $(KERNDIR)/kernel.o
+	ld -T $(BOOTDIR)/linker.ld -o $(KERNEL) $(KERNDIR)/kernel.o $(BOOTDIR)/loader.o
 
 .PHONY: clean
 clean:
