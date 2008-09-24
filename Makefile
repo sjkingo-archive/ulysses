@@ -1,22 +1,9 @@
+.PHONY: all kernel run
 
-KERNEL=		kernel.bin
-BOOTDIR=	boot
-KERNDIR=	kernel
+all: kernel
 
-.PHONY: all
-all: link
-
-.PHONY: kernel
 kernel:
-	$(MAKE) -C $(KERNDIR) kernel
-	$(MAKE) -C $(BOOTDIR) loader
+	$(MAKE) -C kernel kernel
 
-.PHONY: link
-link: kernel
-	ld -T $(BOOTDIR)/linker.ld -o $(KERNEL) $(KERNDIR)/kernel.o $(BOOTDIR)/loader.o
-
-.PHONY: clean
-clean:
-	$(MAKE) -C $(KERNDIR) clean
-	$(MAKE) -C $(BOOTDIR) clean
-	rm -f $(KERNEL)
+run:
+	qemu -fda boot/grub.img -hda fat:kernel -boot a -m 8
