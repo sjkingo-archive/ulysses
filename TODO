@@ -12,3 +12,6 @@
 - Scheduler (round-robin)
 - finish kprintf
 - shutdown via APCI
+- memory manager (first fit)
+- GC?
+
