@@ -11,7 +11,7 @@ LOADEROBJ=	../boot/loader.o
 all: loader kernel
 
 clean:
-	rm -f $(OBJS) kernel
+	rm -f *.o kernel
 	$(MAKE) -C ../boot clean
 
 loader:
