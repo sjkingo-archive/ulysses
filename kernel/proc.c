@@ -22,6 +22,10 @@ void init_proc(void)
         sched_queues[i].head = NULL;
         sched_queues[i].tail = NULL;
     }
+
+#if DEBUG
+    kprintf("init_proc(): proc table set up\n");
+#endif
 }
 
 /* new_pid()
@@ -89,6 +93,10 @@ void sched(struct proc *p)
         q.tail->next = p;
         q.tail = p;
     }
+
+#if DEBUG
+    kprintf("sched(): pid %d added to queue %d\n", p->pid, p->sched_q);
+#endif
 }
 
 /* pick_proc()
