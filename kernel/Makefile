@@ -1,18 +1,24 @@
 CC=		gcc
-CFLAGS=		-Wall -isystem ../include
-CKFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
+LD=		ld
+CFLAGS=		-Wall -Wextra -isystem ../include
+LDFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
 
 OBJS=		main.o kprintf.o proc.o shutdown.o
+LOADEROBJ=	../boot/loader.o
 
-.PHONY: all
-all: kernel
+.PHONY: all clean loader kernel
 
-.PHONY: clean
+all: loader kernel
+
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) kernel
+	$(MAKE) -C ../boot clean
 
-.PHONY: kernel
+loader:
+	$(MAKE) -C ../boot loader
+
 kernel: $(OBJS)
+	$(LD) $(LDFLAGS) -T linker.ld -o kernel $(LOADEROBJ) $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(CKFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) -o $@ -c $<

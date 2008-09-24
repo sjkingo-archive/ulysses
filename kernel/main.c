@@ -9,7 +9,7 @@ void _kmain(void *mdb, unsigned int magic)
     
     /* Add IDLE as first proc in table and schedule it */
     new_proc(-1, -1, -1, "IDLE");
-    proc[0].pid = PID_IDLE; /* ignore the auto-generated pid */
+    proc[0].pid = PID_IDLE; /* XXX ignore the auto-generated pid */
     sched(get_proc(PID_IDLE));
 
     /* XXX just for testing */
