@@ -6,8 +6,8 @@
  */
 
 void halt(void);
-
 void panic(const char *msg);
+void shutdown(void);
 
 #endif
 

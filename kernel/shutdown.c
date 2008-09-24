@@ -1,6 +1,6 @@
 
+/* kernel.h includes shutdown.h for us */
 #include "kernel.h"
-#include "kprintf.h"
 
 /* halt()
  *  Attempt to halt the CPU by jumping to an invalid memory location, or if
@@ -26,6 +26,15 @@ void panic(const char *msg)
     if (panicking++) return; /* prevent recursive panics - thanks AST */
 
     if (msg != NULL) kprintf("\nKernel panic: %s\n", msg);
+    halt();
+}
+
+/* shutdown()
+ *  Properly shut down KOS using ACPI.
+ */
+void shutdown(void)
+{
+    /* XXX but for now, just halt() */
     halt();
 }
 
