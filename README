@@ -1,0 +1,23 @@
+Kingo Operating System (KOS)
+============================
+
+All commands are assumed to have a cwd of repo root.
+
+How to build
+------------
+
+The kernel must be built on x86 hardware, or using a cross-compiler (which
+requires a change in the kernel Makefile).
+
+$ make -C kernel/ kernel
+
+How to run
+----------
+
+$ make run
+$ make gdb
+gdb> ; do stuff you want to here
+gdb> c
+grub> kernel (hd0,0)/kernel
+grub> boot
+
