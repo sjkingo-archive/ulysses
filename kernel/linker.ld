@@ -2,7 +2,7 @@
 ENTRY (_loader)
 
 SECTIONS {
-    . = 0x001000000;
+    . = 0x00100000;
 
     .text : {
         *(.text)
