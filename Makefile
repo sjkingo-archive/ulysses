@@ -1,4 +1,4 @@
-.PHONY: all kernel run
+.PHONY: all kernel run gdb
 
 all: kernel
 
@@ -6,4 +6,7 @@ kernel:
 	$(MAKE) -C kernel kernel
 
 run:
-	qemu -fda boot/grub.img -hda fat:kernel -boot a -m 8
+	qemu -s -S -fda boot/grub.img -hda fat:kernel -boot a -m 8
+
+gdb:
+	gdb -x gdb-startup
