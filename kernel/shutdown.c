@@ -1,7 +1,6 @@
 
+#include "kernel.h"
 #include "kprintf.h"
-
-#include <unistd.h>
 
 /* halt()
  *  Attempt to halt the CPU by jumping to an invalid memory location, or if

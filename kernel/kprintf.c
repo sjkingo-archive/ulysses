@@ -1,7 +1,6 @@
 
-#include "kprintf.h"
-
-#include <unistd.h>
+/* kernel.h includes kprintf.h for us */
+#include "kernel.h"
 
 /* kputc()
  *  Write a char directly to video memory, using the hex colour.

@@ -1,6 +1,6 @@
 
+#include "kernel.h"
 #include "proc.h"
-#include "shutdown.h"
 
 void _kmain(void *mdb, unsigned int magic)
 {

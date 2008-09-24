@@ -1,7 +1,6 @@
 
+#include "kernel.h"
 #include "proc.h"
-
-#include <unistd.h>
 
 /* init_proc()
  *  Initialises the process table and scheduling queues.

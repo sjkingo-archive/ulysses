@@ -2,8 +2,6 @@
 #ifndef _PROC_H
 #define _PROC_H
 
-#include <types.h>
-
 /* Here is the process table and the kernel scheduler.
  *
  * The scheduler is currently a queue-based, round-robin scheduler. It does 
