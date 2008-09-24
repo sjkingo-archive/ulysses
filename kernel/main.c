@@ -1,5 +1,6 @@
 
 #include "proc.h"
+#include "shutdown.h"
 
 void _kmain(void *mdb, unsigned int magic)
 {
@@ -10,5 +11,8 @@ void _kmain(void *mdb, unsigned int magic)
     new_proc(-1, -1, -1, "IDLE");
     proc[0].pid = PID_IDLE; /* ignore the auto-generated pid */
     sched(get_proc(PID_IDLE));
+
+    /* XXX just for testing */
+    panic("Got milk?");
 }
 
