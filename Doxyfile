@@ -1,0 +1,7 @@
+PROJECT_NAME = KOS
+INPUT = kernel boot include x86
+OUTPUT_DIRECTORY = docs
+SOURCE_BROWSER = yes
+FILE_PATTERNS = *.h *.c *.asm *.s
+RECURSIVE = YES
+

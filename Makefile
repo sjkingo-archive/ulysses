@@ -1,4 +1,4 @@
-.PHONY: all kernel run gdb
+.PHONY: all kernel run gdb docs
 
 all: kernel
 
@@ -10,3 +10,6 @@ run:
 
 gdb:
 	gdb -x gdb-startup
+
+docs:
+	rm -rf docs && doxygen
