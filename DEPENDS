@@ -1,0 +1,6 @@
+gcc 4.2 x86
+doxygen
+gdb 6
+qemu (requires gcc 3 to build)
+nasm 0.98
+
