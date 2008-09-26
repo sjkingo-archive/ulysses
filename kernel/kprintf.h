@@ -17,8 +17,8 @@
 /* A screen is defined as an 80x25 location in video memory */
 struct vidmem {
     unsigned char *mem;
-    unsigned int last_x;
-    unsigned int last_y;
+    unsigned int next_x;
+    unsigned int next_y;
 };
 struct vidmem screen;
 

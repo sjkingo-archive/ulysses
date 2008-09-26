@@ -4,7 +4,7 @@
 
 void _kmain(void *mdb, unsigned int magic)
 {
-    /* Initialise screen */
+    /* Initialise screen - this must be the very first thing we do! */
     init_screen();
 
     /* Set up the process table and scheduling queues */

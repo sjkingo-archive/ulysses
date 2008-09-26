@@ -8,8 +8,8 @@
 void init_screen(void)
 {
     screen.mem = VIDMEM;
-    screen.last_x = 0;
-    screen.last_y = 0;
+    screen.next_x = 0;
+    screen.next_y = 0;
     clear_screen();
 }
 
@@ -34,18 +34,18 @@ void kputc(const char c, const char colour)
 {
     unsigned int index;
 
-    screen.last_x++;
-
     /* Overflow to new line if needed */
-    if (screen.last_x >= WIDTH) {
-        screen.last_x = 0;
-        screen.last_y++;
+    if (screen.next_x >= WIDTH) {
+        screen.next_x = 0;
+        screen.next_y++;
     }
 
-    index = (screen.last_x * 2) + ((screen.last_y * 2) * WIDTH);
-
+    /* Each character in video mem is 2 bytes */
+    index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
     screen.mem[index] = c;
     screen.mem[++index] = colour;
+    
+    screen.next_x++;
 }
 
 /* kprintf()

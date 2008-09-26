@@ -24,7 +24,7 @@ void panic(const char *msg)
 {
     static int panicking = 0;
     if (panicking++) return; /* prevent recursive panics - thanks AST */
-    if (msg != NULL) kprintf("\nKernel panic: %s\n", msg);
+    if (msg != NULL) kprintf("Kernel panic: %s", msg);
     halt();
 }
 
