@@ -11,9 +11,20 @@
 #define printf kprintf
 
 #define VIDMEM ((unsigned char *)0xb8000)
+#define WIDTH 80
+#define HEIGHT 25
 
+/* A screen is defined as an 80x25 location in video memory */
+struct vidmem {
+    unsigned char *mem;
+    unsigned int last_x;
+    unsigned int last_y;
+};
+struct vidmem screen;
+
+void init_screen(void);
+void clear_screen(void);
 void kputc(const char c, const char colour);
-
 void kprintf(const char *fmt, ...);
 
 #endif
