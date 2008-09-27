@@ -7,6 +7,9 @@ void _kmain(void *mdb, unsigned int magic)
     /* Initialise screen - this must be the very first thing we do! */
     init_screen();
 
+    /* Print some pretty startup info */
+    kprintf("KOS - Kingo Operating System\n");
+
     /* Set up the process table and scheduling queues */
     init_proc();
     

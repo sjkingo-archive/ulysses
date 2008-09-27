@@ -2,6 +2,8 @@
 /* kernel.h includes kprintf.h for us */
 #include "kernel.h"
 
+#include <stdarg.h>
+
 /* init_screen()
  *  Initialise video memory and clear the screen.
  */
@@ -48,16 +50,54 @@ void kputc(const char c, const char colour)
     screen.next_x++;
 }
 
+void kputs(const char *str)
+{
+    while (*str != '\0') {
+        kputc(*str, 0x07); /* white on black */
+        str++;
+    }
+}
+
 /* kprintf()
  *  Accept a format string and variable arguments list, and write each char
  *  via the kputc() function.
  */
 void kprintf(const char *fmt, ...)
 {
+    va_list argp;
+
+    /* Thank you Ken Thompson for giving us this >_< */
+    va_start(argp, fmt);
+
     while (*fmt != '\0') {
-        /* XXX actually handle format operators */
-        kputc(*fmt, 0x07); /* white on black */
+
+        /* Format specifier, read ahead and format the arg into a string */
+        if (*fmt == '%') {
+            char *str;
+
+            fmt++; /* skip the % since it's no longer important */
+            switch (*fmt) {
+                case 's':
+                    str = va_arg(argp, char *);
+                    if (str == NULL) str = "(null)";
+                    break;
+            }
+            kputs(str);
+
+        } else {
+            if (*fmt == '\n') {
+                screen.next_x = 0;
+                screen.next_y++;
+            } else if (*fmt == '\r') {
+                screen.next_x = 0;
+            } else {
+                kputc(*fmt, 0x07); /* white on black */
+            }
+        }
+
         fmt++;
     }
+
+    va_end(argp);
 }
 
