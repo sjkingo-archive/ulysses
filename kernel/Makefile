@@ -3,7 +3,7 @@ LD=		ld
 CFLAGS=		-g -Wall -Wextra -isystem ../include
 LDFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
 
-OBJS=		main.o kprintf.o proc.o shutdown.o
+OBJS=		main.o kprintf.o proc.o shutdown.o ../lib/itoa.o
 LOADEROBJ=	../boot/loader.o
 
 .PHONY: all clean loader kernel
@@ -11,7 +11,7 @@ LOADEROBJ=	../boot/loader.o
 all: loader kernel
 
 clean:
-	rm -f *.o kernel
+	rm -f *.o $(OBJS) kernel
 	$(MAKE) -C ../boot clean
 
 loader:
