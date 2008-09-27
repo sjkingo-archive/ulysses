@@ -7,7 +7,7 @@
  * files.
  */
 
-#define DEBUG 0 /* be verbose with what the kernel is doing - SLOW */
+#define DEBUG 1 /* be verbose with what the kernel is doing - SLOW */
 
 /* POSIX system includes */
 #include <types.h>

@@ -9,6 +9,8 @@ void _kmain(void *mdb, unsigned int magic)
 
     /* Print some pretty startup info */
     kprintf("KOS - Kingo Operating System\n");
+    kprintf("version 0.1 (if-it-works-have-a-party)\n\n");
+    kprintf("XXX BIOS memory map\n");
 
     /* Set up the process table and scheduling queues */
     init_proc();
@@ -18,7 +20,6 @@ void _kmain(void *mdb, unsigned int magic)
     proc[0].pid = PID_IDLE; /* XXX ignore the auto-generated pid */
     sched(get_proc(PID_IDLE));
 
-    /* XXX just for testing */
-    panic("Got milk?");
+    panic("_kmain() exited?");
 }
 

@@ -8,6 +8,8 @@
  */
 void halt(void)
 {
+    kprintf("\nCPU halted");
+
     __asm__("cli");
     __asm__("hlt");
 
@@ -35,6 +37,8 @@ void panic(const char *msg)
  */
 void shutdown(void)
 {
+    kprintf("Shutting down KOS\n");
+
     /* XXX but for now, just halt() */
     halt();
 }

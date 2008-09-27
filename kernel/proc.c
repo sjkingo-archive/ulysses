@@ -10,6 +10,11 @@ void init_proc(void)
 {
     register struct proc *p;
     register unsigned short i;
+    static flag_t initProc;
+
+    /* Only allow this function to be called once */
+    if (initProc) panic("init_proc() already set up");
+    initProc = 1;
     
     /* Blank the process table */
     for (p = BEG_PROC; p < END_PROC; ++p) {
@@ -51,6 +56,11 @@ void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
     proc[index].ready = 1; /* ready to run */
     proc[0].s_ticks_left = SCHED_QUANTUM;
     proc[0].s_quantum_size = SCHED_QUANTUM;
+
+#if DEBUG
+    kprintf("new_proc(): %s, pid %d, uid %d, egid %d, rgid %d\n", name,
+            (unsigned int)uid, (unsigned int)egid, (unsigned int)rgid);
+#endif
 }
 
 /* get_proc()
@@ -114,6 +124,10 @@ void pick_proc(void)
         while (p != NULL) {
             if (p->ready) { /* ready process found, schedule it to be run */
                 next_proc = p;
+#if DEBUG
+                kprintf("pick_proc(): %s, pid %d\n", p->name, 
+                        (unsigned int)p->pid);
+#endif
                 return;
             }
             p = p->next;
