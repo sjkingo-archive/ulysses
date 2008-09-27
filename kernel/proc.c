@@ -2,10 +2,9 @@
 #include "kernel.h"
 #include "proc.h"
 
-/* init_proc()
- *  Initialises the process table and scheduling queues.
- *  This needs to be called *once* by kmain(), and never again.
- */
+/* Internal function prototypes */
+pid_t new_pid(void);
+
 void init_proc(void)
 {
     register struct proc *p;
@@ -33,18 +32,11 @@ void init_proc(void)
 #endif
 }
 
-/* new_pid()
- *  Generate a new pid and return it.
- */
 pid_t new_pid(void)
 {
     return PID_NONE; /* XXX */
 }
 
-/* new_proc()
- *  Add a new process to the process table. Note that this process will
- *  *not* be scheduled at this time. Call sched() for that.
- */
 void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
 {
     unsigned int index = ++last_proc; /* get this proc's index */
@@ -63,10 +55,6 @@ void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
 #endif
 }
 
-/* get_proc()
- *  Searches the process table for a process with the given pid. Returns
- *  a pointer to the process struct if found, or NULL if not.
- */
 struct proc *get_proc(pid_t pid)
 {
     register struct proc *p;
@@ -76,10 +64,6 @@ struct proc *get_proc(pid_t pid)
     return NULL;
 }
 
-/* sched()
- *  Determines which scheduling queue to add the given process to, and
- *  adds it.
- */
 void sched(struct proc *p)
 {
     register struct sched_q q;
@@ -109,11 +93,6 @@ void sched(struct proc *p)
 #endif
 }
 
-/* pick_proc()
- *  Picks a process to be run next. This starts with the head of queue 0, and
- *  proceeds to the only process in the lowest queue - IDLE. Once a runnable
- *  process is found, point next_proc to it and return.
- */
 void pick_proc(void)
 {
     register unsigned short i;

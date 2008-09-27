@@ -61,12 +61,36 @@ struct sched_q {
 struct sched_q sched_queues[NR_SCHED_Q]; /* all of the scheduling queues */
 struct proc *next_proc; /* next process to run */
 
-/* Function prototypes */
+/* init_proc()
+ *  Initialises the process table and scheduling queues. This needs to be
+ *  called *once* and once only. A panic() will be triggered if this is
+ *  called again.
+ */
 void init_proc(void);
-pid_t new_pid(void);
+
+/* new_proc()
+ *  Add a new process to the process table. Note that this process will
+ *  *not* be scheduled at this time. Call sched() for that.
+ */
 void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name);
+
+/* get_proc()
+ *  Searches the process table for a process with the given pid. Returns
+ *  a pointer to the process struct if found, or NULL if not.
+ */
 struct proc *get_proc(pid_t pid);
+
+/* sched()
+ *  Determines which scheduling queue to add the given process to, and
+ *  adds it.
+ */
 void sched(struct proc *p);
+
+/* pick_proc()
+ *  Picks a process to be run next. This starts with the head of queue 0, and
+ *  proceeds to the only process in the lowest queue - IDLE. Once a runnable
+ *  process is found, point next_proc to it and return.
+ */
 void pick_proc(void);
 
 #endif
