@@ -73,16 +73,21 @@ void kprintf(const char *fmt, ...)
 
         /* Format specifier, read ahead and format the arg into a string */
         if (*fmt == '%') {
-            char *str;
-
             fmt++; /* skip the % since it's no longer important */
             switch (*fmt) {
+                char *str;
+
                 case 's':
                     str = va_arg(argp, char *);
                     if (str == NULL) str = "(null)";
+                    kputs(str);
                     break;
+
+                default:
+                    /* print it raw */
+                    kputc('%', 0x07);
+                    kputc(*fmt, 0x07);
             }
-            kputs(str);
 
         } else {
             if (*fmt == '\n') {
