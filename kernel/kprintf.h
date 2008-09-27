@@ -14,6 +14,9 @@
 #define WIDTH 80
 #define HEIGHT 25
 
+/* Colours */
+#define COLOUR_WB 0x07 /* white on black */
+
 /* A screen is defined as an 80x25 location in video memory */
 struct vidmem {
     unsigned char *mem;
@@ -24,7 +27,8 @@ struct vidmem screen;
 
 void init_screen(void);
 void clear_screen(void);
-void kputc(const char c, const char colour);
+void kputc(const char c);
+void kputs(const char *str);
 void kprintf(const char *fmt, ...);
 
 #endif

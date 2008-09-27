@@ -30,9 +30,9 @@ void clear_screen(void)
 }
 
 /* kputc()
- *  Write a char directly to video memory, using the hex colour.
+ *  Write a char directly to video memory.
  */
-void kputc(const char c, const char colour)
+void kputc(const char c)
 {
     unsigned int index;
 
@@ -45,16 +45,21 @@ void kputc(const char c, const char colour)
     /* Each character in video mem is 2 bytes */
     index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
     screen.mem[index] = c;
-    screen.mem[++index] = colour;
+    screen.mem[++index] = COLOUR_WB;
     
     screen.next_x++;
 }
 
 void kputs(const char *str)
 {
-    while (*str != '\0') {
-        kputc(*str, 0x07); /* white on black */
-        str++;
+    char *ptr;
+
+    if (str == NULL) ptr = "(null)";
+    else ptr = str;
+
+    while (*ptr != '\0') {
+        kputc(*ptr);
+        ptr++;
     }
 }
 
@@ -75,18 +80,23 @@ void kprintf(const char *fmt, ...)
         if (*fmt == '%') {
             fmt++; /* skip the % since it's no longer important */
             switch (*fmt) {
-                char *str;
 
                 case 's':
-                    str = va_arg(argp, char *);
-                    if (str == NULL) str = "(null)";
-                    kputs(str);
+                    kputs(va_arg(argp, char *));
+                    break;
+
+                case 'c':
+                    kputc(va_arg(argp, char));
+                    break;
+
+                case '%':
+                    kputc('%');
                     break;
 
                 default:
                     /* print it raw */
-                    kputc('%', 0x07);
-                    kputc(*fmt, 0x07);
+                    kputc('%');
+                    kputc(*fmt);
             }
 
         } else {
@@ -96,7 +106,7 @@ void kprintf(const char *fmt, ...)
             } else if (*fmt == '\r') {
                 screen.next_x = 0;
             } else {
-                kputc(*fmt, 0x07); /* white on black */
+                kputc(*fmt);
             }
         }
 
