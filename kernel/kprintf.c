@@ -5,34 +5,30 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-/* init_screen()
- *  Initialise video memory and clear the screen.
- */
+/* Internal function prototypes */
+void kputc(const char c);
+void kputs(const char *str);
+void kputd(const int d);
+
 void init_screen(void)
 {
-    screen.mem = VIDMEM;
+    screen.mem = VIDMEM_START;
     screen.next_x = 0;
     screen.next_y = 0;
     clear_screen();
 }
 
-/* clear_screen()
- *  Writes blank spaces to the current screen and reset the cursor.
- */
 void clear_screen(void)
 {
     register unsigned int i;
     for (i = 0; i < (WIDTH * HEIGHT * 2); i++) {
         screen.mem[i] = ' ';
-        screen.mem[++i] = 0x07;
+        screen.mem[++i] = COLOUR_WB; 
     }
 
     /* XXX reset cursor */
 }
 
-/* kputc()
- *  Write a char directly to video memory.
- */
 void kputc(const char c)
 {
     unsigned int index;
@@ -53,8 +49,7 @@ void kputc(const char c)
 
 void kputs(const char *str)
 {
-    char *ptr;
-
+    const char *ptr;
     if (str == NULL) ptr = "(null)";
     else ptr = str;
 
@@ -69,10 +64,6 @@ void kputd(const int d)
     kputs(itoa(d));
 }
 
-/* kprintf()
- *  Accept a format string and variable arguments list, and write each char
- *  via the kputc() function.
- */
 void kprintf(const char *fmt, ...)
 {
     va_list argp;
@@ -86,7 +77,6 @@ void kprintf(const char *fmt, ...)
         if (*fmt == '%') {
             fmt++; /* skip the % since it's no longer important */
             switch (*fmt) {
-
                 case 's':
                     kputs(va_arg(argp, char *));
                     break;
@@ -109,7 +99,6 @@ void kprintf(const char *fmt, ...)
                     kputc('%');
                     kputc(*fmt);
             }
-
         } else {
             if (*fmt == '\n') {
                 screen.next_x = 0;
