@@ -1,12 +1,14 @@
-.PHONY: all kernel run gdb docs
+QEMU_ARGS=	-fda boot/grub.img -hda fat:kernel -boot a -m 8
 
-all: kernel
+.PHONY: all debug run gdb docs
 
-kernel:
-	$(MAKE) -C kernel kernel
+all: run
+
+debug:
+	qemu -s -S $(QEMU_ARGS)
 
 run:
-	qemu -s -S -fda boot/grub.img -hda fat:kernel -boot a -m 8
+	qemu $(QEMU_ARGS)
 
 gdb:
 	gdb -x gdb-startup
