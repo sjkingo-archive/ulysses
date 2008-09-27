@@ -17,5 +17,18 @@
 #include "kprintf.h"
 #include "shutdown.h"
 
+/* The main kernel data structure */
+struct kernel {
+    void *mdb; /* physical address of multiboot struct */
+    unsigned int magic;
+};
+struct kernel kern;
+
+/* sanity_check()
+ *  Perform a sanity check of the kernel's data structures and physical memory
+ *  locations. If anything fails the check, a panic() will be issued.
+ */
+void sanity_check(void);
+
 #endif
 
