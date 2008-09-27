@@ -3,6 +3,7 @@
 #include "kernel.h"
 
 #include <stdarg.h>
+#include <stdlib.h>
 
 /* init_screen()
  *  Initialise video memory and clear the screen.
@@ -63,6 +64,11 @@ void kputs(const char *str)
     }
 }
 
+void kputd(const int d)
+{
+    kputs(itoa(d));
+}
+
 /* kprintf()
  *  Accept a format string and variable arguments list, and write each char
  *  via the kputc() function.
@@ -87,6 +93,11 @@ void kprintf(const char *fmt, ...)
 
                 case 'c':
                     kputc(va_arg(argp, char));
+                    break;
+
+                case 'i':
+                case 'd':
+                    kputd(va_arg(argp, int));
                     break;
 
                 case '%':
