@@ -17,6 +17,8 @@
 /* Colours */
 #define COLOUR_WB 0x07 /* white on black */
 
+#define TAB "        " /* 8 spaces */
+
 /* A screen is defined as an 80x25 location in video memory */
 struct vidmem {
     unsigned char *mem;

@@ -8,7 +8,7 @@ void print_startup(void);
 void print_startup(void)
 {
     kprintf("KOS - Kingo Operating System\n");
-    kprintf("version 0.1 (if-it-works-have-a-party)\n\n");
+    kprintf("v0.1\t(Codename: Nomad)\n\n");
 }
 
 void sanity_check(void)

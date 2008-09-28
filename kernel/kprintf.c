@@ -9,6 +9,7 @@
 void kputc(const char c);
 void kputs(const char *str);
 void kputd(const int d);
+void kputdu(const unsigned int ud);
 
 void init_screen(void)
 {
@@ -64,15 +65,18 @@ void kputd(const int d)
     kputs(itoa(d));
 }
 
+void kputdu(const unsigned int ud)
+{
+    kputs(itoa(ud)); /* XXX itoa() takes a signed int! */
+}
+
 void kprintf(const char *fmt, ...)
 {
-    va_list argp;
-
     /* Thank you Ken Thompson for giving us this >_< */
+    va_list argp;
     va_start(argp, fmt);
 
     while (*fmt != '\0') {
-
         /* Format specifier, read ahead and format the arg into a string */
         if (*fmt == '%') {
             fmt++; /* skip the % since it's no longer important */
@@ -85,7 +89,11 @@ void kprintf(const char *fmt, ...)
                     kputc(va_arg(argp, char));
                     break;
 
-                case 'i':
+                case 'u': /* unsigned int */
+                    kputdu(va_arg(argp, unsigned int));
+                    break;
+
+                case 'i': /* signed int */
                 case 'd':
                     kputd(va_arg(argp, int));
                     break;
@@ -105,6 +113,9 @@ void kprintf(const char *fmt, ...)
                 screen.next_y++;
             } else if (*fmt == '\r') {
                 screen.next_x = 0;
+            } else if (*fmt == '\t') {
+                /* XXX for now just pad 8 spaces */
+                kputs(TAB);
             } else {
                 kputc(*fmt);
             }
