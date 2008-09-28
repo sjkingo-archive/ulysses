@@ -2,7 +2,7 @@
 #ifndef _x86_H
 #define _x86_H
 
-#include "halt.h"
+/* Put x86-specific stuff here. */
 
 #endif
 

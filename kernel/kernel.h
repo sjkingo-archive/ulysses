@@ -15,6 +15,7 @@
 
 /* Our own headers */
 #include "../config.h"
+#include "../arch/halt.h"
 #include "kprintf.h"
 #include "shutdown.h"
 
@@ -22,7 +23,7 @@
 #ifdef _ARCH_x86
 #include "../arch/x86/x86.h"
 #else
-#include "../arch/common/common.h" /* fall back to common - may not work! */
+#error No _ARCH_* defined!
 #endif
 
 /* The main kernel data structure */

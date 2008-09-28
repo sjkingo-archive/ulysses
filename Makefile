@@ -5,7 +5,7 @@ CFLAGS=		-m32 -g -Wall -Wextra -Werror -isystem include
 LDFLAGS=	-melf_i386 -nostdlib -nostartfiles -nodefaultlibs
 ASMFLAGS=	-f elf
 
-OBJS=		kernel/main.o kernel/kprintf.o kernel/proc.o kernel/shutdown.o lib/itoa.o
+OBJS=		kernel/main.o kernel/kprintf.o kernel/proc.o kernel/shutdown.o lib/itoa.o arch/x86/halt.o
 LOADEROBJ=	arch/x86/loader.o
 LINKER=		arch/x86/linker.ld
 
