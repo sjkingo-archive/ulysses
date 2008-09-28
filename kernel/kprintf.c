@@ -26,8 +26,27 @@ void clear_screen(void)
         screen.mem[i] = ' ';
         screen.mem[++i] = COLOUR_WB; 
     }
+    move_cursor(0, 0);
+}
 
-    /* XXX reset cursor */
+/* XXX move somewhere else? */
+void outb(const unsigned int port, unsigned int value)
+{
+    /* note the OUTB asm call has the order reversed (as most calls do) */
+    __asm__ volatile("outb %%al, %%dx" : : "a" (value), "d" (port));
+}
+
+void move_cursor(const unsigned int x, const unsigned int y)
+{
+    unsigned int index = x + (WIDTH * y);
+
+    /* High byte */
+    outb(0x3d4, 0xe); /* CRTC register */
+    outb(0x3d5, (index >> 8)); /* data */
+
+    /* Low byte */
+    outb(0x3d4, 0xf); /* CRTC register */
+    outb(0x3d5, (index & 0xFF)); /* data */
 }
 
 void kputc(const char c)
@@ -44,13 +63,18 @@ void kputc(const char c)
     index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
     screen.mem[index] = c;
     screen.mem[++index] = COLOUR_WB;
+
+    /* Update the screen cursor (not hardware). This will place the cursor
+     * underneath the current char.
+     */
+    move_cursor(screen.next_x, screen.next_y);
     
     screen.next_x++;
 }
 
 void kputs(const char *str)
 {
-    const char *ptr;
+    const char *ptr; /* since we may want to change what str is pointing to */
     if (str == NULL) ptr = "(null)";
     else ptr = str;
 

@@ -38,6 +38,11 @@ void init_screen(void);
  */
 void clear_screen(void);
 
+/* move_cursor()
+ *  Move the screen cursor to the specified coordinates.
+ */
+void move_cursor(const unsigned int x, const unsigned int y);
+
 /* kprintf()
  *  printf() for the kernel. Takes a format string and variable arguments
  *  list, formats the string using given args and specifiers, and appends
