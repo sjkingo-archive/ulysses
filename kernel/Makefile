@@ -1,6 +1,6 @@
 CC=		gcc
 LD=		ld
-CFLAGS=		-g -Wall -Wextra -isystem ../include
+CFLAGS=		-g -Wall -Wextra -Werror -isystem ../include
 LDFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
 
 OBJS=		main.o kprintf.o proc.o shutdown.o ../lib/itoa.o
