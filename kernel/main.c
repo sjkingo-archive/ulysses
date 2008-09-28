@@ -31,7 +31,8 @@ void _kmain(void *mdb, unsigned int magic)
 
     /* Print startup messages */
     print_startup();
-    kprintf("Multiboot magic: %d\n", kern.magic);
+    kprintf("kern.mdb: %p\n", kern.mdb);
+    kprintf("kern.magic: %p\n", kern.magic);
     /* XXX BIOS memory map */
 
     /* Set up the process table and scheduling queues and add IDLE as first

@@ -6,10 +6,11 @@
 #include <stdlib.h>
 
 /* Internal function prototypes */
-void kputc(const char c);
-void kputs(const char *str);
-void kputd(const int d);
-void kputdu(const unsigned int ud);
+void kputc(const char c); /* characters, every other kput uses this */
+void kputs(const char *str); /* character arrays */
+void kputd(const int d); /* signed decimals */
+void kputdu(const unsigned int ud); /* unsigned decimals */
+void kputx(const unsigned long hex, const char hex_table[16]); /* hex */
 
 void init_screen(void)
 {
@@ -94,6 +95,18 @@ void kputdu(const unsigned int ud)
     kputs(itoa(ud)); /* XXX itoa() takes a signed int! */
 }
 
+void kputx(const unsigned long hex, const char hex_table[16])
+{
+    unsigned long h = hex; /* since we are modifying it */
+    char *str;
+
+    do {
+        *--str = hex_table[(h % 0x10)];
+    } while ((h /= 0x10) > 0);
+
+    kputs(str);
+}
+
 void kprintf(const char *fmt, ...)
 {
     /* Thank you Ken Thompson for giving us this >_< */
@@ -120,6 +133,16 @@ void kprintf(const char *fmt, ...)
                 case 'i': /* signed int */
                 case 'd':
                     kputd(va_arg(argp, int));
+                    break;
+
+                case 'p': /* pointer, print a 0x and fall through */
+                    kputs("0x");
+                case 'x': /* lowercase hex */
+                    kputx(va_arg(argp, unsigned long), HEX_LOWER);
+                    break;
+
+                case 'X': /* uppercase hex */
+                    kputx(va_arg(argp, unsigned long), HEX_UPPER);
                     break;
 
                 case '%':

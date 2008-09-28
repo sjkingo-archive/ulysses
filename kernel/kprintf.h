@@ -19,6 +19,10 @@
 
 #define TAB "        " /* 8 spaces */
 
+/* The hexidecimal alphabet */
+#define HEX_LOWER "0123456789abcdef"
+#define HEX_UPPER "0123456789ABCDEF"
+
 /* A screen is defined as an 80x25 location in video memory */
 struct vidmem {
     unsigned char *mem;
