@@ -8,7 +8,12 @@ void print_startup(void);
 void print_startup(void)
 {
     kprintf("KOS - Kingo Operating System\n");
-    kprintf("v0.1\t(Codename: Nomad)\n\n");
+    kprintf("v0.1\t(Codename: Nomad)\n");
+#ifdef _ARCH_x86
+    kprintf("Compiled for x86\n");
+#else
+    kprintf("Compiled for UNKNOWN - may be unstable!\n");
+#endif
 }
 
 void sanity_check(void)

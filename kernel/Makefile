@@ -1,10 +1,11 @@
 CC=		gcc
 LD=		ld
-CFLAGS=		-g -Wall -Wextra -Werror -isystem ../include
-LDFLAGS=	-nostdlib -nostartfiles -nodefaultlibs
+CFLAGS=		-m32 -g -Wall -Wextra -Werror -isystem ../include
+LDFLAGS=	-melf_i386 -nostdlib -nostartfiles -nodefaultlibs
 
 OBJS=		main.o kprintf.o proc.o shutdown.o ../lib/itoa.o
 LOADEROBJ=	../boot/loader.o
+LINKER=		../arch/x86/linker.ld
 
 .PHONY: all clean loader kernel
 
@@ -18,7 +19,7 @@ loader:
 	$(MAKE) -C ../boot loader
 
 kernel: $(OBJS)
-	$(LD) $(LDFLAGS) -T linker.ld -o kernel $(LOADEROBJ) $(OBJS)
+	$(LD) $(LDFLAGS) -T $(LINKER) -o kernel $(LOADEROBJ) $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<

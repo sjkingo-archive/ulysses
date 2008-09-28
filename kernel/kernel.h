@@ -14,8 +14,16 @@
 #include <unistd.h>
 
 /* Our own headers */
+#include "../config.h"
 #include "kprintf.h"
 #include "shutdown.h"
+
+/* Arch-specific headers */
+#ifdef _ARCH_x86
+#include "../arch/x86/x86.h"
+#else
+#include "../arch/common/common.h" /* fall back to common - may not work! */
+#endif
 
 /* The main kernel data structure */
 struct kernel {
