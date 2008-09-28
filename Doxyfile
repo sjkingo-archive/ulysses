@@ -1,5 +1,5 @@
 PROJECT_NAME = KOS
-INPUT = kernel boot include x86
+INPUT = arch boot include kernel lib
 OUTPUT_DIRECTORY = docs
 SOURCE_BROWSER = yes
 FILE_PATTERNS = *.h *.c *.asm *.s
