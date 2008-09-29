@@ -28,8 +28,8 @@
 
 /* The main kernel data structure */
 struct kernel {
-    void *mdb; /* physical address of multiboot struct */
-    unsigned int magic;
+    multiboot_info_t *mbi; /* multiboot info struct as passed by loader */
+    unsigned int mbm; /* magic number */
 };
 struct kernel kern;
 

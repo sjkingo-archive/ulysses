@@ -2,8 +2,26 @@
 #include "kernel.h"
 #include "proc.h"
 
-/* Internal function prototypes */
-void print_startup(void);
+void print_memory_map(void)
+{
+    memory_map_t *mmap;
+    
+    if (!MB_FLAG(kern.mbi->flags, 0)) panic("No multiboot memory info");
+    if (!MB_FLAG(kern.mbi->flags, 6)) panic("No multiboot memory map");
+
+    kprintf("Lower memory: %u KB\nUpper memory: %u KB\n", kern.mbi->mem_lower,
+                kern.mbi->mem_upper);
+    kprintf("Memory map; addr %p, length %p\n", kern.mbi->mmap_addr, 
+            kern.mbi->mmap_length);
+    for (mmap = (memory_map_t *) kern.mbi->mmap_addr; (unsigned long)mmap < 
+            (kern.mbi->mmap_addr + kern.mbi->mmap_length);
+            mmap = (memory_map_t *)((unsigned long)mmap + mmap->size + 
+            sizeof (mmap->size))) {
+        kprintf("  size %p, length = %p%x, type %p, base_addr %p%x\n",
+                mmap->size, mmap->length_high, mmap->length_low, mmap->type,
+                mmap->base_addr_high, mmap->base_addr_low);
+    }
+}
 
 void print_startup(void)
 {
@@ -11,15 +29,11 @@ void print_startup(void)
     kprintf("v0.1\t(Codename: Nomad)\n");
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
-#else
-    kprintf("Compiled for UNKNOWN - may be unstable!\n");
 #endif
 }
 
 void sanity_check(void)
 {
-    if (kern.mdb == NULL) panic("(sanity) kern.mdb is NULL");
-    if (kern.magic <= 0) panic("(sanity) kern.magic <= 0");
 
 #if DEBUG
     kprintf("Kernel sanity check passed\n");
@@ -29,16 +43,16 @@ void sanity_check(void)
 void _kmain(void *mdb, unsigned int magic)
 {
     init_screen(); /* must be first in _kmain() */
-
-    /* Set up the kernel data structure */
-    kern.mdb = mdb;
-    kern.magic = magic;
-
-    /* Print startup messages */
     print_startup();
-    kprintf("kern.mdb: %p\n", kern.mdb);
-    kprintf("kern.magic: %p\n", kern.magic);
-    /* XXX BIOS memory map */
+
+    /* Set up the multiboot stuff given to us */
+    if (magic != MULTIBOOT_LOADER_MAGIC)
+        panic("Kernel not booted by a Multiboot loader");
+    else
+        kprintf("Kernel booted by a Multiboot loader; magic %p\n", magic);
+    kern.mbi = (multiboot_info_t *)mdb;
+    kern.mbm = magic;
+    print_memory_map();
 
     /* Set up the process table and scheduling queues and add IDLE as first
      * proc in table.
