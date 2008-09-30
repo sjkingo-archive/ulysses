@@ -5,7 +5,9 @@ CFLAGS=		-m32 -g -Wall -Wextra -Werror -isystem include
 LDFLAGS=	-melf_i386 -nostdlib -nostartfiles -nodefaultlibs
 ASMFLAGS=	-f elf
 
-OBJS=		kernel/main.o kernel/kprintf.o kernel/proc.o kernel/shutdown.o lib/itoa.o arch/x86/halt.o
+OBJS=		kernel/main.o kernel/kprintf.o kernel/proc.o kernel/shutdown.o kernel/mm.o lib/itoa.o lib/string.o
+OBJS_ARCH=	arch/x86/halt.o arch/x86/gdt.o arch/x86/isr/idt.o arch/x86/isr/interrupt.o arch/x86/isr/isr.o arch/x86/flush.o
+
 LOADEROBJ=	arch/x86/loader.o
 LINKER=		arch/x86/linker.ld
 
@@ -15,8 +17,8 @@ QEMU_ARGS=	-fda arch/x86/grub.img -hda fat:kernel -boot a -m 8
 
 all: kernel/kernel
 
-kernel/kernel: $(OBJS) $(LOADEROBJ)
-	$(LD) $(LDFLAGS) -T $(LINKER) -o kernel/kernel $(LOADEROBJ) $(OBJS)
+kernel/kernel: $(OBJS) $(OBJS_ARCH) $(LOADEROBJ)
+	$(LD) $(LDFLAGS) -T $(LINKER) -o kernel/kernel $(LOADEROBJ) $(OBJS) $(OBJS_ARCH)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -25,7 +27,7 @@ kernel/kernel: $(OBJS) $(LOADEROBJ)
 	$(ASM) $(ASMFLAGS) -o $@ $<
 
 clean:
-	rm -f kernel/*.o lib/*.o arch/x86/*.o kernel/kernel
+	rm -f kernel/*.o lib/*.o arch/x86/*.o arch/x86/isr/*.o kernel/kernel
 
 debug:
 	qemu -s -S $(QEMU_ARGS)

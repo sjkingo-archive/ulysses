@@ -50,6 +50,9 @@ void _kmain(void *mdb, unsigned int magic)
     init_screen(); /* must be first in _kmain() */
     print_startup();
 
+#ifdef _ARCH_x86
+    /* Do x86-specific startup */
+
     /* Set up the multiboot stuff given to us by the boot loader */
     if (magic != MULTIBOOT_LOADER_MAGIC)
         panic("Kernel not booted by a Multiboot loader");
@@ -57,6 +60,13 @@ void _kmain(void *mdb, unsigned int magic)
         kprintf("Kernel booted by a Multiboot loader; magic %p\n", magic);
     kern.mbi = (multiboot_info_t *)mdb;
     print_memory_map();
+
+    /* Set up the GDT and IDT */
+    if (init_gdt()) kprintf("GDT initialised\n");
+    else panic("GDT failed initialisation\n");
+    if (init_idt()) kprintf("IDT initialised\n");
+    else panic("IDT failed initialisation");
+#endif
 
     /* Set up the process table and scheduling queues and add IDLE as first
      * proc in table.
