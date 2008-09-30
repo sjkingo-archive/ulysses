@@ -9,15 +9,12 @@
 
 #define DEBUG 1 /* be verbose with what the kernel is doing - SLOW */
 
-/* POSIX system includes */
-#include <types.h>
-#include <unistd.h>
-
 /* Our own headers */
-#include "../config.h"
+#include "../config.h" /* must be first */
 #include "../arch/halt.h"
 #include "kprintf.h"
 #include "shutdown.h"
+#include "mm.h"
 
 /* Arch-specific headers */
 #ifdef _ARCH_x86
@@ -26,10 +23,13 @@
 #error No _ARCH_* defined!
 #endif
 
+/* POSIX system includes */
+#include <types.h>
+#include <unistd.h>
+
 /* The main kernel data structure */
 struct kernel {
     multiboot_info_t *mbi; /* multiboot info struct as passed by loader */
-    unsigned int mbm; /* magic number */
 };
 struct kernel kern;
 

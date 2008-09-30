@@ -2,7 +2,7 @@
 #include "kernel.h"
 #include "proc.h"
 
-void print_memory_map(void)
+static void print_memory_map(void)
 {
     memory_map_t *mmap;
     
@@ -13,17 +13,17 @@ void print_memory_map(void)
                 kern.mbi->mem_upper);
     kprintf("Memory map; addr %p, length %p\n", kern.mbi->mmap_addr, 
             kern.mbi->mmap_length);
-    for (mmap = (memory_map_t *) kern.mbi->mmap_addr; (unsigned long)mmap < 
+    for (mmap = (memory_map_t *)kern.mbi->mmap_addr; (unsigned long)mmap < 
             (kern.mbi->mmap_addr + kern.mbi->mmap_length);
             mmap = (memory_map_t *)((unsigned long)mmap + mmap->size + 
-            sizeof (mmap->size))) {
+            sizeof(mmap->size))) {
         kprintf("  size %p, length = %p%x, type %p, base_addr %p%x\n",
                 mmap->size, mmap->length_high, mmap->length_low, mmap->type,
                 mmap->base_addr_high, mmap->base_addr_low);
     }
 }
 
-void print_startup(void)
+static void print_startup(void)
 {
     kprintf("KOS - Kingo Operating System\n");
     kprintf("v0.1\t(Codename: Nomad)\n");
@@ -35,8 +35,13 @@ void print_startup(void)
 void sanity_check(void)
 {
 
+    goto pass; /* default to passing */
+    goto fail; /* to keep the compiler happy */
+    fail:
+        panic("Kernel sanity check failed");
+    pass:
 #if DEBUG
-    kprintf("Kernel sanity check passed\n");
+        kprintf("Kernel sanity check passed\n");
 #endif
 }
 
@@ -45,13 +50,12 @@ void _kmain(void *mdb, unsigned int magic)
     init_screen(); /* must be first in _kmain() */
     print_startup();
 
-    /* Set up the multiboot stuff given to us */
+    /* Set up the multiboot stuff given to us by the boot loader */
     if (magic != MULTIBOOT_LOADER_MAGIC)
         panic("Kernel not booted by a Multiboot loader");
     else
         kprintf("Kernel booted by a Multiboot loader; magic %p\n", magic);
     kern.mbi = (multiboot_info_t *)mdb;
-    kern.mbm = magic;
     print_memory_map();
 
     /* Set up the process table and scheduling queues and add IDLE as first
