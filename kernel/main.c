@@ -17,7 +17,7 @@ static void print_memory_map(void)
             (kern.mbi->mmap_addr + kern.mbi->mmap_length);
             mmap = (memory_map_t *)((unsigned long)mmap + mmap->size + 
             sizeof(mmap->size))) {
-        kprintf("  size %p, length = %p%x, type %p, base_addr %p%x\n",
+        kprintf("\tsize %p\tlength %p%x\ttype %p\tbase_addr %p%x\n",
                 mmap->size, mmap->length_high, mmap->length_low, mmap->type,
                 mmap->base_addr_high, mmap->base_addr_low);
     }

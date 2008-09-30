@@ -175,16 +175,30 @@ void kprintf(const char *fmt, ...)
                     kputc(*fmt);
             }
         } else {
-            if (*fmt == '\n') {
-                screen.next_x = 0;
+            switch (*fmt) {
+
+            case '\0':
+                return;
+
+            case '\b':
+                if (screen.next_x) screen.next_x--;
+                break;
+
+            case '\n':
                 screen.next_y++;
-            } else if (*fmt == '\r') {
+                /* fall through to \r */
+            case '\r':
                 screen.next_x = 0;
-            } else if (*fmt == '\t') {
+                break;
+
+            case '\t':
                 /* XXX still doesn't work 100% */
                 screen.next_x = (screen.next_x + 8) & ~(8 - 1);
-            } else {
+                break;
+
+            default:
                 kputc(*fmt);
+
             }
         }
 
