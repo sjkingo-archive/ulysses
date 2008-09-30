@@ -43,6 +43,7 @@ void sanity_check(void)
 #if DEBUG
         kprintf("Kernel sanity check passed\n");
 #endif
+        return; /* so we don't have an empty label with DEBUG 0 */
 }
 
 void _kmain(void *mdb, unsigned int magic)
