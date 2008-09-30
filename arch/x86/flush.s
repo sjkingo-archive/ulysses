@@ -1,4 +1,6 @@
 
+; Descriptor table flush.
+
 global gdt_flush
 global idt_flush
 
@@ -19,6 +21,7 @@ gdt_flush:
 .flush:
    ret
 
+; Load the interrupt table - we should now have interrupts!
 idt_flush:
     mov eax, [esp+4]
     lidt [eax]

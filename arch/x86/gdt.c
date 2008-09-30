@@ -17,7 +17,6 @@ static void gdt_set_gate(int num, unsigned int base, unsigned int limit,
    gdt_entries[num].access = access;
 }
 
-
 flag_t init_gdt(void)
 {
     gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
@@ -29,9 +28,8 @@ flag_t init_gdt(void)
     gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); /* user-mode code */
     gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); /* user-mode data */
 
-    gdt_flush((unsigned int)&gdt_ptr); /* declared in gdt.s */
+    gdt_flush((unsigned int)&gdt_ptr); /* declared in flush.s */
 
     return TRUE; /* clean return for kmain() */
 }
-
 

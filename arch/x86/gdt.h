@@ -2,8 +2,8 @@
 #ifndef _GDT_H
 #define _GDT_H
 
-/* This is the global descriptor table that x86 provides us with segmentation.
- * What a mess... >_<
+/* This is the global descriptor table that x86 kindly gives us segmentation
+ * through.
  */
 
 #include <types.h>
@@ -15,13 +15,13 @@ struct gdt_entry_struct {
     unsigned char access; /* access ring */
     unsigned char granularity;
     unsigned char base_high; /* highest 8 bits of the base */
-} __attribute__((packed));
+} __attribute__((packed)); /* pack to 1 byte */
 typedef struct gdt_entry_struct gdt_entry_t;
 
 struct gdt_ptr_struct {
     unsigned short limit; /* upper 16 bits of all limits */
     unsigned int base; /* address of the first gdt_entry_t */
-} __attribute__((packed));
+} __attribute__((packed)); /* pack to 1 byte */
 typedef struct gdt_ptr_struct gdt_ptr_t;
 
 gdt_ptr_t gdt_ptr;
@@ -33,7 +33,7 @@ gdt_entry_t gdt_entries[5];
  */
 flag_t init_gdt(void);
 
-/* See gdt_flush.s for assembler routine for this. */
+/* See flush.s for assembler routine for this. */
 /* XXX move this to inline assembler */
 extern void gdt_flush(unsigned int);
 

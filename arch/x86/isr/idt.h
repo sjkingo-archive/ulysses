@@ -2,6 +2,11 @@
 #ifndef _IDT_H
 #define _IDT_H
 
+/* Interrupt descriptor table. This declares all of the CPU interrupts handling
+ * code. Be sure to not corrupt the IDT, or the CPU will be unable to lookup
+ * any interrupts and instead default to triple-faulting.
+ */
+
 #include <types.h>
 
 struct idt_entry_struct {
@@ -31,11 +36,9 @@ flag_t init_idt(void);
 /* XXX move this to inline assembler */
 extern void idt_flush(unsigned int);
 
-/* These are the interrupt handler stubs. They are declared in interrupts.s.
+/* These are the interrupt handler stubs. They are declared in interrupt.s.
  * This is very messy, since the CPU has the possibility of generating 32
- * interrupts (and will triple fault if not handler exists for them).
- *
- * FYI isr = interrupt service routine
+ * interrupts (and will triple fault if no handler exists for them).
  */
 extern void isr0(); /* div by zero */
 extern void isr1(); /* debug */
@@ -72,7 +75,9 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
-/* phew. now look in interrupts.s */
+/* and anything 32 -> 256 are configurable by us */
+
+/* phew. now look in interrupt.s... */
 
 #endif
 
