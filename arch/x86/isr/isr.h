@@ -14,5 +14,10 @@ typedef struct registers {
  */
 void isr_handler(registers_t regs);
 
+/* test_interrupts()
+ *  Generate interrupts 0 -> 18, in order.
+ */
+void test_interrupts(void);
+
 #endif
 

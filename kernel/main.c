@@ -66,6 +66,9 @@ void _kmain(void *mdb, unsigned int magic)
     else panic("GDT failed initialisation\n");
     if (init_idt()) kprintf("IDT initialised\n");
     else panic("IDT failed initialisation");
+
+    kprintf("Testing interrupts...\n");
+    test_interrupts();
 #endif
 
     /* Set up the process table and scheduling queues and add IDLE as first
