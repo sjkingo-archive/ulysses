@@ -14,7 +14,6 @@
 #include "../arch/halt.h"
 #include "kprintf.h"
 #include "shutdown.h"
-#include "mm.h"
 
 /* Arch-specific headers */
 #ifdef _ARCH_x86
