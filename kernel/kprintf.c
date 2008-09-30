@@ -181,8 +181,8 @@ void kprintf(const char *fmt, ...)
             } else if (*fmt == '\r') {
                 screen.next_x = 0;
             } else if (*fmt == '\t') {
-                /* XXX for now just pad 8 spaces */
-                kputs(TAB);
+                /* XXX still doesn't work 100% */
+                screen.next_x = (screen.next_x + 8) & ~(8 - 1);
             } else {
                 kputc(*fmt);
             }
