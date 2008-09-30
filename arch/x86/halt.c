@@ -8,7 +8,7 @@
 
 void halt(void)
 {
-    kprintf("\nCPU halted");
+    kprintf("\nCPU halt");
     __asm__ __volatile__("cli ; hlt");
     kprintf("\nCPU woken from halt, suiciding instead...");
     HALT_SUICIDE;
