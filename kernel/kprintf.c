@@ -5,13 +5,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-/* Internal function prototypes */
-void kputc(const char c); /* characters, every other kput uses this */
-void kputs(const char *str); /* character arrays */
-void kputd(const int d); /* signed decimals */
-void kputdu(const unsigned int ud); /* unsigned decimals */
-void kputx(const unsigned long hex, const char hex_table[16]); /* hex */
-
 void init_screen(void)
 {
     screen.mem = VIDMEM_START;
@@ -31,7 +24,7 @@ void clear_screen(void)
 }
 
 /* XXX move somewhere else? */
-void outb(const unsigned int port, unsigned int value)
+static void outb(const unsigned int port, unsigned int value)
 {
     /* note the OUTB asm call has the order reversed (as most calls do) */
     __asm__ volatile("outb %%al, %%dx" : : "a" (value), "d" (port));
@@ -55,7 +48,7 @@ void move_cursor(const unsigned int x, const unsigned int y)
  *  and inefficient process, so we request GCC to place all variables on
  *  CPU registers instead of stack.
  */
-void scroll_screen(void)
+static void scroll_screen(void)
 {
     /* Each char in memory is 2 bytes wide, so we need to deal with both when
      * moving.
@@ -74,7 +67,7 @@ void scroll_screen(void)
     move_cursor(screen.next_x, last_line);
 }
 
-void kputc(const char c)
+static void kputc(const char c)
 {
     unsigned int index;
 
@@ -100,7 +93,7 @@ void kputc(const char c)
     screen.next_x++;
 }
 
-void kputs(const char *str)
+static void kputs(const char *str)
 {
     const char *ptr; /* since we may want to change what str is pointing to */
     if (str == NULL) ptr = "(null)";
@@ -112,17 +105,17 @@ void kputs(const char *str)
     }
 }
 
-void kputd(const int d)
+static void kputd(const int d)
 {
     kputs(itoa(d));
 }
 
-void kputdu(const unsigned int ud)
+static void kputdu(const unsigned int ud)
 {
     kputs(itoa(ud)); /* XXX itoa() takes a signed int! */
 }
 
-void kputx(const unsigned long hex, const char hex_table[16])
+static void kputx(const unsigned long hex, const char hex_table[16])
 {
     unsigned long h = hex; /* since we are modifying it */
     char *str;
