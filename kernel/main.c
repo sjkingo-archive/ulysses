@@ -30,8 +30,7 @@ static void print_memory_map(void)
 
 static void print_startup(void)
 {
-    kprintf("KOS - Kingo Operating System\n");
-    kprintf("v0.1\t(Codename: Nomad)\n");
+    kprintf("Ulysses\tv0.1 (codename: Nomad)\n");
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
 #endif

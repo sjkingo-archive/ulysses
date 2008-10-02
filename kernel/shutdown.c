@@ -23,7 +23,7 @@ void panic(const char *msg)
 
 void shutdown(void)
 {
-    kprintf("Shutting down KOS\n");
+    kprintf("Shutting down Ulysses\n");
     halt(); /* XXX but for now, just halt */
 }
 

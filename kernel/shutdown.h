@@ -13,7 +13,7 @@
 void panic(const char *msg);
 
 /* shutdown()
- *  Cleanly shuts down KOS.
+ *  Cleanly shuts down the operating system.
  */
 void shutdown(void);
 

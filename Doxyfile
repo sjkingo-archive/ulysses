@@ -1,4 +1,4 @@
-PROJECT_NAME = KOS
+PROJECT_NAME = Ulysses
 INPUT = arch boot include kernel lib
 OUTPUT_DIRECTORY = docs
 SOURCE_BROWSER = yes
