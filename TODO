@@ -10,4 +10,3 @@
 - shutdown via APCI
 - memory manager (first fit)
 - GC?
-- IRQs
