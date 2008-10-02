@@ -1,12 +1,15 @@
 
+#include "../../kernel/kernel.h"
+
 #include "timer.h"
 #include "isr/isr.h"
 #include "util.h"
 
 static void timer_callback(registers_t regs)
 {
-    (void)(regs); /* to keep the compiler happy */
-    timer_tick(++ticks);
+    //(void)(regs); /* to keep the compiler happy */
+    //timer_tick(++ticks);
+    kprintf("timer tick\n");
 }
 
 void init_timer(unsigned int freq)

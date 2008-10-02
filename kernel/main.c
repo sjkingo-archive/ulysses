@@ -74,10 +74,6 @@ void _kmain(void *mdb, unsigned int magic)
     else panic("IDT failed initialisation");
 
     init_timer(50); /* 50 Hz timer */
-
-    kprintf("Testing interrupts...\n");
-    test_interrupts();
-
 #endif
 
     /* Set up the process table and scheduling queues and add IDLE as first

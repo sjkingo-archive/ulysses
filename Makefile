@@ -1,7 +1,7 @@
 CC=		gcc
 LD=		ld
 ASM=		nasm
-CFLAGS=		-m32 -g -Wall -Wextra -Werror -isystem include
+CFLAGS=		-m32 -g -Wall -Wextra -isystem include
 LDFLAGS=	-melf_i386 -nostdlib -nostartfiles -nodefaultlibs
 ASMFLAGS=	-f elf
 

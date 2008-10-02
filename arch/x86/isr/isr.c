@@ -29,6 +29,9 @@ void isr_handler(registers_t regs)
             kprintf("Hardware breakpoint\n");
             break;
 
+        case 13:
+            panic("General protection fault");
+
         default:
             panic("Unhandled interrupt");
     }
@@ -64,19 +67,22 @@ void register_interrupt_handler(unsigned char n, isr_t handler)
 {
     interrupt_handlers[n] = handler;
 #if DEBUG
-    kprintf("Interrupt handler registered for IRQ %c\n", n);
+    kprintf("Interrupt handler registered for IRQ %d\n", n);
 #endif
 }
 
 void irq_handler(registers_t regs)
 {
+    __asm__ __volatile("cli");
+
     /* Write an end of interrupt signal to the PICs */
     if (regs.int_no >= 40) outb(0xA0, 0x20); /* if source, send to slave PIC */
     outb(0x20, 0x20); /* always send to master PIC */
 
     /* Call the handler for this IRQ */
-    if (interrupt_handlers[regs.int_no] != 0) {
-        isr_t handler = interrupt_handlers[regs.int_no];
-        handler(regs);
-    }
+    if (interrupt_handlers[regs.int_no] == 0) return;
+    
+    isr_t handler = interrupt_handlers[regs.int_no];
+    __asm__ __volatile__("sti"); /* enable interrupts before jumping */
+    handler(regs); /* jump to the handler */
 }
