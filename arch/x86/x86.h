@@ -8,6 +8,8 @@
 #include "isr/idt.h" /* IDT */
 #include "isr/isr.h" /* interrupts */
 #include "multiboot.h"
+#include "timer.h"
+#include "util.h"
 
 #endif
 

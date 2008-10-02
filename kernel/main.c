@@ -2,6 +2,11 @@
 #include "kernel.h"
 #include "proc.h"
 
+void timer_tick(unsigned long ticks)
+{
+    kprintf("Timer tick %d\n", ticks);
+}
+
 static void print_memory_map(void)
 {
     memory_map_t *mmap;
@@ -68,8 +73,11 @@ void _kmain(void *mdb, unsigned int magic)
     if (init_idt()) kprintf("IDT initialised\n");
     else panic("IDT failed initialisation");
 
+    init_timer(50); /* 50 Hz timer */
+
     kprintf("Testing interrupts...\n");
     test_interrupts();
+
 #endif
 
     /* Set up the process table and scheduling queues and add IDLE as first

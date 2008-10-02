@@ -23,13 +23,6 @@ void clear_screen(void)
     move_cursor(0, 0);
 }
 
-/* XXX move somewhere else? */
-static void outb(const unsigned int port, unsigned int value)
-{
-    /* note the OUTB asm call has the order reversed (as most calls do) */
-    __asm__ volatile("outb %%al, %%dx" : : "a" (value), "d" (port));
-}
-
 void move_cursor(const unsigned int x, const unsigned int y)
 {
     unsigned int index = x + (WIDTH * y);

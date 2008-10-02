@@ -60,3 +60,23 @@ void test_interrupts(void)
     __asm__("int $0x18");
 }
 
+void register_interrupt_handler(unsigned char n, isr_t handler)
+{
+    interrupt_handlers[n] = handler;
+#if DEBUG
+    kprintf("Interrupt handler registered for IRQ %c\n", n);
+#endif
+}
+
+void irq_handler(registers_t regs)
+{
+    /* Write an end of interrupt signal to the PICs */
+    if (regs.int_no >= 40) outb(0xA0, 0x20); /* if source, send to slave PIC */
+    outb(0x20, 0x20); /* always send to master PIC */
+
+    /* Call the handler for this IRQ */
+    if (interrupt_handlers[regs.int_no] != 0) {
+        isr_t handler = interrupt_handlers[regs.int_no];
+        handler(regs);
+    }
+}
