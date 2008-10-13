@@ -5,13 +5,13 @@
 /* The CPU timer */
 
 #define CLOCK 1193180
+#define TIMER_FREQ 50
 
 unsigned long ticks;
 
-void init_timer(unsigned int freq);
+flag_t init_timer(unsigned int freq);
 
-/* Declared in main.c */
-extern void timer_tick(unsigned long ticks);
+void timer_tick(registers_t regs);
 
 #endif
 

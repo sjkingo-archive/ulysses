@@ -2,11 +2,6 @@
 #include "kernel.h"
 #include "proc.h"
 
-void timer_tick(unsigned long ticks)
-{
-    kprintf("Timer tick %d\n", ticks);
-}
-
 static void print_memory_map(void)
 {
     memory_map_t *mmap;
@@ -75,7 +70,10 @@ void _kmain(void *mdb, unsigned int magic)
     if (init_paging()) kprintf("Paging initialised\n");
     else panic("Paging failed initialisation");
 
-    init_timer(50); /* 50 Hz timer */
+    /* Start a clock timer going */
+    if (init_timer(TIMER_FREQ)) kprintf("Timer initialised at %d Hz\n", 
+            TIMER_FREQ);
+    else panic("Timer failed initialisation");
 #endif
 
     /* Set up the process table and scheduling queues and add IDLE as first
@@ -89,6 +87,7 @@ void _kmain(void *mdb, unsigned int magic)
 
     /* Start IDLE going and never return */
     sched(get_proc(PID_IDLE));
+    __asm__("sti ; hlt"); /* XXX since IDLE is non-existant */
     panic("_kmain() exited?");
 }
 
