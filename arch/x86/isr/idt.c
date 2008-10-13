@@ -1,5 +1,6 @@
 
 #include "idt.h"
+#include "isr.h"
 #include "../util.h"
 
 #include <string.h>
@@ -20,8 +21,9 @@ flag_t init_idt(void)
     idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
     idt_ptr.base = (unsigned int)&idt_entries;
 
-    /* Initialise the IDT to 0 */
+    /* Initialise the IDT and handlers to 0 */
     memset(&idt_entries, 0, sizeof(idt_entry_t) * 256);
+    memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 
     /* Remap the IRQ table since they share common interrupt numbers as
      * CPU-generated interrupts.

@@ -17,24 +17,10 @@ void isr_handler(registers_t regs)
             regs.ebx, regs.edx, regs.ecx, regs.eax);
 #endif
 
-    /* Make sure you never call return from inside the switch - this will
-     * leave interrupts *disabled*!!
-     */
-    switch (regs.int_no) {
-        case 0: /* div by zero */
-            kprintf("Recovering from a div by zero; needs better maths...\n");
-            break;
-
-        case 3: /* breakpoint */
-            kprintf("Hardware breakpoint\n");
-            break;
-
-        case 13:
-            panic("General protection fault");
-
-        default:
-            panic("Unhandled interrupt");
-    }
+    /* If a handler exists, call it */
+    isr_t handler = interrupt_handlers[regs.int_no];
+    if (handler == NULL) panic("Unhandled interrupt");
+    handler(regs);
 
     /* If we are returning to kernel proper, re-enable interrupts */
     __asm__ __volatile__("sti");
@@ -86,3 +72,4 @@ void irq_handler(registers_t regs)
     __asm__ __volatile__("sti"); /* enable interrupts before jumping */
     handler(regs); /* jump to the handler */
 }
+
