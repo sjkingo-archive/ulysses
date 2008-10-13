@@ -38,6 +38,7 @@ static void print_startup(void)
 
 void sanity_check(void)
 {
+    kprintf("XXX sanity_check() stub\n");
 
     goto pass; /* default to passing */
     goto fail; /* to keep the compiler happy */
@@ -66,13 +67,11 @@ void _kmain(void *mdb, unsigned int magic)
     kern.mbi = (multiboot_info_t *)mdb;
     print_memory_map();
 
-    /* Set up the GDT and IDT */
+    /* Set up GDT, IDT and paging - NOTE the order is important! */
     if (init_gdt()) kprintf("GDT initialised\n");
     else panic("GDT failed initialisation\n");
     if (init_idt()) kprintf("IDT initialised\n");
     else panic("IDT failed initialisation");
-
-    /* Set up paging */
     if (init_paging()) kprintf("Paging initialised\n");
     else panic("Paging failed initialisation");
 
