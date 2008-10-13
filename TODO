@@ -1,12 +1,10 @@
-(mostly) in descending order of urgency:
-
-- DESIGN
 - Load kernel into higher half (0xC0000000)
 - Protected mode!
-- Memory paging (http://wiki.osdev.org/Setting_Up_Paging) / VM
 - PQ implementation (doubly LL)
 - Process table (actually add process memory maps)
 - Scheduler (round-robin)
 - shutdown via APCI
 - memory manager (first fit)
 - GC?
+- paging comments
+
