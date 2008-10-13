@@ -72,6 +72,10 @@ void _kmain(void *mdb, unsigned int magic)
     if (init_idt()) kprintf("IDT initialised\n");
     else panic("IDT failed initialisation");
 
+    /* Set up paging */
+    if (init_paging()) kprintf("Paging initialised\n");
+    else panic("Paging failed initialisation");
+
     init_timer(50); /* 50 Hz timer */
 #endif
 

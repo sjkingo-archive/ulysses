@@ -6,7 +6,7 @@ LDFLAGS=	-melf_i386 -nostdlib -nostartfiles -nodefaultlibs
 ASMFLAGS=	-f elf
 
 OBJS=		kernel/main.o kernel/kprintf.o kernel/proc.o kernel/shutdown.o lib/itoa.o lib/string.o
-OBJS_ARCH=	arch/x86/halt.o arch/x86/util.o arch/x86/timer.o arch/x86/gdt.o arch/x86/isr/idt.o arch/x86/isr/interrupt.o arch/x86/isr/isr.o arch/x86/flush.o
+OBJS_ARCH=	arch/x86/halt.o arch/x86/util.o arch/x86/timer.o arch/x86/gdt.o arch/x86/isr/idt.o arch/x86/isr/interrupt.o arch/x86/isr/isr.o arch/x86/flush.o arch/x86/paging.o
 
 LOADEROBJ=	arch/x86/loader.o
 LINKER=		arch/x86/linker.ld
