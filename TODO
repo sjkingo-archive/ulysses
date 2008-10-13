@@ -8,3 +8,4 @@
 - GC?
 - paging comments
 
+- find why a timer tick causes a GPF
