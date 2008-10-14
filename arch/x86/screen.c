@@ -89,17 +89,13 @@ void put_char(const char c)
     /* Overflow the screen if needed */
     if (screen.next_y >= HEIGHT) scroll_screen();
 
-    /* Each character in video mem is 2 bytes */
+    /* Each character in video mem is 2 bytes: we call this a cell */
     index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
     screen.mem[index] = c;
     screen.mem[++index] = COLOUR_WB;
-
-    /* Update the screen cursor (not hardware). This will place the cursor
-     * underneath the current char.
-     */
-    move_cursor(screen.next_x, screen.next_y);
     
-    screen.next_x++;
+    /* Incremement the x position and move the cursor to the next cell */
+    move_cursor(++screen.next_x, screen.next_y);
 }
 
 void flush_screen(const char *data)
