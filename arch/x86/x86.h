@@ -13,5 +13,10 @@
 #include "screen.h"
 #include "util.h"
 
+/* startup_x86()
+ *  Perform x86-specific startup.
+ */
+void startup_x86(void *mdb, unsigned int magic);
+
 #endif
 
