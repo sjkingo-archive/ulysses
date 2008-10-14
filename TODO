@@ -8,9 +8,3 @@
 - GC?
 - paging comments
 - cpuid (!! >_<)
-
-Bugs
-====
-
-- GPF on STI
-    Incorrect ring perhaps?
