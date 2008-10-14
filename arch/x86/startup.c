@@ -2,6 +2,12 @@
 #include "x86.h"
 #include "../../kernel/kernel.h"
 
+static void gpf_handler(registers_t regs)
+{
+    kprintf("GPF: err_code: %d\n", regs.err_code);
+    panic("General protection fault");
+}
+
 static void print_memory_map(void)
 {
     memory_map_t *mmap;
@@ -37,7 +43,11 @@ void startup_x86(void *mdb, unsigned int magic)
     if (!init_idt()) panic("IDT failed initialisation");
     if (!init_paging()) panic("Paging failed initialisation");
 
+    /* Set up a handler for GPFs so we get some nice info */
+    register_interrupt_handler(13, &gpf_handler);
+
     /* Start a clock timer going */
     if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
 }
+
 
