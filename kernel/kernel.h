@@ -14,6 +14,7 @@
 #include "../arch/halt.h"
 #include "kprintf.h"
 #include "shutdown.h"
+#include "vt.h"
 
 /* Arch-specific headers */
 #ifdef _ARCH_x86
@@ -37,6 +38,11 @@ struct kernel kern;
  *  locations. If anything fails the check, a panic() will be issued.
  */
 void sanity_check(void);
+
+/* stub()
+ *  Print stub information for a function name given.
+ */
+void stub(char *fname);
 
 #endif
 

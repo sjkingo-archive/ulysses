@@ -10,6 +10,7 @@
 #include "multiboot.h"
 #include "paging.h"
 #include "timer.h"
+#include "screen.h"
 #include "util.h"
 
 #endif

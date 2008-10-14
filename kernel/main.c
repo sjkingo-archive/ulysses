@@ -33,7 +33,7 @@ static void print_startup(void)
 
 void sanity_check(void)
 {
-    kprintf("XXX sanity_check() stub\n");
+    stub((char *)__func__);
 
     goto pass; /* default to passing */
     goto fail; /* to keep the compiler happy */
@@ -46,35 +46,36 @@ void sanity_check(void)
         return; /* so we don't have an empty label with DEBUG 0 */
 }
 
+void stub(char *fname)
+{
+    kprintf("stub: %s()\n", fname);
+}
+
 void _kmain(void *mdb, unsigned int magic)
 {
-    init_screen(); /* must be first in _kmain() */
-    print_startup();
-
 #ifdef _ARCH_x86
     /* Do x86-specific startup */
+    
+    init_screen(); /* must be first in _kmain() */
 
     /* Set up the multiboot stuff given to us by the boot loader */
     if (magic != MULTIBOOT_LOADER_MAGIC)
         panic("Kernel not booted by a Multiboot loader");
-    else
-        kprintf("Kernel booted by a Multiboot loader; magic %p\n", magic);
     kern.mbi = (multiboot_info_t *)mdb;
-    print_memory_map();
+    print_memory_map(); /* XXX you never see this */
 
     /* Set up GDT, IDT and paging - NOTE the order is important! */
-    if (init_gdt()) kprintf("GDT initialised\n");
-    else panic("GDT failed initialisation\n");
-    if (init_idt()) kprintf("IDT initialised\n");
-    else panic("IDT failed initialisation");
-    if (init_paging()) kprintf("Paging initialised\n");
-    else panic("Paging failed initialisation");
+    if (!init_gdt()) panic("GDT failed initialisation\n");
+    if (!init_idt()) panic("IDT failed initialisation");
+    if (!init_paging()) panic("Paging failed initialisation");
 
     /* Start a clock timer going */
-    if (init_timer(TIMER_FREQ)) kprintf("Timer initialised at %d Hz\n", 
-            TIMER_FREQ);
-    else panic("Timer failed initialisation");
+    if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
 #endif
+    
+    /* Set up the virtual terminals */
+    if (!init_vt()) panic("Virtual terminals failed initialisation");
+    print_startup();
 
     /* Set up the process table and scheduling queues and add IDLE as first
      * proc in table.
