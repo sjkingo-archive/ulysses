@@ -27,7 +27,9 @@ void sanity_check(void)
 
 void stub(char *fname)
 {
+#if DEBUG
     kprintf("stub: %s()\n", fname);
+#endif
 }
 
 void _kmain(void *mdb, unsigned int magic)

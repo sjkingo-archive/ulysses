@@ -2,16 +2,14 @@
 #ifndef _KERNEL_H
 #define _KERNEL_H
 
-/* This header sets up global definitions, and includes all the common header 
- * files required for kernel operation, to reduce clutter in the *.{c,h}
- * files.
+/* This sets up any global variables (pre-processor definitions should go
+ * in ../config.h), and includes all common header files needed for kernel
+ * operation - reducing clutter in the *.{c,h} files.
  */
-
-#define DEBUG 1 /* be verbose with what the kernel is doing - SLOW */
 
 /* Our own headers */
 #include "../config.h" /* must be first */
-#include "../arch/halt.h"
+#include "../arch/halt.h" /* halt code to fall back on */
 #include "kprintf.h"
 #include "shutdown.h"
 #include "vt.h"
@@ -40,7 +38,7 @@ struct kernel kern;
 void sanity_check(void);
 
 /* stub()
- *  Print stub information for a function name given.
+ *  Print stub information for a function name given if DEBUG.
  */
 void stub(char *fname);
 
