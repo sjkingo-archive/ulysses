@@ -114,3 +114,9 @@ void pick_proc(void)
     }
 }
 
+void idle_task(void)
+{
+    kprintf("Putting CPU in idle...\n");
+    __asm__("hlt");
+}
+

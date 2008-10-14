@@ -4,7 +4,7 @@
 
 static void print_startup(void)
 {
-    kprintf("Ulysses\tv0.1 (codename: Nomad)\n");
+    kprintf("Ulysses\tv0.2 (codename: Psycho)\n");
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
 #endif
@@ -36,7 +36,7 @@ void _kmain(void *mdb, unsigned int magic)
     startup_x86(mdb, magic);
 #endif
     
-    /* Set up the virtual terminals */
+    /* Set up the virtual terminals - this will switch us to the LOG VT */
     if (!init_vt()) panic("Virtual terminals failed initialisation");
     print_startup();
 
@@ -51,7 +51,7 @@ void _kmain(void *mdb, unsigned int magic)
 
     /* Start IDLE going and never return */
     sched(get_proc(PID_IDLE));
-    __asm__("sti ; hlt"); /* XXX since IDLE is non-existant */
+    idle_task();
     panic("_kmain() exited?");
 }
 

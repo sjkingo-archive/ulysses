@@ -93,5 +93,11 @@ void sched(struct proc *p);
  */
 void pick_proc(void);
 
+/* idle_task()
+ *  Switches back to ring 0 and halts the CPU with interrupts enabled. This
+ *  has the effect of idling the CPU efficiently.
+ */
+void idle_task(void);
+
 #endif
 
