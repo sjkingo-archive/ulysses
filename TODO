@@ -7,5 +7,10 @@
 - memory manager (first fit)
 - GC?
 - paging comments
+- cpuid (!! >_<)
 
-- find why a timer tick causes a GPF
+Bugs
+====
+
+- GPF on STI
+    Incorrect ring perhaps?
