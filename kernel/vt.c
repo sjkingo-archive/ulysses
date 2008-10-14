@@ -13,10 +13,8 @@ flag_t init_vt(void)
         for (j = 0; j < MAX_CHARS; j++) virtual_terms[i].data[j] = '\0';
     }
 
-    /* Switch to the first VT */
-    if (!switch_vt(0)) return FALSE;
-    kprintf("Switched to VT 0\n");
-
+    if (!switch_vt(VT_LOG)) return FALSE;
+    kprintf("Switched to VT %d\n", active_vt);
     return TRUE; /* ensure a sane return for _kmain() */
 }
 
