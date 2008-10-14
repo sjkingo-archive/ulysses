@@ -9,6 +9,12 @@
  */
 void memset(void *dest, int c, size_t len);
 
+/* memcpy()
+ *  Copy n bytes from src to dest. The destination must be large enough.
+ *  Return a pointer to start of dest.
+ */
+void *memcpy(void *dest, const void *src, size_t n);
+
 /* strlen()
  *  Calculate length of s, excluding the terminating '\0' char.
  *  Returns the length.
