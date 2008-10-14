@@ -1,5 +1,5 @@
 PROJECT_NAME = Ulysses
-INPUT = arch boot include kernel lib
+INPUT = arch include kernel lib
 OUTPUT_DIRECTORY = docs
 SOURCE_BROWSER = yes
 FILE_PATTERNS = *.h *.c *.asm *.s
