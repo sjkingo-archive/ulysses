@@ -3,7 +3,7 @@
 #include "../../kernel/kernel.h"
 
 #include <string.h> /* for memset() */
-#include <types.h> /* for flag_t */
+#include <sys/types.h> /* for flag_t */
 
 extern unsigned int end; /* end of kernel: declared in linker.ld */
 

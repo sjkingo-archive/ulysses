@@ -23,7 +23,7 @@
 #endif
 
 /* POSIX system includes */
-#include <types.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 /* The main kernel data structure */

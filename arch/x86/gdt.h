@@ -6,7 +6,7 @@
  * through.
  */
 
-#include <types.h>
+#include <sys/types.h>
 
 struct gdt_entry_struct {
     unsigned short limit_low;

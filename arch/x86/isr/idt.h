@@ -7,7 +7,7 @@
  * any interrupts and instead default to triple-faulting.
  */
 
-#include <types.h>
+#include <sys/types.h>
 
 struct idt_entry_struct {
     unsigned short base_low; /* lower 16 bits to jump to */

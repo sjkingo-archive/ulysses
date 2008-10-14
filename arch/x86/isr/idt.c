@@ -4,7 +4,7 @@
 #include "../util.h"
 
 #include <string.h>
-#include <types.h>
+#include <sys/types.h>
 
 static void idt_set_gate(unsigned char num, unsigned int base, 
         unsigned short sel, unsigned char flags)

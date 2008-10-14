@@ -7,7 +7,7 @@
  */
 
 #include "isr/isr.h" /* for registers_t */
-#include <types.h> /* for flag_t */
+#include <sys/types.h> /* for flag_t */
 
 #define INDEX_FROM_BIT(a) (a/32)
 #define OFFSET_FROM_BIT(a) (a%32)
