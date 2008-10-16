@@ -5,7 +5,7 @@
 #include <string.h> /* for memset() */
 #include <sys/types.h> /* for flag_t */
 
-extern unsigned int end; /* end of kernel: declared in linker.ld */
+extern unsigned int end; /* end addr of kernel: declared in linker.ld */
 
 unsigned int kmalloc(unsigned int size, flag_t align, unsigned int *phys)
 {
@@ -36,6 +36,9 @@ static void clear_frame(unsigned int frame_addr)
     frames[INDEX_FROM_BIT(frame)] &= ~(0x1 << OFFSET_FROM_BIT(frame));
 }
 
+/* first_frame()
+ *  Find the first free page frame and return its index.
+ */
 static unsigned int first_frame(void)
 {
     unsigned int i, j;
@@ -48,6 +51,9 @@ static unsigned int first_frame(void)
     return -1; /* no free frames */
 }
 
+/* switch_page_dir()
+ *  Change the current page directory on the CPU.
+ */
 static void switch_page_dir(page_dir_t *dir)
 {
     unsigned int cr0;
@@ -58,6 +64,11 @@ static void switch_page_dir(page_dir_t *dir)
     __asm__ __volatile__("mov %0, %%cr0" : : "r" (cr0));
 }
 
+/* get_page()
+ *  Return the page entry matching the given *virtual* address from page
+ *  directory dir. If the address is not assigned to a page entry and make
+ *  is set, create and assign the entry.
+ */
 static page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
 {
     unsigned int index = addr / 0x1000;
@@ -80,7 +91,10 @@ static page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
     return 0; /* did nothing */
 }
 
-void alloc_frame(page_t *page, int is_kernel, int is_writeable)
+/* alloc_frame()
+ *  Allocate the frame in the given page entry.
+ */
+static void alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
     unsigned int index; /* index of first free frame */
 
@@ -96,7 +110,10 @@ void alloc_frame(page_t *page, int is_kernel, int is_writeable)
     page->frame = index;
 }
 
-void free_frame(page_t *page)
+/* free_frame()
+ *  Deallocate the given page entry's frame.
+ */
+static void free_frame(page_t *page)
 {
     unsigned int frame;
     if (!(frame = page->frame)) return; /* no allocated frames in page */
