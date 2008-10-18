@@ -10,7 +10,7 @@
 #include <sys/types.h>
 
 #define NUM_VT 4
-#define VT_LOG NUM_VT - 1
+#define VT_LOG (NUM_VT - 1)
 
 #define MAX_CHARS 10000 /* XXX */
 typedef struct _vt {
