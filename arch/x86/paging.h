@@ -1,6 +1,6 @@
 
-#ifndef _PAGING_H
-#define _PAGING_H
+#ifndef _x86_PAGING_H
+#define _x86_PAGING_H
 
 /* This is the x86 paging code. It sets up a page table and tells the CPU
  * about it. This provides us with virtual memory!

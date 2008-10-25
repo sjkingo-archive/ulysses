@@ -1,6 +1,6 @@
 
-#ifndef _GDT_H
-#define _GDT_H
+#ifndef _x86_GDT_H
+#define _x86_GDT_H
 
 /* This is the global descriptor table that x86 kindly gives us segmentation
  * through.

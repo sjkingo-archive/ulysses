@@ -1,9 +1,6 @@
 
 #include "../../kernel/kernel.h"
-
 #include "timer.h"
-#include "isr/isr.h"
-#include "util.h"
 
 void timer_tick(registers_t regs)
 {

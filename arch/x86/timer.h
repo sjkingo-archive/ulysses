@@ -1,6 +1,6 @@
 
-#ifndef _TIMER_H
-#define _TIMER_H
+#ifndef _x86_TIMER_H
+#define _x86_TIMER_H
 
 /* The CPU timer */
 

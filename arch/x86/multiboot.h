@@ -1,6 +1,6 @@
 
-#ifndef _MULTIBOOT_H
-#define _MULTIBOOT_H
+#ifndef _x86_MULTIBOOT_H
+#define _x86_MULTIBOOT_H
 
 /* This is the Multiboot header file for Intel x86. It declares the structs
  * that a Multiboot loader will store in memory for us. Note that since all

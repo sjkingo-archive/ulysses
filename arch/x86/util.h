@@ -1,6 +1,6 @@
 
-#ifndef _UTIL_H
-#define _UTIL_H
+#ifndef _x86_UTIL_H
+#define _x86_UTIL_H
 
 /* This is for all random x86-related utility functions. */
 
