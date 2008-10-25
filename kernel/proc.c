@@ -30,6 +30,14 @@ void init_proc(void)
 #if DEBUG
     kprintf("init_proc(): proc table set up\n");
 #endif
+
+    /* Set up the idle process */
+    new_proc(-1, -1, -1, "IDLE");
+    proc[0].pid = PID_IDLE; /* XXX ignore the auto-generated pid */
+    sched(get_proc(PID_IDLE));
+#if DEBUG
+    kprintf("init_proc(): IDLE process set up\n");
+#endif
 }
 
 pid_t new_pid(void)

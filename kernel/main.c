@@ -42,18 +42,11 @@ void _kmain(void *mdb, unsigned int magic)
     if (!init_vt()) panic("Virtual terminals failed initialisation");
     print_startup();
 
-    /* Set up the process table and scheduling queues and add IDLE as first
-     * proc in table.
-     */
-    init_proc();
-    new_proc(-1, -1, -1, "IDLE");
-    proc[0].pid = PID_IDLE; /* XXX ignore the auto-generated pid */
-
+    init_proc(); /* set up process table and scheduling queues */
     sanity_check(); /* do a sanity check of the kernel */
 
-    /* Start IDLE going and never return */
-    sched(get_proc(PID_IDLE));
-    idle_task();
+    /* Force IDLE going and never return */
+    idle_task(); /* XXX */
     panic("_kmain() exited?");
 }
 
