@@ -12,6 +12,7 @@
 #include "../arch/halt.h" /* halt code to fall back on */
 #include "kprintf.h"
 #include "shutdown.h"
+#include "util.h"
 #include "vt.h"
 
 /* Arch-specific headers */
@@ -30,17 +31,6 @@ struct kernel {
     multiboot_info_t *mbi; /* multiboot info struct as passed by loader */
 };
 struct kernel kern;
-
-/* sanity_check()
- *  Perform a sanity check of the kernel's data structures and physical memory
- *  locations. If anything fails the check, a panic() will be issued.
- */
-void sanity_check(void);
-
-/* stub()
- *  Print stub information for a function name given if DEBUG.
- */
-void stub(char *fname);
 
 #endif
 
