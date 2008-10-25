@@ -13,6 +13,10 @@
 #include "screen.h"
 #include "util.h"
 
+/* kernel includes */
+#include "../kernel/kprintf.h"
+#include "../kernel/shutdown.h"
+
 /* startup_x86()
  *  Perform x86-specific startup.
  */

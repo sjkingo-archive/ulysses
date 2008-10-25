@@ -1,6 +1,5 @@
 
-#include "../../kernel/kernel.h"
-#include "timer.h"
+#include "x86.h"
 
 void timer_tick(registers_t regs)
 {

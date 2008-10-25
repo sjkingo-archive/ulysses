@@ -1,6 +1,5 @@
 
-#include "paging.h"
-#include "../../kernel/kernel.h"
+#include "x86.h"
 
 #include <string.h> /* for memset() */
 #include <sys/types.h> /* for flag_t */

@@ -1,7 +1,5 @@
 
-#include "idt.h"
-#include "isr.h"
-#include "../util.h"
+#include "../x86.h"
 
 #include <string.h>
 #include <sys/types.h>

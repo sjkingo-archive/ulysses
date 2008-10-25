@@ -1,5 +1,5 @@
 
-#include "gdt.h"
+#include "x86.h"
 
 #include <sys/types.h>
 

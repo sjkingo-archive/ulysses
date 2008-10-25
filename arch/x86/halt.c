@@ -3,7 +3,7 @@
  * and halt the CPU. Fall back to suiciding if that doesn't work.
  */
 
-#include "../kernel/kprintf.h"
+#include "x86.h"
 #include "../halt.h"
 
 void halt(void)

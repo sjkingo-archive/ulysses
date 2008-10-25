@@ -1,6 +1,5 @@
 
-#include "screen.h"
-#include "util.h"
+#include "x86.h"
 
 void init_screen(void)
 {
