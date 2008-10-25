@@ -8,27 +8,6 @@ static void gpf_handler(registers_t regs)
     panic("General protection fault");
 }
 
-static void print_memory_map(void)
-{
-    memory_map_t *mmap;
-    
-    if (!MB_FLAG(kern.mbi->flags, 0)) panic("No multiboot memory info");
-    if (!MB_FLAG(kern.mbi->flags, 6)) panic("No multiboot memory map");
-
-    kprintf("Lower memory: %u KB\nUpper memory: %u KB\n", kern.mbi->mem_lower,
-                kern.mbi->mem_upper);
-    kprintf("Memory map; addr %p, length %p\n", kern.mbi->mmap_addr, 
-            kern.mbi->mmap_length);
-    for (mmap = (memory_map_t *)kern.mbi->mmap_addr; (unsigned long)mmap < 
-            (kern.mbi->mmap_addr + kern.mbi->mmap_length);
-            mmap = (memory_map_t *)((unsigned long)mmap + mmap->size + 
-            sizeof(mmap->size))) {
-        kprintf("\tsize %p\tlength %p%x\ttype %p\tbase_addr %p%x\n",
-                mmap->size, mmap->length_high, mmap->length_low, mmap->type,
-                mmap->base_addr_high, mmap->base_addr_low);
-    }
-}
-
 void startup_x86(void *mdb, unsigned int magic)
 {
     init_screen(); /* must be first */

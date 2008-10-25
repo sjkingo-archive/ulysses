@@ -29,11 +29,13 @@ static void set_frame(unsigned int frame_addr)
     frames[INDEX_FROM_BIT(frame)] |= (0x1 << OFFSET_FROM_BIT(frame));
 }
 
+#if 0
 static void clear_frame(unsigned int frame_addr)
 {
     unsigned int frame = frame_addr / 0x1000;
     frames[INDEX_FROM_BIT(frame)] &= ~(0x1 << OFFSET_FROM_BIT(frame));
 }
+#endif
 
 /* first_frame()
  *  Find the first free page frame and return its index.
@@ -109,6 +111,7 @@ static void alloc_frame(page_t *page, int is_kernel, int is_writeable)
     page->frame = index;
 }
 
+#if 0
 /* free_frame()
  *  Deallocate the given page entry's frame.
  */
@@ -119,6 +122,7 @@ static void free_frame(page_t *page)
     clear_frame(frame);
     page->frame = 0x0;
 }
+#endif
 
 flag_t init_paging(void)
 {
