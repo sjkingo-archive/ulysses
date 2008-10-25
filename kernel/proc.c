@@ -2,6 +2,8 @@
 #include "kernel.h"
 #include "proc.h"
 
+#include <string.h>
+
 /* Internal function prototypes */
 pid_t new_pid(void);
 
@@ -52,14 +54,16 @@ void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
     proc[index].uid = uid;
     proc[index].egid = egid;
     proc[index].rgid = rgid;
-    proc[index].name[0] = name[0]; /* XXX to keep the compiler happy */
+    strcpy(proc[index].name, name);
     proc[index].ready = 1; /* ready to run */
     proc[0].s_ticks_left = SCHED_QUANTUM;
     proc[0].s_quantum_size = SCHED_QUANTUM;
 
 #if DEBUG
-    kprintf("new_proc(): %s, pid %d, uid %d, egid %d, rgid %d\n", name,
-            (unsigned int)uid, (unsigned int)egid, (unsigned int)rgid);
+    kprintf("new_proc(): %s, pid %d, uid %d, egid %d, rgid %d\n", 
+            proc[index].name, (unsigned int)proc[index].pid, 
+            (unsigned int)proc[index].uid, (unsigned int)proc[index].egid,
+            (unsigned int)proc[index].rgid);
 #endif
 }
 
