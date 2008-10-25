@@ -31,9 +31,16 @@ void flush_vt(void)
     flush_screen(virtual_terms[active_vt].data);
 }
 
-void append_char(const char c, flag_t write)
+void append_char(const char c, flag_t write, flag_t all)
 {
-    virtual_terms[active_vt].data[virtual_terms[active_vt].next++] = c;
+    if (all) {
+        unsigned short i;
+        for (i = 0; i < NUM_VT; i++) {
+            virtual_terms[i].data[virtual_terms[i].next++] = c;
+        }
+    } else {
+        virtual_terms[active_vt].data[virtual_terms[active_vt].next++] = c;
+    }
     if (write) put_char(c); /* write through to the screen directly */
 }
 

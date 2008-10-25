@@ -42,9 +42,9 @@ void flush_vt(void);
 
 /* append_char()
  *  Appends the given character to the current VT's buffer and writes it to
- *  screen if write is true.
+ *  screen if write is true. If all is true, write to all VTs.
  */
-void append_char(const char c, flag_t write);
+void append_char(const char c, flag_t write, flag_t all);
 
 #endif
 
