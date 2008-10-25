@@ -5,11 +5,17 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+/* kputc()
+ *  Append a raw character. All other kput..() call this.
+ */
 static void kputc(const char c, flag_t all)
 {
     append_char(c, TRUE, all);
 }
 
+/* kputs()
+ *  Print a NULL-terminated string character-by-character.
+ */
 static void kputs(const char *str, flag_t all)
 {
     const char *ptr; /* since we may want to change what str is pointing to */
@@ -22,16 +28,28 @@ static void kputs(const char *str, flag_t all)
     }
 }
 
+/* kputd()
+ *  Convert a signed integer to string and and put it. 
+ *  See kputdu() for unsigned.
+ */
 static void kputd(const int d, flag_t all)
 {
     kputs(itoa(d), all);
 }
 
+/* kputdu()
+ *  Convert an *un*signed integer to string and put it.
+ *  See kputd() for signed.
+ */
 static void kputdu(const unsigned int ud, flag_t all)
 {
     kputs(itoa(ud), all); /* XXX itoa() takes a signed int! */
 }
 
+/* kputx()
+ *  Given the hex table to use, convert to string and put.
+ *  hex_table can be either HEX_UPPER or HEX_LOWER.
+ */
 static void kputx(const unsigned long hex, const char hex_table[16], 
         flag_t all)
 {
@@ -46,8 +64,9 @@ static void kputx(const unsigned long hex, const char hex_table[16],
 }
 
 /* kprint()
- *  This formats and puts individual chars from the format string fmt.
- *  Thank you Ken Thompson for giving us this >_<
+ *  Formats and puts individual chars from the format string fmt. This does
+ *  the actual work of kprintf() and kprintf_all().
+ *  Thank you Ken Thompson for giving us this ugly mess >_<
  */
 static void kprint(const char *fmt, va_list argp, flag_t all)
 {
@@ -113,7 +132,7 @@ void kprintf_all(const char *fmt, ...)
 {
     va_list argp;
     va_start(argp, fmt);
-    kprint(fmt, argp, TRUE);
+    kprint(fmt, argp, TRUE); /* print to all VTs */
     va_end(argp);
 }
 
