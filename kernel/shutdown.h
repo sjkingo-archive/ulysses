@@ -7,8 +7,8 @@
  */
 
 /* panic()
- *  Prints the panic message and halts the CPU. Makes no effort to clean up
- *  and shut down processes cleanly.
+ *  Prints the panic message to all VTs and halts the CPU. 
+ *  Makes no effort to clean up and shut down processes cleanly.
  */
 void panic(const char *msg);
 
