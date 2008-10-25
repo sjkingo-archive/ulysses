@@ -1,6 +1,8 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#include <unistd.h> /* for NULL */
+
 #define TRUE 1
 #define FALSE 0
 
