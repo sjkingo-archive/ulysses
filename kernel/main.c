@@ -4,7 +4,7 @@
 
 static void print_startup(void)
 {
-    kprintf("Ulysses\tv0.2 (codename: Psycho)\n");
+    kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
 #endif

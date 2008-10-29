@@ -18,5 +18,12 @@
  */
 #define DEBUG 1
 
+/* VERSION_NUM
+ * VERSION_CN
+ *  Version number and codename of the kernel.
+*/
+#define VERSION_NUM "0.1.5"
+#define VERSION_CN "amnesiac"
+
 #endif
 
