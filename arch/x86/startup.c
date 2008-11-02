@@ -2,10 +2,12 @@
 #include "x86.h"
 #include "../../kernel/kernel.h"
 
-static void gpf_handler(registers_t regs)
+static void generic_handler(registers_t regs)
 {
-    kprintf("GPF: err_code: %d\n", regs.err_code);
-    panic("General protection fault");
+    switch (regs.int_no) {
+        case 0: panic("Divide by zero error");
+        case 13: panic("General protection fault");
+    }
 }
 
 void startup_x86(void *mdb, unsigned int magic)
@@ -17,16 +19,17 @@ void startup_x86(void *mdb, unsigned int magic)
         panic("Kernel not booted by a Multiboot loader");
     kern.mbi = (multiboot_info_t *)mdb;
 
-    /* Set up GDT, IDT and paging - NOTE the order is important! */
+    /* Set up GDT, IDT, paging, PIC clock timer.
+     * NOTE the order is important!
+     */
     if (!init_gdt()) panic("GDT failed initialisation\n");
     if (!init_idt()) panic("IDT failed initialisation");
     if (!init_paging()) panic("Paging failed initialisation");
-
-    /* Set up a handler for GPFs so we get some nice info */
-    register_interrupt_handler(13, &gpf_handler);
-
-    /* Start a clock timer going */
     if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
+
+    /* Register some interrupt handlers */
+    register_interrupt_handler(0, &generic_handler);
+    register_interrupt_handler(13, &generic_handler);
 }
 
 

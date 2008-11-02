@@ -17,6 +17,8 @@ flag_t init_timer(unsigned int freq)
     outb(0x40, (unsigned char)(div & 0xFF));
     outb(0x40, (unsigned char)((div >> 8) & 0xFF));
 
+    kprintf("Timer at %d Hz (divisor %d)\n", freq, div);
+
     return TRUE; /* ensure a sane return for _kmain() */
 }
 
