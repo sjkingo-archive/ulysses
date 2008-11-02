@@ -14,6 +14,7 @@
 #include "util.h"
 
 /* kernel includes */
+#include "../config.h"
 #include "../kernel/kprintf.h"
 #include "../kernel/shutdown.h"
 
