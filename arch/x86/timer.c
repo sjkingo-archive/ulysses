@@ -3,7 +3,7 @@
 
 void timer_tick(registers_t regs)
 {
-    kprintf("Timer tick %d\n", ++ticks);
+    ticks++;
 }
 
 flag_t init_timer(unsigned int freq)
