@@ -2,26 +2,6 @@
 #ifndef _ISR_H
 #define _ISR_H
 
-/* Since we remap IRQs to interrupt numbers >= 32, assign a useful name to
- * each of them.
- */
-#define IRQ0 32
-#define IRQ1 33
-#define IRQ2 34
-#define IRQ3 35
-#define IRQ4 36
-#define IRQ5 37
-#define IRQ6 38
-#define IRQ7 39
-#define IRQ8 40
-#define IRQ9 41
-#define IRQ10 42
-#define IRQ11 43
-#define IRQ12 44
-#define IRQ13 45
-#define IRQ14 46
-#define IRQ15 47
-
 typedef struct registers {
     unsigned int ds; /* data segment selector */
     unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; /* from pusha */
@@ -29,7 +9,7 @@ typedef struct registers {
     unsigned int eip, cs, eflags, useresp, ss; /* CPU gives us these */
 } registers_t;
 
-/* Callback for IRQ handling */
+/* Callback for interrupt handler */
 typedef void (*isr_t)(registers_t);
 
 /* Interrupt vectors */
@@ -96,23 +76,46 @@ extern void isr31();
 
 /* and anything 32 -> 256 are configurable by us */
 
-/* Programmable IRQ vectors */
-extern void irq0();
-extern void irq1();
-extern void irq2();
-extern void irq3();
-extern void irq4();
-extern void irq5();
-extern void irq6();
-extern void irq7();
-extern void irq8();
-extern void irq9();
-extern void irq10();
-extern void irq11();
-extern void irq12();
-extern void irq13();
-extern void irq14();
-extern void irq15();
+/* Since we remap IRQs to interrupt numbers >= 32, assign a useful name to
+ * each of them.
+ */
+#define IRQ0 32
+#define IRQ1 33
+#define IRQ2 34
+#define IRQ3 35
+#define IRQ4 36
+#define IRQ5 37
+#define IRQ6 38
+#define IRQ7 39
+#define IRQ8 40
+#define IRQ9 41
+#define IRQ10 42
+#define IRQ11 43
+#define IRQ12 44
+#define IRQ13 45
+#define IRQ14 46
+#define IRQ15 47
+
+/* Programmable IRQ vectors. These get remapped to INT32 and onwards */
+/* Master PIC */
+extern void irq0(); /* system timer */
+extern void irq1(); /* keyboard */
+extern void irq2(); /* redirected to IRQ9 */
+extern void irq3(); /* com 2/4 */
+extern void irq4(); /* com 1/3 */
+extern void irq5(); /* sound card */
+extern void irq6(); /* floppy disk */
+extern void irq7(); /* parallel */
+
+/* Slave PIC */
+extern void irq8(); /* RT clock */
+extern void irq9(); /* redirected from IRQ2 */
+extern void irq10(); /* reserved */
+extern void irq11(); /* reserved */
+extern void irq12(); /* ps2 mouse */
+extern void irq13(); /* maths co-processor */
+extern void irq14(); /* hard disk */
+extern void irq15(); /* reserved */
 
 /* phew. now look in interrupt.s... */
 
