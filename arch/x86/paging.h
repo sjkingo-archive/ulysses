@@ -12,7 +12,7 @@
  * back to the directory, which wastes 256 MB of addressable space.
  */
 
-#include "isr/isr.h" /* for registers_t */
+#include "isr.h" /* for registers_t */
 #include <sys/types.h> /* for flag_t */
 
 #define INDEX_FROM_BIT(a) (a/32)

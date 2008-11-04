@@ -1,5 +1,5 @@
 
-#include "../x86.h"
+#include "x86.h"
 
 #include <string.h>
 #include <sys/types.h>

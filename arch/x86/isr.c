@@ -1,5 +1,5 @@
 
-#include "../x86.h"
+#include "x86.h"
 
 void isr_handler(registers_t regs)
 {
