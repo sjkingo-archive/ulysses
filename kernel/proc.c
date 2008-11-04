@@ -131,7 +131,6 @@ void idle_task(void)
 #if DEBUG
     kprintf("Putting CPU in idle...\n");
 #endif
-    __asm__("sti");
     __asm__("hlt");
 }
 

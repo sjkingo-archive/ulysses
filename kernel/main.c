@@ -47,6 +47,5 @@ void _kmain(void *mdb, unsigned int magic)
 
     /* Force IDLE going and never return */
     idle_task(); /* XXX */
-    panic("_kmain() exited?");
 }
 

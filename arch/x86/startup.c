@@ -41,6 +41,9 @@ void startup_x86(void *mdb, unsigned int magic)
     /* Register some interrupt handlers */
     register_interrupt_handler(0, &generic_handler);
     register_interrupt_handler(13, &generic_handler);
+
+    /* And finally, enable interrupts */
+    __asm__ __volatile__("sti");
 }
 
 
