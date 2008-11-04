@@ -21,7 +21,6 @@ flag_t init_idt(void)
 
     /* Initialise the IDT and handlers to 0 */
     memset(&idt_entries, 0, sizeof(idt_entry_t) * 256);
-    memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 
     /* Remap the IRQ table since they share common interrupt numbers as
      * CPU-generated interrupts.
@@ -90,6 +89,8 @@ flag_t init_idt(void)
     idt_set_gate(47, (unsigned int)irq15, 0x08, 0x8E);
 
     idt_flush((unsigned int)&idt_ptr); /* declared in flush.s */
+    
+    memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 
     return TRUE; /* clean return for kmain() */
 }
