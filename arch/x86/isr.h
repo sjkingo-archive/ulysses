@@ -20,11 +20,6 @@ isr_t interrupt_handlers[256];
  */
 void isr_handler(registers_t regs);
 
-/* test_interrupts()
- *  Generate interrupts 0 -> 18, in order.
- */
-void test_interrupts(void);
-
 /* register_interrupt_handler()
  *  Register the given function as a vector for IRQ n.
  */
