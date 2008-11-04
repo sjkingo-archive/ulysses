@@ -37,5 +37,8 @@ flag_t init_gdt(void);
 /* XXX move this to inline assembler */
 extern void gdt_flush(unsigned int);
 
+/* See flush.s for assembler routine for this. */
+extern void enter_pm(void);
+
 #endif
 

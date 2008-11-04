@@ -3,6 +3,7 @@
 
 global gdt_flush
 global idt_flush
+global enter_pm
 
 gdt_flush:
     ; get pointer to gdt struct and load it
@@ -25,5 +26,16 @@ gdt_flush:
 idt_flush:
     mov eax, [esp+4]
     lidt [eax]
+    ret
+
+; Enter protected mode
+enter_pm:
+    cli ; not re-entrant
+    mov eax, cr0
+    or eax, 1 ; PM bit
+    mov cr0, eax
+    jmp 0x08:.pm ; far jump into protected mode
+.pm:
+    sti
     ret
 

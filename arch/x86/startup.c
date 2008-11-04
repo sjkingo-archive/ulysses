@@ -10,6 +10,13 @@ static void generic_handler(registers_t regs)
     }
 }
 
+static flag_t init_pm(void)
+{
+    enter_pm(); /* see flush.s */
+    kprintf("Switched to protected mode\n");
+    return TRUE;
+}
+
 void startup_x86(void *mdb, unsigned int magic)
 {
     init_screen(); /* must be first */
@@ -19,12 +26,16 @@ void startup_x86(void *mdb, unsigned int magic)
         panic("Kernel not booted by a Multiboot loader");
     kern.mbi = (multiboot_info_t *)mdb;
 
-    /* Set up GDT, IDT, paging, PIC clock timer.
-     * NOTE the order is important!
+    /* Set up and load the GDT and IDT into the CPU. Then enable paging
+     * and switch to protected mode. Then bring up the PIC clock timer.
+     * 
+     * NOTE the order is important! GDT, IDT and Paging MUST be before
+     * PM!
      */
     if (!init_gdt()) panic("GDT failed initialisation\n");
     if (!init_idt()) panic("IDT failed initialisation");
     if (!init_paging()) panic("Paging failed initialisation");
+    if (!init_pm()) panic("Protected mode failed initialisation");
     if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
 
     /* Register some interrupt handlers */
