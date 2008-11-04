@@ -1,35 +1,38 @@
 
-global _loader
+global loader
+global mboot
+
 extern _kmain
+extern code
+extern bss
+extern end
 
 ; multiboot header
 MODULEALIGN equ 1 << 0 ; do alignment on page boundaries
-MEMINFO equ 1 << 0 ; memory map
+MEMINFO equ 1 << 1 ; memory map
 FLAGS equ MODULEALIGN | MEMINFO ; multiboot flag
 MAGIC equ 0x1BADB002 ; bad boo 2?
 CHECKSUM equ -(MAGIC + FLAGS)
 
-section .text
-align 4
-MultiBootHeader:
+[bits 32]
+
+mboot:
     dd MAGIC
     dd FLAGS
     dd CHECKSUM
 
-STACKSIZE equ 0x4000 ; 16 KB of kernel stack
+    dd mboot
+    dd code
+    dd bss
+    dd end
+    dd loader
 
 ; call the kernel
-_loader:
-    mov esp, stack+STACKSIZE ; we now have a stack
+loader:
     push eax ; multiboot magic num
     push ebx ; multiboot info struct
 
+    cli ; we don't want interrupts for a while yet
     call _kmain
-    cli ; disable interrupts
-    hlt ; halt the CPU
-
-section .bss
-align 32
-stack:
-    resb STACKSIZE ; 16 KB stack of quadword boundary
+    jmp $ ; infinite loop
 
