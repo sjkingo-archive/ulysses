@@ -3,8 +3,7 @@
 
 void timer_tick(registers_t regs)
 {
-    if (regs.int_no != IRQ0) panic("timer_tick() called for IRQ %d\n", 
-            regs.int_no);
+    if (regs.int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
     ticks++;
 }
 

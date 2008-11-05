@@ -1,20 +1,13 @@
 
 /* kernel.h includes shutdown.h for us */
 #include "kernel.h"
-#include <stdarg.h>
 
-void panic(const char *msg, ...)
+void panic(const char *msg)
 {
     static int panicking = 0;
     if (panicking++) return; /* prevent recursive panics - thanks AST */
 
-    /* Format and print the panic */
-    va_list argp;
-    va_start(argp, msg);
-    kprintf_all("\nKernel panic: ");
-    kprintf(msg, argp, TRUE); /* _all */
-    kprintf("\n");
-    va_end(argp);
+    kprintf_all("\nKernel panic: %s\n", msg);
 
 #if __GNUC__
     /* GCC provides us with some nice debugging internals: dump them if built

@@ -7,12 +7,10 @@
  */
 
 /* panic()
- *  Prints the panic message to all VTs and halts the CPU. Can accept a
- *  variable arguments list and format like kprintf().
- *
+ *  Prints the panic message to all VTs and halts the CPU. 
  *  Makes no effort to clean up and shut down processes cleanly.
  */
-void panic(const char *msg, ...);
+void panic(const char *msg);
 
 /* shutdown()
  *  Cleanly shuts down the operating system.
