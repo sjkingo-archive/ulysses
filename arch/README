@@ -1,4 +1,0 @@
-This directory is organised into arch-specific code. 
-
-Declare the correct arch in /config.h. If no valid arch is found, we fall
-back to common, which *should* work on any arch, but that is unknown.
