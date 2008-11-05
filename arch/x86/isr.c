@@ -20,9 +20,6 @@ void isr_handler(registers_t regs)
 void register_interrupt_handler(unsigned char n, isr_t handler)
 {
     interrupt_handlers[n] = handler;
-#if DEBUG
-    kprintf("Interrupt handler registered for INT %d\n", n);
-#endif
 }
 
 void irq_handler(registers_t regs)
@@ -34,11 +31,12 @@ void irq_handler(registers_t regs)
     }
 
     /* Since we don't care about a lot of IRQs, we can just ignore any
-     * that don't have a handler. Do this here instead of calling the
-     * interrupt handler above (which would panic if unhandled).
+     * that don't have a handler.
      */
     isr_t handler = interrupt_handlers[regs.int_no];
-    if (handler == NULL) kprintf("Unhandled IRQ %d\n", regs.int_no);
-    else handler(regs);
+    if (handler != NULL) handler(regs);
+#if DEBUG
+    else kprintf("Unhandled IRQ %d\n", regs.int_no);
+#endif
 }
 

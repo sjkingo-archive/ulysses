@@ -2,14 +2,16 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-/* Main kernel configuration file. Set any global pre-processor definitions
- * here (all global variables should go in kernel/kernel.h instead).
+/* Main kernel configuration file. 
+ *
+ * This is for global pre-processor definitions only - all global variables 
+ * should go in kernel/kernel.h instead.
  */
 
 /* _ARCH_x
  *  The architecture to build the kernel for. x must be a directory in
- *  arch/ and have a corresponding include in kernel/kernel.h for this to
- *  work.
+ *  arch/ with targets set in SConstruct, and have a corresponding include in 
+ *  kernel/kernel.h for this to work.
  */
 #define _ARCH_x86
 

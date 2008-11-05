@@ -2,6 +2,21 @@
 #ifndef _ISR_H
 #define _ISR_H
 
+/* Interrupt service routines. This declares the handling for interrupts
+ * generated after we load the IDT. We handle both CPU-generated interrupts
+ * (vectors 0 to 31) and IRQ-generated hardware interrupts (vectors 32 to 47)
+ * here.
+ *
+ * Since 8086 maps the IRQ table over the top of the CPU interrupt vectors
+ * by default, we need to remap the IRQ interrupts to vectors 32 and onward
+ * so not to mask any CPU-generated interrupts.
+ *
+ * In general, IRQ-generated interrupts are safe to ignore, however ignoring
+ * a CPU-generated interrupt can easily lead to certain protection mechanisms
+ * (set up in the GDT) to be violated. This will cause the CPU-interrupt to be
+ * closely followed by a GPF (int 13).
+ */
+
 typedef struct registers {
     unsigned int ds; /* data segment selector */
     unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; /* from pusha */
@@ -30,10 +45,7 @@ void register_interrupt_handler(unsigned char n, isr_t handler);
  */
 void irq_handler(registers_t regs);
 
-/* These are the interrupt handler stubs. They are declared in interrupt.s.
- * This is very messy, since the CPU has the possibility of generating 32
- * interrupts (and will triple fault if no handler exists for them).
- */
+/* CPU-generated interrupt handler stubs; declared in interrupt.s */
 extern void isr0(); /* div by zero */
 extern void isr1(); /* debug */
 extern void isr2(); /* non-maskable interrupt */
@@ -54,7 +66,7 @@ extern void isr16(); /* coprocessor fault */
 extern void isr17(); /* alignment check */
 extern void isr18(); /* machine exception */
 
-/* the rest are reserved... */
+/* Vectors 19 to 31 are reserved for __future__ by Intel */
 extern void isr19();
 extern void isr20();
 extern void isr21();
@@ -69,9 +81,9 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
-/* and anything 32 -> 256 are configurable by us */
+/* Vectors 32 to 256 are configurable by us */
 
-/* Since we remap IRQs to interrupt numbers >= 32, assign a useful name to
+/* Since we remap IRQs to interrupt vectors >= 32, assign a useful name to
  * each of them.
  */
 #define IRQ0 32
@@ -91,7 +103,7 @@ extern void isr31();
 #define IRQ14 46
 #define IRQ15 47
 
-/* Programmable IRQ vectors. These get remapped to INT32 and onwards */
+/* Programmable IRQ vectors. These get remapped to vector 32 and onwards */
 /* Master PIC */
 extern void irq0(); /* system timer */
 extern void irq1(); /* keyboard */

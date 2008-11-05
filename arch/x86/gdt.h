@@ -2,8 +2,9 @@
 #ifndef _x86_GDT_H
 #define _x86_GDT_H
 
-/* This is the global descriptor table that x86 kindly gives us segmentation
- * through.
+/* This is the global descriptor table that we need to load into the CPU. 
+ * The GDT tells the CPU information about global memory segments, assisting
+ * in protection and privilege granting for access.
  */
 
 #include <sys/types.h>
@@ -33,11 +34,8 @@ gdt_entry_t gdt_entries[5];
  */
 flag_t init_gdt(void);
 
-/* See flush.s for assembler routine for this. */
-/* XXX move this to inline assembler */
+/* See flush.s for assembler routines for these */
 extern void gdt_flush(unsigned int);
-
-/* See flush.s for assembler routine for this. */
 extern void enter_pm(void);
 
 #endif

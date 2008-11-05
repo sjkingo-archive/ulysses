@@ -2,9 +2,10 @@
 #ifndef _IDT_H
 #define _IDT_H
 
-/* Interrupt descriptor table. This declares all of the CPU interrupts handling
- * code. Be sure to not corrupt the IDT, or the CPU will be unable to lookup
- * any interrupts and instead default to triple-faulting.
+/* Interrupt descriptor table. We load this into the CPU so it can determine
+ * interrupt vectors and exception handling responses.
+ *
+ * Interrupt handlers do not belong here: see isr.{c,h}.
  */
 
 #include <sys/types.h>
