@@ -1,6 +1,0 @@
-PROJECT_NAME = Ulysses
-INPUT = ../arch ../include ../kernel ../lib
-OUTPUT_DIRECTORY = doxygen
-SOURCE_BROWSER = yes
-FILE_PATTERNS = *.h *.c *.asm *.s
-RECURSIVE = YES
