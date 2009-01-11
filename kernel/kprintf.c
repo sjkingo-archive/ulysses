@@ -54,11 +54,13 @@ static void kputx(const unsigned long hex, const char hex_table[16],
         flag_t all)
 {
     unsigned long h = hex; /* since we are modifying it */
-    char *str;
+    char str[16];
+    char *ptr = str;
 
     do {
-        *--str = hex_table[(h % 0x10)];
+        *ptr++ = hex_table[(h % 0x10)];
     } while ((h /= 0x10) > 0);
+    *ptr = '\0';
 
     kputs(str, all);
 }
