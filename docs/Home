@@ -1,1 +1,10 @@
-This is Ulysses, a tiny operating system.
+== Ulysses
+
+This is //Ulysses//, a tiny operating system.
+
+It is named after the [[http://en.wikipedia.org/wiki/Ulysses_(novel)|novel]] that I fell in love with by [[http://en.wikipedia.org/wiki/James_Joyce|James Joyce]].
+
+== Bloom
+
+Named after the book's [[http://en.wikipedia.org/wiki/Leopold_Bloom|protagonist]],
+//Bloom// is the [[http://en.wikipedia.org/wiki/C_standard_library|libc]] implementation that //Ulysses// uses.
