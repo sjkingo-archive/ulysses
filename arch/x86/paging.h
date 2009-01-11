@@ -55,5 +55,22 @@ flag_t init_paging(void);
  */
 void page_fault(registers_t regs);
 
+/* get_page()
+ *  Return the page entry matching the given *virtual* address from page
+ *  directory dir. If the address is not assigned to a page entry and make
+ *  is set, create and assign the entry.
+ */
+page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir);
+
+/* alloc_frame()
+ *  Allocate the frame in the given page entry.
+ */
+void alloc_frame(page_t *page, int is_kernel, int is_writeable);
+
+/* free_frame()
+ *  Deallocate the given page entry's frame.
+ */
+void free_frame(page_t *page);
+
 #endif
 

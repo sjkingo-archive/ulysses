@@ -6,7 +6,8 @@
 
 extern unsigned int end; /* end addr of kernel: declared in linker.ld */
 
-unsigned int kmalloc(unsigned int size, flag_t align, unsigned int *phys)
+static unsigned int kmalloc_paging(unsigned int size, flag_t align, 
+        unsigned int *phys)
 {
     /* Perform alignment */
     if (align && (placement_address & 0xFFFFF000)) {
@@ -29,13 +30,11 @@ static void set_frame(unsigned int frame_addr)
     frames[INDEX_FROM_BIT(frame)] |= (0x1 << OFFSET_FROM_BIT(frame));
 }
 
-#if 0
 static void clear_frame(unsigned int frame_addr)
 {
     unsigned int frame = frame_addr / 0x1000;
     frames[INDEX_FROM_BIT(frame)] &= ~(0x1 << OFFSET_FROM_BIT(frame));
 }
-#endif
 
 /* first_frame()
  *  Find the first free page frame and return its index.
@@ -70,7 +69,7 @@ static void switch_page_dir(page_dir_t *dir)
  *  directory dir. If the address is not assigned to a page entry and make
  *  is set, create and assign the entry.
  */
-static page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
+page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
 {
     unsigned int index = addr / 0x1000;
     unsigned int table_index = index / 1024;
@@ -83,7 +82,8 @@ static page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
     if (make) {
         unsigned int tmp;
         dir->tables[table_index] = 
-                    (page_table_t *)kmalloc(sizeof(page_table_t), 1, &tmp);
+                    (page_table_t *)kmalloc_paging(sizeof(page_table_t), 
+                    1, &tmp);
         memset(dir->tables[table_index], 0, 0x1000);
         dir->tables_phys[table_index] = tmp | 0x7; /* present, rw, us */
         return (&dir->tables[table_index]->pages[index % 1024]);
@@ -95,7 +95,7 @@ static page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
 /* alloc_frame()
  *  Allocate the frame in the given page entry.
  */
-static void alloc_frame(page_t *page, int is_kernel, int is_writeable)
+void alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
     unsigned int index; /* index of first free frame */
 
@@ -111,18 +111,16 @@ static void alloc_frame(page_t *page, int is_kernel, int is_writeable)
     page->frame = index;
 }
 
-#if 0
 /* free_frame()
  *  Deallocate the given page entry's frame.
  */
-static void free_frame(page_t *page)
+void free_frame(page_t *page)
 {
     unsigned int frame;
     if (!(frame = page->frame)) return; /* no allocated frames in page */
     clear_frame(frame);
     page->frame = 0x0;
 }
-#endif
 
 flag_t init_paging(void)
 {
@@ -132,11 +130,12 @@ flag_t init_paging(void)
     placement_address = (unsigned int)&end;
     //nframes = kern.mbi->mem_upper / 0x1000;
     nframes = 0x500000 / 0x1000; /* XXX 8 MB */
-    frames = (unsigned int *)kmalloc(INDEX_FROM_BIT(nframes), 0, NULL);
+    frames = (unsigned int *)kmalloc_paging(INDEX_FROM_BIT(nframes), 0, NULL);
     memset(frames, 0, INDEX_FROM_BIT(nframes));
 
     /* Set up a page directory */
-    kernel_directory = (page_dir_t *)kmalloc(sizeof(page_dir_t), 1, NULL);
+    kernel_directory = (page_dir_t *)kmalloc_paging(sizeof(page_dir_t), 
+            1, NULL);
     memset(kernel_directory, 0, sizeof(page_dir_t));
     current_directory = kernel_directory;
     
