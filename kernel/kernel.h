@@ -10,6 +10,7 @@
 /* Our own headers */
 #include "../config.h" /* must be first */
 #include "../arch/halt.h" /* halt code to fall back on */
+#include "initrd.h"
 #include "kprintf.h"
 #include "shutdown.h"
 #include "util.h"

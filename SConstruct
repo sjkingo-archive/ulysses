@@ -1,10 +1,10 @@
 
 arch_sources = [ 'arch/x86/%s' % file for file in [ 'startup.c', 'halt.c', 
         'util.c', 'timer.c', 'gdt.c', 'flush.s', 'paging.c', 'screen.c', 
-        'loader.s', 'idt.c', 'interrupt.s', 'isr.c' ] ]
+        'loader.s', 'idt.c', 'interrupt.s', 'isr.c', 'kheap.c', 'oarray.c' ] ]
 
-kern_sources = [ 'kernel/%s' % file for file in [ 'main.c', 'kprintf.c', 
-        'proc.c', 'shutdown.c', 'vt.c', 'util.c' ] ]
+kern_sources = [ 'kernel/%s' % file for file in [ 'main.c', 'initrd.c', 
+        'kprintf.c', 'proc.c', 'shutdown.c', 'vfs.c', 'vt.c', 'util.c' ] ]
 
 lib_sources = [ 'lib/%s' % file for file in [ 'itoa.c', 'string.c' ] ]
 

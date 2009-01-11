@@ -42,6 +42,8 @@ void _kmain(void *mdb, unsigned int magic)
     print_startup();
     print_memory_map();
 
+    init_initrd(*(unsigned int *)kern.mbi->mods_addr);
+
     init_proc(); /* set up process table and scheduling queues */
     sanity_check(); /* do a sanity check of the kernel */
 
