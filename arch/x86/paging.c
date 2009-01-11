@@ -159,7 +159,7 @@ void page_fault(registers_t regs)
     __asm__ __volatile("mov %%cr2, %0" : "=r" (faulting_addr));
 
     /* Print some info */
-    kprintf("Page fault at %x with error %d\n", faulting_addr, regs.err_code);
+    kprintf("Page fault at %p with error %d:\n", faulting_addr, regs.err_code);
     if (!(regs.err_code & 0x1)) kprintf("\tpage not present \n");
     if (regs.err_code & 0x2) kprintf("\twrite operation\n");
     if (regs.err_code & 0x4) kprintf("\t!ring 0\n");
