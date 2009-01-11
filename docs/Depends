@@ -1,0 +1,10 @@
+== To build
+
+* gcc 4.2
+* scons
+* nasm
+
+== To run
+
+* qemu (requires gcc 3 to build)
+* gdb 6

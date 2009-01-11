@@ -1,6 +1,0 @@
-gcc 4.2
-doxygen
-gdb 6
-qemu (requires gcc 3 to build)
-nasm
-scons
