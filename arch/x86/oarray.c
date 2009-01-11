@@ -41,7 +41,7 @@ oarray_t place_oarray(void *addr, unsigned int max_size,
 
 void destroy_oarray(oarray_t *array)
 {
-//    kfree(array->array);
+    kfree(array->array);
 }
 
 void insert_oarray(type_t item, oarray_t *array)
