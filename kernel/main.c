@@ -25,7 +25,7 @@ static void print_memory_map(void)
             (kern.mbi->mmap_addr + kern.mbi->mmap_length);
             mmap = (memory_map_t *)((unsigned long)mmap + mmap->size + 
             sizeof(mmap->size))) {
-        kprintf("\tsize %p\tlength %p%x\ttype %p\tbase_addr %p%x\n",
+        kprintf("\tsize %p\tlength %p%x\ttype %x\tbase_addr %p%x\n",
                 mmap->size, mmap->length_high, mmap->length_low, mmap->type,
                 mmap->base_addr_high, mmap->base_addr_low);
     }
@@ -40,10 +40,12 @@ void _kmain(void *mdb, unsigned int magic)
     /* Set up the virtual terminals - this will switch us to the LOG VT */
     if (!init_vt()) panic("Virtual terminals failed initialisation");
     print_startup();
-    print_memory_map();
 
-    init_initrd(*(unsigned int *)kern.mbi->mods_addr);
+#if DEBUG
+    print_memory_map(); /* print memory map given by multiboot */
+#endif
 
+    init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_proc(); /* set up process table and scheduling queues */
     sanity_check(); /* do a sanity check of the kernel */
 
