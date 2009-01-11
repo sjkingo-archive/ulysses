@@ -27,5 +27,11 @@ size_t strlen(const char *s);
  */
 char *strcpy(char *dest, const char *src);
 
+/* strcmp()
+ *   Compares the given strings and returns -1 if s1 is less than s2, 0 if
+ *   equal, or 1 if greater than.
+ */
+int strcmp(const char *s1, const char *s2);
+
 #endif
 
