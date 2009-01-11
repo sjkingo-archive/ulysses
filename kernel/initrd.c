@@ -16,7 +16,7 @@ int nroot_nodes;
 struct dirent dirent;
 
 static unsigned int initrd_read(fs_node_t *node, unsigned int offset, 
-        unsigned int size, unsigned int *buffer)
+        unsigned int size, unsigned char *buffer)
 {
     initrd_file_header_t header = file_headers[node->inode];
     if (offset > header.length) return 0;
@@ -38,7 +38,7 @@ static struct dirent *initrd_readdir(fs_node_t *node, unsigned int index)
         return &dirent;
     }
 
-    if ((index - 1) >= nroot_nodes) {
+    if ((int)(index - 1) >= nroot_nodes) {
         return 0;
     }
 
@@ -70,7 +70,7 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
 
 fs_node_t *init_initrd(unsigned int loc)
 {
-    int i;
+    unsigned int i;
 
     initrd_header = (initrd_header_t *)loc;
     file_headers = (initrd_file_header_t *) (loc + sizeof(initrd_header_t));
@@ -118,7 +118,7 @@ fs_node_t *init_initrd(unsigned int loc)
     for (i = 0; i < initrd_header->nfiles; i++) {
         /* Edit the file's header and alter the relative file offset. */
         file_headers[i].offset += loc;
-        strcpy(root_nodes[i].name, &file_headers[i].name);
+        strcpy(root_nodes[i].name, file_headers[i].name);
         root_nodes[i].mask = 0;
         root_nodes[i].uid = 0;
         root_nodes[i].gid = 0;
