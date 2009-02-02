@@ -46,3 +46,20 @@ int feof(FILE *fp)
     else return FALSE;
 }
 
+char *fgets(char *s, int length, FILE *stream)
+{
+    int i;
+
+    for (i = 0; i < (length - 1); i++) {
+        char c = (char)fgetc(stream);
+        if (c == EOF) break;
+        s[i] = c;
+        if (c == '\n') break;
+    }
+
+    if (i == 0) return NULL;
+
+    s[++i] = '\0'; /* don't override newline due to break */
+    return s;
+}
+
