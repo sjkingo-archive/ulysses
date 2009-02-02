@@ -83,6 +83,7 @@ void keyboard_handler(registers_t regs)
             if (shift_state) key = map_shifted[b];
             else key = map_unshifted[b];
 #if DEBUG
+            kprintf("scancode: 0x%x\n", b);
             kprintf("keyboard: '%c'\n", (char)key);
 #endif
     }
