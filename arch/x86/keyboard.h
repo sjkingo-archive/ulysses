@@ -2,8 +2,19 @@
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
-#include <sys/types.h>
-#include "isr.h"
+/* This is the keyboard driver. A callback into this module is placed at 
+ * startup to intercept IRQ1. We then read from the PIC that sent the IRQ
+ * and get back a scancode: a hexidecimal code that signifies the key pressed.
+ * 
+ * The scancode is converted into a key by use of the map_ tables. Once 
+ * converted, the key is appended to the ring buffer. This can be read by
+ * the read_next_key() function and is mapped to the stdin file stream in
+ * libc.
+ */
+
+#include "isr.h" /* for registers_t */
+
+#define KB_BUFFER_SIZE 255
 
 #define KB_MAKE_SHIFT 0x2A
 #define KB_BREAK_SHIFT 0xAA
@@ -70,6 +81,11 @@
  *   it to a key.
  */
 void keyboard_handler(registers_t regs);
+
+/* read_next_key()
+ *   Returns the next keypress in the buffer.
+ */
+char read_next_key(void);
 
 #endif
 

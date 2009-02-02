@@ -58,6 +58,27 @@ unsigned short map_shifted[] = {
  */
 flag_t shift_state = FALSE;
 
+/* kb_buffer
+ *   Ring buffer of keyboard key presses.
+ */
+char unsigned kb_buffer[KB_BUFFER_SIZE];
+
+/* buffer_keypress
+ *   Store the key in a ring buffer for reading.
+ */
+static void buffer_keypress(unsigned int scancode, unsigned int key)
+{
+    static unsigned short i = 0;
+    if ((i + 1) >= KB_BUFFER_SIZE) i = 0; /* ring buffer, override */
+
+    kb_buffer[i] = (char)key;
+
+#if DEBUG
+            kprintf("scancode: 0x%x\n", scancode);
+            kprintf("keyboard: '%c'\n", (char)key);
+#endif
+}
+
 void keyboard_handler(registers_t regs)
 {
     unsigned int b = inb(0x60); /* read the scancode */
@@ -82,10 +103,14 @@ void keyboard_handler(registers_t regs)
 
             if (shift_state) key = map_shifted[b];
             else key = map_unshifted[b];
-#if DEBUG
-            kprintf("scancode: 0x%x\n", b);
-            kprintf("keyboard: '%c'\n", (char)key);
-#endif
+            buffer_keypress(b, key);
     }
+}
+
+char read_next_key(void)
+{
+    static unsigned short i = 0;
+    if ((i + 1) >= KB_BUFFER_SIZE) i = 0;
+    return kb_buffer[i++];
 }
 
