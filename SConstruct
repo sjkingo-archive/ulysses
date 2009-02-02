@@ -1,7 +1,7 @@
 
 arch_sources = [ 'arch/x86/%s' % file for file in [ 'startup.c', 'halt.c', 
         'util.c', 'timer.c', 'gdt.c', 'flush.s', 'paging.c', 'screen.c', 
-        'loader.s', 'idt.c', 'interrupt.s', 'isr.c', 'kheap.c', 'oarray.c' ] ]
+        'loader.s', 'idt.c', 'interrupt.s', 'isr.c', 'kheap.c', 'oarray.c', 'keyboard.c' ] ]
 
 kern_sources = [ 'kernel/%s' % file for file in [ 'main.c', 'initrd.c', 
         'kprintf.c', 'proc.c', 'shutdown.c', 'vfs.c', 'vt.c', 'util.c' ] ]

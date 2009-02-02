@@ -9,5 +9,7 @@
  */
 void outb(const unsigned int port, unsigned int value);
 
+unsigned char inb(unsigned int port);
+
 #endif
 

@@ -7,6 +7,7 @@
 #include "gdt.h" /* global descriptor table */
 #include "idt.h" /* IDT */
 #include "isr.h" /* interrupts */
+#include "keyboard.h"
 #include "kheap.h"
 #include "multiboot.h"
 #include "paging.h"

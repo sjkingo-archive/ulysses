@@ -20,6 +20,7 @@ static void init_isrs(void)
 {
     register_interrupt_handler(0, &panic_handler);
     register_interrupt_handler(13, &panic_handler);
+    register_interrupt_handler(33, &keyboard_handler);
 }
 
 void startup_x86(void *mdb, unsigned int magic)
