@@ -24,6 +24,11 @@ extern FILE *stdin;
 int fgetc(FILE *fp);
 #define getc(fp) fgetc(fp)
 
+/* getchar()
+ *   Reads a single character from stdin. See fgetc() for details.
+ */
+#define getchar() getc(stdin)
+
 /* fread()
  *   Copy nmemb items of data of size size from the file stream given
  *   into the array pointed to by ptr. Returns the number of items read.
