@@ -6,6 +6,11 @@
 
 #define EOF -1
 
+/* As defined by IEEE SUS: http://www.opengroup.org/onlinepubs/009695399/ */
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
+
 typedef struct file_struct {
     int fd;
 
@@ -48,6 +53,27 @@ int feof(FILE *fp);
  *  Returns NULL if EOF found with no characters read, else returns s.
  */
 char *fgets(char *s, int length, FILE *stream);
+
+/* fseek()
+ *   Set the file position for the given stream. The new position is
+ *   calculated by adding offset bytes to the position given by whence.
+ *   This will either be SEEK_SET, SEEK_CUR or SEEK_END, making the offset
+ *   relative to start of the file, the current position, or the end of file,
+ *   respectively.
+ *   Returns 0 for success or -1 if error.
+ */
+int fseek(FILE *stream, long offset, int whence);
+
+/* rewind()
+ *   Sets the file position for the given stream to the start of the
+ *   file stream.
+ */
+#define rewind(stream) fseek(stream, 0, SEEK_SET)
+
+/* ftell()
+ *   Returns the current position for the given file stream.
+ */
+long ftell(FILE *stream);
 
 #endif
 

@@ -63,3 +63,20 @@ char *fgets(char *s, int length, FILE *stream)
     return s;
 }
 
+int fseek(FILE *stream, long offset, int whence)
+{
+    long pos;
+    if (whence == SEEK_SET) pos = offset;
+    else if (whence == SEEK_CUR) pos = offset + stream->buffer_pos;
+    else if (whence == SEEK_END) pos = offset + stream->buffer_len;
+    else return EOF;
+
+    stream->buffer_pos = pos;
+    return 0;
+}
+
+long ftell(FILE *stream)
+{
+    return stream->buffer_pos;
+}
+
