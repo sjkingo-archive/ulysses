@@ -40,3 +40,9 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
     return nmemb;
 }
 
+int feof(FILE *fp)
+{
+    if (fp->buffer_pos >= fp->buffer_len) return TRUE;
+    else return FALSE;
+}
+

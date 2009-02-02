@@ -28,5 +28,11 @@ int fgetc(FILE *fp);
  */
 size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
+/* feof()
+ *   Returns true if the file stream given has reached end of file, else
+ *   return false.
+ */
+int feof(FILE *fp);
+
 #endif
 
