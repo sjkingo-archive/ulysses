@@ -17,10 +17,12 @@ typedef struct file_struct {
 extern FILE *stdin;
 
 /* fgetc()
+ * getc()
  *   Return one character from the given file stream, or EOF if no more 
  *   to be read.
  */
 int fgetc(FILE *fp);
+#define getc(fp) fgetc(fp)
 
 /* fread()
  *   Copy nmemb items of data of size size from the file stream given
