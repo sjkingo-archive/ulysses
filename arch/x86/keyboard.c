@@ -54,9 +54,11 @@ unsigned short map_shifted[] = {
 };
 
 /* shift_state
- *   Remembers the current state of the shift key.
+ * alt_state
+ *   Remembers the current state of the shift and alt keys.
  */
 flag_t shift_state = FALSE;
+flag_t alt_state = FALSE;
 
 /* kb_buffer
  *   Ring buffer of keyboard key presses.
@@ -77,7 +79,7 @@ void keyboard_handler(registers_t regs)
 {
     unsigned int scancode = inb(0x60); /* read the scancode */
     unsigned int key;
-    
+
     /* Handle modifiers */
     switch (scancode) {
         case KB_MAKE_SHIFT:
@@ -101,12 +103,28 @@ void keyboard_handler(registers_t regs)
             else shift_state = TRUE;
             return;
 
+        case KB_LALT:
+        case KB_RALT:
+            if (alt_state) alt_state = FALSE;
+            else alt_state = TRUE;
+            return;
+            
         case KB_F1:
-            print_startup();
+            if (alt_state) switch_vt(0);
+            else print_startup();
             return;
 
         case KB_F2:
-            print_current_proc();
+            if (alt_state) switch_vt(1);
+            else print_current_proc();
+            return;
+
+        case KB_F3:
+            if (alt_state) switch_vt(2);
+            return;
+
+        case KB_F4:
+            if (alt_state) switch_vt(3);
             return;
 
         case KB_F9:
