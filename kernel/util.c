@@ -24,3 +24,11 @@ void stub(char *fname)
 #endif
 }
 
+void print_startup(void)
+{
+    kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
+#ifdef _ARCH_x86
+    kprintf("Compiled for x86\n");
+#endif
+}
+

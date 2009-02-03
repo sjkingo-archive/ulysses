@@ -12,6 +12,7 @@
 #include "../arch/halt.h" /* halt code to fall back on */
 #include "initrd.h"
 #include "kprintf.h"
+#include "proc.h"
 #include "shutdown.h"
 #include "util.h"
 #include "vt.h"

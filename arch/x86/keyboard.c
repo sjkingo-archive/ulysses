@@ -66,30 +66,20 @@ char unsigned kb_buffer[KB_BUFFER_SIZE];
 /* buffer_keypress
  *   Store the key in a ring buffer for reading.
  */
-static void buffer_keypress(unsigned int scancode, unsigned int key)
+static void buffer_keypress(unsigned int key)
 {
     static unsigned short i = 0;
     if ((i + 1) >= KB_BUFFER_SIZE) i = 0; /* ring buffer, override */
-
     kb_buffer[i] = (char)key;
-
-#if DEBUG
-            kprintf("scancode: 0x%x\n", scancode);
-            kprintf("keyboard: '%c'\n", (char)key);
-#endif
 }
 
 void keyboard_handler(registers_t regs)
 {
-    unsigned int b = inb(0x60); /* read the scancode */
+    unsigned int scancode = inb(0x60); /* read the scancode */
     unsigned int key;
     
-    switch (b) {
-        case KB_CAPSLOCK:
-            if (shift_state) shift_state = FALSE;
-            else shift_state = TRUE;
-            return;
-
+    /* Handle modifiers */
+    switch (scancode) {
         case KB_MAKE_SHIFT:
             shift_state = TRUE;
             return;
@@ -99,11 +89,35 @@ void keyboard_handler(registers_t regs)
             return;
 
         default:
-            if ((b & KB_IGNORE)) return;
+            if ((scancode & KB_IGNORE)) return;
+            if (shift_state) key = map_shifted[scancode];
+            else key = map_unshifted[scancode];
+    }
 
-            if (shift_state) key = map_shifted[b];
-            else key = map_unshifted[b];
-            buffer_keypress(b, key);
+    /* Handle the key press */
+    switch (key) {
+        case KB_CAPSLOCK:
+            if (shift_state) shift_state = FALSE;
+            else shift_state = TRUE;
+            return;
+
+        case KB_F1:
+            print_startup();
+            return;
+
+        case KB_F2:
+            print_current_proc();
+            return;
+
+        case KB_F9:
+            sanity_check();
+            return;
+
+        case KB_F10:
+            panic("F10 pressed");
+
+        default:
+            buffer_keypress(key);
     }
 }
 

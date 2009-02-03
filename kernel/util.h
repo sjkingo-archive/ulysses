@@ -15,5 +15,10 @@ void sanity_check(void);
  */
 void stub(char *fname);
 
+/* print_startup()
+ *  Output kernel information.
+ */
+void print_startup(void);
+
 #endif
 

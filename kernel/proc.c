@@ -131,6 +131,15 @@ void idle_task(void)
 #if DEBUG
     kprintf("Putting CPU in idle...\n");
 #endif
+    curr_pid = PID_IDLE;
     __asm__("hlt");
+}
+
+void print_current_proc(void)
+{
+    register struct proc *p = get_proc(curr_pid);
+    kprintf("Current process information:\n");
+    kprintf("\tpid: %d\t%s\tsched_q: %d\n", p->pid, p->name, p->sched_q);
+    kprintf("\tuid: %d\tegid: %d\trgid: %d\n", p->uid, p->egid, p->rgid);
 }
 

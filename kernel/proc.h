@@ -61,6 +61,8 @@ struct sched_q {
 struct sched_q sched_queues[NR_SCHED_Q]; /* all of the scheduling queues */
 struct proc *next_proc; /* next process to run */
 
+pid_t curr_pid; /* current pid running */
+
 /* init_proc()
  *  Initialises the process table and scheduling queues. This needs to be
  *  called *once* and once only. A panic() will be triggered if this is
@@ -98,6 +100,11 @@ void pick_proc(void);
  *  has the effect of idling the CPU efficiently.
  */
 void idle_task(void);
+
+/* print_current_proc()
+ *  Dumps information on the currently running process.
+ */
+void print_current_proc(void);
 
 #endif
 
