@@ -17,7 +17,6 @@ typedef struct _cpuid_t {
 } cpuid_t;
 
 void init_cpu(void);
-cpuid_t cpuid(unsigned int number);
 
 #endif
 

@@ -4,6 +4,7 @@
 
 /* Put x86-specific stuff here. */
 
+#include "cpu.h"
 #include "gdt.h" /* global descriptor table */
 #include "idt.h" /* IDT */
 #include "isr.h" /* interrupts */

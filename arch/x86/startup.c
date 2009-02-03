@@ -46,6 +46,7 @@ void startup_x86(void *mdb, unsigned int magic)
      *  4. Activate memory paging
      *  5. Set up clock timer
      *  6. Register handlers for common interrupts
+     *  7. Identify the CPU(s) attached to the system
      */
     if (!init_gdt()) panic("GDT failed initialisation\n");
     enter_pm(); /* see flush.s */
@@ -53,6 +54,7 @@ void startup_x86(void *mdb, unsigned int magic)
     if (!init_paging()) panic("Paging failed initialisation");
     if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
     init_isrs();
+    init_cpu();
 
     /* And finally, enable interrupts */
     __asm__ __volatile__("sti");
