@@ -4,8 +4,10 @@
 
 #include <string.h>
 
-/* Internal function prototypes */
-pid_t new_pid(void);
+static pid_t new_pid(void)
+{
+    return PID_NONE; /* XXX */
+}
 
 void init_proc(void)
 {
@@ -40,11 +42,6 @@ void init_proc(void)
 #if DEBUG
     kprintf("init_proc(): IDLE process set up\n");
 #endif
-}
-
-pid_t new_pid(void)
-{
-    return PID_NONE; /* XXX */
 }
 
 void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
