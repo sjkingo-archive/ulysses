@@ -14,6 +14,9 @@ typedef int gid_t; /* group id */
 typedef int pid_t; /* process id */
 typedef unsigned char flag_t; /* 0/1 logical flag */
 
+typedef long time_t; /* time in sec since epoch */
+typedef long useconds_t; /* time in microseconds since epoch */
+typedef long suseconds_t; /* time in microseconds since epoch */
 
 #endif
 

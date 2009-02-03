@@ -3,6 +3,9 @@
 #include "util.h"
 #include "../../kernel/kernel.h"
 
+#include <sys/time.h>
+#include <sys/types.h>
+
 static unsigned char read_cmos(unsigned char reg)
 {
     unsigned char v;
