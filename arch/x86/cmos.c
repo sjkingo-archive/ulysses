@@ -15,11 +15,17 @@ static unsigned char read_cmos(unsigned char reg)
     return v;
 }
 
-void cmos_datetime(void)
+struct timeval cmos_datetime(void)
 {
+    struct timeval t;
+    t.tv_sec = 0;
+    return t;
+
+#if 0
     kprintf("Datetime from CMOS: %d-%d-%d %d:%d:%d\n", 
             BCD_INT(read_cmos(DT_YR)), BCD_INT(read_cmos(DT_MTH)), 
             BCD_INT(read_cmos(DT_MDAY)), BCD_INT(read_cmos(DT_HR)), 
             BCD_INT(read_cmos(DT_MIN)), BCD_INT(read_cmos(DT_SEC)));
+#endif
 }
 

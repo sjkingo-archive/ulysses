@@ -2,6 +2,8 @@
 #ifndef _CMOS_H
 #define _CMOS_H
 
+#include <sys/time.h>
+
 /* CMOS indexes for datetime */
 #define DT_SEC 0
 #define DT_MIN 2
@@ -12,9 +14,9 @@
 #define DT_YR 9
 
 /* cmos_datetime()
- *  Get the date time stamp from the CMOS and store it for the kernel.
+ *  Returns the current CMOS timestamp in a timeval struct.
  */
-void cmos_datetime(void);
+struct timeval cmos_datetime(void);
 
 #endif
 

@@ -1,10 +1,16 @@
 
 #include "x86.h"
+#include "../../kernel/kernel.h"
 
 void timer_tick(registers_t regs)
 {
     if (regs.int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
     ticks++;
+
+    /* Increment every second */
+    if ((ticks % TIMER_FREQ) == 0) {
+        kern.current_time_offset.tv_sec++;
+    }
 }
 
 flag_t init_timer(unsigned int freq)

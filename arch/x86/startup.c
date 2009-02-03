@@ -23,6 +23,12 @@ static void init_isrs(void)
     register_interrupt_handler(33, &keyboard_handler);
 }
 
+static void set_time(void)
+{
+    kern.loaded_time = cmos_datetime();
+    kern.current_time_offset.tv_sec = 0;
+}
+
 void startup_x86(void *mdb, unsigned int magic)
 {
     /* Disable interrupts in case someone removes the cli instruction from
@@ -44,14 +50,16 @@ void startup_x86(void *mdb, unsigned int magic)
      *  2. Enter protected mode
      *  3. Load IDT
      *  4. Activate memory paging
-     *  5. Set up clock timer
-     *  6. Register handlers for common interrupts
-     *  7. Identify the CPU(s) attached to the system
+     *  5. Set kernel load time from CMOS
+     *  6. Set up clock timer
+     *  7. Register handlers for common interrupts
+     *  8. Identify the CPU(s) attached to the system
      */
     if (!init_gdt()) panic("GDT failed initialisation\n");
     enter_pm(); /* see flush.s */
     if (!init_idt()) panic("IDT failed initialisation");
     if (!init_paging()) panic("Paging failed initialisation");
+    set_time();
     if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
     init_isrs();
     init_cpu();

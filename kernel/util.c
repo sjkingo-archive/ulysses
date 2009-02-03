@@ -30,5 +30,6 @@ void print_startup(void)
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
 #endif
+    kprintf("%d seconds since load\n", kern.current_time_offset.tv_sec);
 }
 
