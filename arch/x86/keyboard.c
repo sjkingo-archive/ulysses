@@ -76,7 +76,7 @@ unsigned short map_caps[] = {
     KP_CENTER, KP_RIGHT, KP_PLUS, KP_END,           /* 0x4C - 0x4F */
     KP_DOWN, KP_PGDN, KP_INSERT, KP_DEL,            /* 0x50 - 0x53 */
     KB_SYSREQ, KB_UNKNOWN, KB_UNKNOWN, KB_UNKNOWN,  /* 0x54 - 0x57 */
-};  
+};
 
 /* shift_state
  * alt_state
@@ -86,21 +86,6 @@ unsigned short map_caps[] = {
 flag_t shift_state = FALSE;
 flag_t alt_state = FALSE;
 flag_t caps_state = FALSE;
-
-/* kb_buffer
- *   Ring buffer of keyboard key presses.
- */
-char unsigned kb_buffer[KB_BUFFER_SIZE];
-
-/* buffer_keypress
- *   Store the key in a ring buffer for reading.
- */
-static void buffer_keypress(unsigned int key)
-{
-    static unsigned short i = 0;
-    if ((i + 1) >= KB_BUFFER_SIZE) i = 0; /* ring buffer, override */
-    kb_buffer[i] = (char)key;
-}
 
 void keyboard_handler(registers_t regs)
 {
@@ -142,12 +127,10 @@ void keyboard_handler(registers_t regs)
             
         case KB_F1:
             if (alt_state) switch_vt(0);
-            else print_startup();
             return;
 
         case KB_F2:
             if (alt_state) switch_vt(1);
-            else print_current_proc();
             return;
 
         case KB_F3:
@@ -166,14 +149,7 @@ void keyboard_handler(registers_t regs)
             panic("F10 pressed");
 
         default:
-            buffer_keypress(key);
+            append_stdin(key);
     }
-}
-
-char read_next_key(void)
-{
-    static unsigned short i = 0;
-    if ((i + 1) >= KB_BUFFER_SIZE) i = 0;
-    return kb_buffer[i++];
 }
 

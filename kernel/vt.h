@@ -12,11 +12,17 @@
 #define NUM_VT 4
 #define VT_LOG (NUM_VT - 1)
 
+#define BUFFER_SIZE 3
 #define MAX_CHARS 10000 /* XXX */
+
 typedef struct _vt {
     unsigned short id;
+
     unsigned short next; /* next index in buffer to write a char to */
     char data[MAX_CHARS];
+
+    unsigned short stdin_next;
+    char stdin_buffer[BUFFER_SIZE];
 } vt_t;
 
 vt_t virtual_terms[NUM_VT]; /* pointers to all the VTs */
@@ -45,6 +51,8 @@ void flush_vt(void);
  *  screen if write is true. If all is true, write to all VTs.
  */
 void append_char(const char c, flag_t write, flag_t all);
+
+void append_stdin(const char c);
 
 #endif
 

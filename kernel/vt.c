@@ -44,3 +44,14 @@ void append_char(const char c, flag_t write, flag_t all)
     if (write) put_char(c); /* write through to the screen directly */
 }
 
+void append_stdin(const char c)
+{
+    if (virtual_terms[active_vt].stdin_next >= BUFFER_SIZE) {
+        virtual_terms[active_vt].stdin_next = 0;
+    }
+
+    virtual_terms[active_vt].stdin_buffer[virtual_terms[
+            active_vt].stdin_next++] = c;
+    append_char(c, TRUE, FALSE);
+}
+
