@@ -106,5 +106,7 @@ void idle_task(void);
  */
 void print_current_proc(void);
 
+void check_current_proc(void);
+
 #endif
 

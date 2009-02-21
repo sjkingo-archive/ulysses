@@ -11,6 +11,8 @@ void timer_tick(registers_t regs)
     if ((ticks % TIMER_FREQ) == 0) {
         kern.current_time_offset.tv_sec++;
     }
+
+    check_current_proc();
 }
 
 flag_t init_timer(unsigned int freq)

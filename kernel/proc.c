@@ -112,6 +112,7 @@ void pick_proc(void)
         while (p != NULL) {
             if (p->ready) { /* ready process found, schedule it to be run */
                 next_proc = p;
+                curr_pid = p->pid;
 #if DEBUG
                 kprintf("pick_proc(): %s, pid %d\n", p->name, 
                         (unsigned int)p->pid);
@@ -123,20 +124,24 @@ void pick_proc(void)
     }
 }
 
-void idle_task(void)
-{
-#if DEBUG
-    kprintf("Putting CPU in idle...\n");
-#endif
-    curr_pid = PID_IDLE;
-    __asm__("hlt");
-}
-
 void print_current_proc(void)
 {
     register struct proc *p = get_proc(curr_pid);
     kprintf("Current process information:\n");
     kprintf("\tpid: %d\t%s\tsched_q: %d\n", p->pid, p->name, p->sched_q);
     kprintf("\tuid: %d\tegid: %d\trgid: %d\n", p->uid, p->egid, p->rgid);
+}
+
+void check_current_proc(void)
+{
+    register struct proc *p = get_proc(curr_pid);
+    if (--p->s_ticks_left <= 0) {
+#if DEBUG
+        kprintf("check_current_proc(): pid %d (%s) exceeded scheduling "
+                "quanta\n", p->pid, p->name);
+#endif
+        p->s_ticks_left = p->s_quantum_size;
+        pick_proc();
+    }
 }
 
