@@ -7,6 +7,7 @@
  * handling to actually write something to an output device.
  */
 
+#include <stdio.h>
 #include <sys/types.h>
 
 #define NUM_VT 4
@@ -21,8 +22,7 @@ typedef struct _vt {
     unsigned short next; /* next index in buffer to write a char to */
     char data[MAX_CHARS];
 
-    unsigned short stdin_next;
-    char stdin_buffer[BUFFER_SIZE];
+    FILE *stdin;
 } vt_t;
 
 vt_t virtual_terms[NUM_VT]; /* pointers to all the VTs */

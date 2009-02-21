@@ -16,7 +16,7 @@ typedef struct file_struct {
 
     unsigned int buffer_pos;
     unsigned int buffer_len;
-    char *buffer;
+    char buffer[1024];
 } FILE;
 
 extern FILE *stdin;

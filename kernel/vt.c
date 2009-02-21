@@ -11,6 +11,10 @@ flag_t init_vt(void)
         virtual_terms[i].id = i;
         virtual_terms[i].next = 0;
         for (j = 0; j < MAX_CHARS; j++) virtual_terms[i].data[j] = '\0';
+
+        virtual_terms[i].stdin->fd = 0;
+        virtual_terms[i].stdin->buffer_pos = 0;
+        virtual_terms[i].stdin->buffer_len = 1024;
     }
 
     if (!switch_vt(VT_LOG)) return FALSE;
@@ -46,12 +50,13 @@ void append_char(const char c, flag_t write, flag_t all)
 
 void append_stdin(const char c)
 {
-    if (virtual_terms[active_vt].stdin_next >= BUFFER_SIZE) {
-        virtual_terms[active_vt].stdin_next = 0;
+    if (virtual_terms[active_vt].stdin->buffer_pos >=
+            virtual_terms[active_vt].stdin->buffer_len) {
+        virtual_terms[active_vt].stdin->buffer_pos = 0;
     }
 
-    virtual_terms[active_vt].stdin_buffer[virtual_terms[
-            active_vt].stdin_next++] = c;
+    virtual_terms[active_vt].stdin->buffer[virtual_terms[
+            active_vt].stdin->buffer_pos++] = c;
     append_char(c, TRUE, FALSE);
 }
 
