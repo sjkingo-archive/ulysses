@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#if 0
 static FILE __stdin = {
     .fd = 0,
     .buffer_pos = 0,
@@ -10,6 +11,7 @@ static FILE __stdin = {
 };
 
 FILE *stdin = &__stdin;
+#endif
 
 int fgetc(FILE *fp)
 {
