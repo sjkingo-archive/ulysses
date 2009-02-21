@@ -83,6 +83,7 @@ extern isr_handler
 ; up for kernel mode segments, calls the C-level fault handler,
 ; and finally restores the stack frame.
 isr_common_stub:
+    cli
     pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
 
     mov ax, ds               ; Lower 16-bits of eax = ds.
@@ -114,6 +115,7 @@ extern irq_handler
 ; up for kernel mode segments, calls the C-level fault handler,
 ; and finally restores the stack frame.
 irq_common_stub:
+    cli
     pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
 
     mov ax, ds               ; Lower 16-bits of eax = ds.
