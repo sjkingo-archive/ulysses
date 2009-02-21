@@ -12,6 +12,7 @@ void timer_tick(registers_t regs)
         kern.current_time_offset.tv_sec++;
     }
 
+    sanity_check();
     check_current_proc();
 }
 

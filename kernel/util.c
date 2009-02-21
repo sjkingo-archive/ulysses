@@ -11,15 +11,12 @@ void sanity_check(void)
     fail:
         panic("Kernel sanity check failed");
     pass:
-#if DEBUG
-        kprintf("Kernel sanity check passed\n");
-#endif
         return; /* so we don't have an empty label with DEBUG 0 */
 }
 
 void stub(char *fname)
 {
-#if DEBUG
+#if 0
     kprintf("stub: %s()\n", fname);
 #endif
 }

@@ -38,9 +38,5 @@ void _kmain(void *mdb, unsigned int magic)
 
     //init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_proc(); /* set up process table and scheduling queues */
-    sanity_check(); /* do a sanity check of the kernel */
-
-    /* Force IDLE going and never return */
-    idle_task(); /* XXX */
 }
 
