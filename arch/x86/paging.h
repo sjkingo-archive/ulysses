@@ -38,13 +38,6 @@ typedef struct page_directory {
     unsigned int phys_addr; /* *physical* address of tables_phys */
 } page_dir_t;
 
-unsigned int *frames; /* pointer to first frame */
-unsigned int nframes; /* number of frames */
-unsigned int placement_address; /* end address of physical memory */
-
-page_dir_t *kernel_directory; /* kernel's page directory */
-page_dir_t *current_directory; /* current page directory */
-
 /* init_paging()
  *  Set up paging and load the kernel's page directory into CPU.
  */

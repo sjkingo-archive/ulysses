@@ -4,6 +4,13 @@
 #include <string.h> /* for memset() */
 #include <sys/types.h> /* for flag_t */
 
+unsigned int *frames; /* pointer to first frame */
+unsigned int nframes; /* number of frames */
+unsigned int placement_address; /* end address of physical memory */
+
+page_dir_t *kernel_directory = 0; /* kernel's page directory */
+page_dir_t *current_directory = 0; /* current page directory */
+
 extern unsigned int end; /* end addr of kernel: declared in linker.ld */
 
 static unsigned int kmalloc_paging(unsigned int size, flag_t align, 
