@@ -37,20 +37,18 @@ void flush_vt(void)
 
 void append_char(const char c, flag_t write, flag_t all)
 {
-    if (all) {
-        unsigned short i;
-        for (i = 0; i < NUM_VT; i++) {
-            if ((virtual_terms[i].next + 1) >= MAX_CHARS) {
-                virtual_terms[i].next = 0;
-            }
-            virtual_terms[i].data[virtual_terms[i].next++] = c;
+    unsigned short i, max;
+
+    if (all) max = NUM_VT;
+    else max = active_vt;
+    
+    for (i = 0; i < max; i++) {
+        if ((virtual_terms[i].next + 1) >= MAX_CHARS) {
+            virtual_terms[i].next = 0;
         }
-    } else {
-        if ((virtual_terms[active_vt].next + 1) >= MAX_CHARS) {
-            virtual_terms[active_vt].next = 0;
-        }
-        virtual_terms[active_vt].data[virtual_terms[active_vt].next++] = c;
+        virtual_terms[i].data[virtual_terms[i].next++] = c;
     }
+
     if (write) put_char(c); /* write through to the screen directly */
 }
 
