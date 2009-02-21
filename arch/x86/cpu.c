@@ -1,5 +1,6 @@
 
 #include "cpu.h"
+#include "../../kernel/kernel.h"
 
 static cpuid_t cpuid(unsigned int number) 
 {
