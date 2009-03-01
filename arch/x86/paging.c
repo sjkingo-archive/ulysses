@@ -1,35 +1,19 @@
 
 #include "x86.h"
+#include "kheap.h"
 
 #include <string.h> /* for memset() */
 #include <sys/types.h> /* for flag_t */
 
 unsigned int *frames; /* pointer to first frame */
 unsigned int nframes; /* number of frames */
-unsigned int placement_address; /* end address of physical memory */
 
 page_dir_t *kernel_directory = 0; /* kernel's page directory */
 page_dir_t *current_directory = 0; /* current page directory */
 
-extern unsigned int end; /* end addr of kernel: declared in linker.ld */
-
-static unsigned int kmalloc_paging(unsigned int size, flag_t align, 
-        unsigned int *phys)
-{
-    /* Perform alignment */
-    if (align && (placement_address & 0xFFFFF000)) {
-        placement_address &= 0xFFFFF000;
-        placement_address += 0x1000;
-    }
-
-    /* Give a physical address */
-    if (phys) *phys = placement_address;
-
-    /* Allocate the required amount */
-    unsigned int start = placement_address;
-    placement_address += size;
-    return start;
-}
+/* declared in kheap.c */
+extern unsigned int placement_address;
+extern heap_t *kheap;
 
 static void set_frame(unsigned int frame_addr)
 {
@@ -89,8 +73,7 @@ page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
     if (make) {
         unsigned int tmp;
         dir->tables[table_index] = 
-                    (page_table_t *)kmalloc_paging(sizeof(page_table_t), 
-                    1, &tmp);
+                    (page_table_t *)kmalloc_ap(sizeof(page_table_t), &tmp);
         memset(dir->tables[table_index], 0, 0x1000);
         dir->tables_phys[table_index] = tmp | 0x7; /* present, rw, us */
         return (&dir->tables[table_index]->pages[index % 1024]);
@@ -131,30 +114,40 @@ void free_frame(page_t *page)
 
 flag_t init_paging(void)
 {
-    unsigned int i = 0;
+    unsigned int i, j, k;
 
     /* Set up page frames */
-    placement_address = (unsigned int)&end;
-    //nframes = kern.mbi->mem_upper / 0x1000;
-    nframes = 0x500000 / 0x1000; /* XXX 8 MB */
-    frames = (unsigned int *)kmalloc_paging(INDEX_FROM_BIT(nframes), 0, NULL);
+    nframes = 0x1000000 / 0x1000;
+    frames = (unsigned int *)kmalloc(INDEX_FROM_BIT(nframes));
     memset(frames, 0, INDEX_FROM_BIT(nframes));
 
     /* Set up a page directory */
-    kernel_directory = (page_dir_t *)kmalloc_paging(sizeof(page_dir_t), 
-            1, NULL);
+    kernel_directory = (page_dir_t *)kmalloc_a(sizeof(page_dir_t));
     memset(kernel_directory, 0, sizeof(page_dir_t));
     current_directory = kernel_directory;
+
+    /* Map pages in the kernel heap */
+    for (i = KHEAP_START; i < KHEAP_START + KHEAP_INITIAL_SIZE; i += 0x1000) {
+        get_page(i, 1, kernel_directory);
+    }
     
     /* Set kernel memory to readable but not writeable to user-space */
-    while (i < placement_address) {
-        alloc_frame(get_page(i, 1, kernel_directory), 0, 0);
-        i += 0x1000;
+    j = 0;
+    while (j < (placement_address + 0x1000)) {
+        alloc_frame(get_page(j, 1, kernel_directory), 0, 0);
+        j += 0x1000;
+    }
+
+    /* Allocate the pages to the kernel directory */
+    for (k = KHEAP_START; k < KHEAP_START + KHEAP_INITIAL_SIZE; k += 0x1000) {
+        alloc_frame(get_page(k, 1, kernel_directory), 0, 0);
     }
 
     /* Register a page fault handler and enable paging */
     register_interrupt_handler(14, &page_fault);
     switch_page_dir(kernel_directory);
+
+    kheap = create_heap(KHEAP_START, KHEAP_START + KHEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
 
     return TRUE; /* clean return for kmain() */
 }
