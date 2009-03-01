@@ -56,7 +56,7 @@ void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
     proc[0].s_ticks_left = SCHED_QUANTUM;
     proc[0].s_quantum_size = SCHED_QUANTUM;
 
-#if DEBUG
+#if SCHED_DEBUG
     kprintf("new_proc(): %s, pid %d, uid %d, egid %d, rgid %d\n", 
             proc[index].name, (unsigned int)proc[index].pid, 
             (unsigned int)proc[index].uid, (unsigned int)proc[index].egid,
@@ -97,7 +97,7 @@ void sched(struct proc *p)
         q.tail = p;
     }
 
-#if DEBUG
+#if SCHED_DEBUG
     kprintf("sched(): pid %d added to queue %d\n", p->pid, p->sched_q);
 #endif
 }
@@ -113,7 +113,7 @@ void pick_proc(void)
             if (p->ready) { /* ready process found, schedule it to be run */
                 next_proc = p;
                 curr_pid = p->pid;
-#if DEBUG
+#if SCHED_DEBUG
                 kprintf("pick_proc(): %s, pid %d\n", p->name, 
                         (unsigned int)p->pid);
 #endif
@@ -136,7 +136,7 @@ void check_current_proc(void)
 {
     register struct proc *p = get_proc(curr_pid);
     if (--p->s_ticks_left <= 0) {
-#if DEBUG
+#if SCHED_DEBUG
         kprintf("check_current_proc(): pid %d (%s) exceeded scheduling "
                 "quanta\n", p->pid, p->name);
 #endif

@@ -20,6 +20,11 @@
  */
 #define DEBUG 1
 
+/* SCHED_DEBUG
+ *  Whether or not to be verbose in logging the kernel scheduler.
+ */
+#define SCHED_DEBUG 0
+
 /* VERSION_NUM
  * VERSION_CN
  *  Version number and codename of the kernel.
