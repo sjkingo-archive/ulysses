@@ -2,6 +2,9 @@
 #include "x86.h"
 #include "../../kernel/kernel.h"
 
+extern void init_a20(void);
+extern int check_a20(void);
+
 /* panic_handler()
  *  Generic handler for interrupts that must trigger a panic() only.
  */
@@ -47,17 +50,19 @@ void startup_x86(void *mdb, unsigned int magic)
      *
      * The order here is important:
      *  1. Load GDT
-     *  2. Enter protected mode
-     *  3. Load IDT
-     *  4. Activate memory paging
-     *  5. Set kernel load time from CMOS
-     *  6. Set up clock timer
-     *  7. Register handlers for common interrupts
-     *  8. Identify the CPU(s) attached to the system
+     *  2. Load IDT
+     *  3. Enable the A20 address line
+     *  4. Enter protected mode
+     *  5. Activate memory paging
+     *  6. Set kernel load time from CMOS
+     *  7. Set up clock timer
+     *  8. Register handlers for common interrupts
+     *  9. Identify the CPU(s) attached to the system
      */
     if (!init_gdt()) panic("GDT failed initialisation\n");
-    enter_pm(); /* see flush.s */
     if (!init_idt()) panic("IDT failed initialisation");
+    init_a20(); /* see a20.s */
+    enter_pm(); /* see flush.s */
     if (!init_paging()) panic("Paging failed initialisation");
     set_time();
     if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
