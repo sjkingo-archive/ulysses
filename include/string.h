@@ -33,5 +33,11 @@ char *strcpy(char *dest, const char *src);
  */
 int strcmp(const char *s1, const char *s2);
 
+/* strchr()
+ *   Returns a pointer to the first instance of the given character in the
+ *   string, or NULL if the character could not be found.
+ */
+char *strchr(const char *s, int c);
+
 #endif
 
