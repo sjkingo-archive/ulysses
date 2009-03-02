@@ -1,0 +1,4 @@
+syntax: glob
+hatta*
+arch/x86/boot/kernel
+.sconsign.dblite
