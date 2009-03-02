@@ -2,6 +2,8 @@
 #include "x86.h"
 #include "../../kernel/kernel.h"
 
+#include <string.h>
+
 extern void init_a20(void);
 extern int check_a20(void);
 
@@ -45,6 +47,10 @@ void startup_x86(void *mdb, unsigned int magic)
     if (magic != MULTIBOOT_LOADER_MAGIC)
         panic("Kernel not booted by a Multiboot loader");
     kern.mbi = (multiboot_info_t *)mdb;
+    
+    /* Copy the kernel command line from multiboot */
+    kern.cmdline = (char *)kmalloc(strlen((char *)kern.mbi->cmdline) + 1);
+    strcpy(kern.cmdline, (char *)kern.mbi->cmdline);
 
     /* Initialise the various low-level x86 stuff.
      *

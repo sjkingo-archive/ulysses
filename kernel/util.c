@@ -24,9 +24,22 @@ void stub(char *fname)
 void print_startup(void)
 {
     kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
+    kprintf("Kernel command line: '%s'\n", kern.cmdline);
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
 #endif
-    kprintf("%d seconds since load\n", kern.current_time_offset.tv_sec);
+#ifdef __GNUC__
+    kprintf("Compiled by gcc %s\n", __VERSION__);
+#endif
+#ifdef __LP64__
+    kprintf("Compiled with 64-bit long int support\n");
+#endif
+#ifdef __STRICT_ANSI__
+    kprintf("Warning: compiled with -ansi\n");
+#endif
+#ifdef __OPTIMIZE__
+    kprintf("Warning: compiled with -Ox optimisations; expect limited "
+            "debugging capacity\n");
+#endif
 }
 

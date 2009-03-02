@@ -32,6 +32,7 @@
 /* The main kernel data structure */
 struct kernel {
     multiboot_info_t *mbi; /* multiboot info struct as passed by loader */
+    char *cmdline; /* kernel command line as passed by loader */
     struct timeval loaded_time; /* time when kernel was first loaded */
     struct timeval current_time_offset; /* current time since loaded_time */
 };
