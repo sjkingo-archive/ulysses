@@ -39,5 +39,11 @@ struct kernel {
 };
 struct kernel kern;
 
+/* startup_kernel()
+ *  Perform higher-level kernel starup procedures. This should only be called
+ *  after arch-specific startup has completed!
+ */
+void startup_kernel(void);
+
 #endif
 

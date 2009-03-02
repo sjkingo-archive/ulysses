@@ -25,6 +25,19 @@
  */
 #define SCHED_DEBUG 0
 
+/* KERN_SHELL
+ *  The kernel shell is a builtin interpreter running in kernel-space.
+ *  If this is set to 1, it will be started once the kernel startup
+ *  has been completed.
+ */
+#define KERN_SHELL 1
+
+/* KERN_INTERACTIVE
+ *  Start the kernel shell straight after the architecture-specific
+ *  startup routines, bypassing all of the higher-level kernel startup.
+ */
+#define KERN_INTERACTIVE 0
+
 /* VERSION_NUM
  * VERSION_CN
  *  Version number and codename of the kernel.
