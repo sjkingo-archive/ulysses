@@ -15,7 +15,6 @@
  */
 
 #define NR_PROCS 100 /* max processes we can handle */
-#define NR_PROC_NAME 50 /* max length (incl. \0) of process name */
 #define NR_SCHED_Q 3 /* number of scheduling queues to use */
 
 /* Core kernel process pids */
@@ -31,7 +30,7 @@ struct proc {
     gid_t egid; /* effective group id */
     gid_t rgid; /* real group id */
 
-    char name[NR_PROC_NAME]; /* NULL-terminated process name */
+    char *name; /* NULL-terminated process name */
 
     unsigned short sched_q; /* scheduling queue this proc belongs to */
     flag_t ready; /* whether this process is ready to be run */

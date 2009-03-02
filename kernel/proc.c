@@ -32,6 +32,8 @@ void init_proc(void)
         sched_queues[i].tail = NULL;
     }
 
+    last_proc = -1; /* no procs yet */
+
 #if DEBUG
     kprintf("init_proc(): proc table set up\n");
 #endif
@@ -52,10 +54,11 @@ void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name)
     proc[index].uid = uid;
     proc[index].egid = egid;
     proc[index].rgid = rgid;
+    proc[index].name = (char *)kmalloc(strlen(name) + 1);
     strcpy(proc[index].name, name);
     proc[index].ready = 1; /* ready to run */
-    proc[0].s_ticks_left = SCHED_QUANTUM;
-    proc[0].s_quantum_size = SCHED_QUANTUM;
+    proc[index].s_ticks_left = SCHED_QUANTUM;
+    proc[index].s_quantum_size = SCHED_QUANTUM;
 
 #if SCHED_DEBUG
     kprintf("new_proc(): %s, pid %d, uid %d, egid %d, rgid %d\n", 
