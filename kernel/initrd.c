@@ -1,10 +1,10 @@
 
 #include "kernel.h"
 
-#include <string.h>
-
 #include "initrd.h"
 #include "vfs.h"
+
+#include <string.h>
 
 initrd_header_t *initrd_header;
 initrd_file_header_t *file_headers;

@@ -1,5 +1,6 @@
 
 #include "kernel.h"
+
 #include "util.h"
 
 void sanity_check(void)

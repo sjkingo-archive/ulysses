@@ -1,5 +1,6 @@
 
 #include "kernel.h"
+
 #include "vt.h"
 
 flag_t init_vt(void)

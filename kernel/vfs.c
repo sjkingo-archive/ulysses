@@ -1,7 +1,7 @@
 
-#include <sys/types.h>
-
 #include "vfs.h"
+
+#include <sys/types.h>
 
 fs_node_t *fs_root = 0;
 

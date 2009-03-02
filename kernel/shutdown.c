@@ -1,5 +1,4 @@
 
-/* kernel.h includes shutdown.h for us */
 #include "kernel.h"
 
 void panic(const char *msg)

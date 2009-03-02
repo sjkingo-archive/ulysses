@@ -1,5 +1,4 @@
 
-/* kernel.h includes kprintf.h for us */
 #include "kernel.h"
 
 #include <stdarg.h>
