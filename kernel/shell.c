@@ -19,6 +19,20 @@ static void execute_cmd(void)
         print_startup();
     } else if (strcmp(shell.data, "uptime") == 0) {
         kprintf("up %d seconds\n", kern.current_time_offset.tv_sec);
+    } else if (strcmp(shell.data, "halt") == 0) {
+        shutdown();
+    } else if (strcmp(shell.data, "check") == 0) {
+        sanity_check();
+    } else if (strcmp(shell.data, "exit") == 0) {
+#if KERN_INTERACTIVE
+        startup_kernel();
+#else
+        shutdown();
+#endif
+    } else if (strcmp(shell.data, "startup_kernel") == 0) {
+        startup_kernel();
+    } else if (strcmp(shell.data, "init_proc") == 0) {
+        init_proc();
     } else {
         kprintf("%s: command not found\n", shell.data);
     }
