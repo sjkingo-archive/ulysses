@@ -3,6 +3,8 @@
 
 #include "vt.h"
 
+extern flag_t shell_active; /* declared in shell.h */
+
 flag_t init_vt(void)
 {
     unsigned short i, j;
@@ -62,6 +64,14 @@ void append_stdin(const char c)
 
     virtual_terms[active_vt].stdin->buffer[virtual_terms[
             active_vt].stdin->buffer_pos++] = c;
-    append_char(c, TRUE, FALSE);
+    
+    /* Either send the character to the shell or stdin buffer of the 
+     * current VT.
+     */
+    if (shell_active) {
+        buffer_key(c);
+    } else {
+        append_char(c, TRUE, FALSE);
+    }
 }
 

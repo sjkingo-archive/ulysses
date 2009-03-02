@@ -38,8 +38,10 @@ void _kmain(void *mdb, unsigned int magic)
 
     init_proc(); /* set up process table and scheduling queues */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
+    init_shell("ulysses> "); /* set up shell */
 
     kprintf("Kernel startup complete in %ds\n", 
             kern.current_time_offset.tv_sec);
+    run_shell(); /* display shell */
 }
 

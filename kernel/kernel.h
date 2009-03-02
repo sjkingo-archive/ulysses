@@ -13,6 +13,7 @@
 #include "initrd.h"
 #include "kprintf.h"
 #include "proc.h"
+#include "shell.h"
 #include "shutdown.h"
 #include "util.h"
 #include "vt.h"
