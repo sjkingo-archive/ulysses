@@ -19,7 +19,7 @@ size_t strlen(const char *s)
 
 char *strcpy(char *dest, const char *src)
 {
-    return memcpy(dest, src, strlen(src));
+    return memcpy(dest, src, (size_t)(strlen(src) + 1));
 }
 
 void *memcpy(void *dest, const void *src, size_t n)
