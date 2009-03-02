@@ -131,7 +131,7 @@ void pick_proc(void)
                 kprintf("pick_proc(): pid %d (%s) is runnable\n", p->pid, 
                         p->name);
 #endif
-                p->task();
+                //p->task();
                 return;
             }
             p = p->next;
