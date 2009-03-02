@@ -20,5 +20,10 @@ void stub(char *fname);
  */
 void print_startup(void);
 
+/* print_cpuinfo()
+ *  Output detected CPU information.
+ */
+void print_cpuinfo(void);
+
 #endif
 

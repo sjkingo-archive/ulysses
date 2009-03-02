@@ -16,6 +16,13 @@ typedef struct _cpuid_t {
     unsigned int edx;
 } cpuid_t;
 
+struct cpu_ident {
+    unsigned int family;
+    unsigned int model;
+    char vendor[12];
+    char expl[64];
+};
+
 void init_cpu(void);
 
 #endif

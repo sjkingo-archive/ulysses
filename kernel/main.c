@@ -31,6 +31,7 @@ void startup_kernel(void)
     
     if (!init_vt()) panic("Virtual terminals failed initialisation");
     print_startup();
+    print_cpuinfo();
     print_memory_map(); /* print memory map given by multiboot */
     init_proc(); /* set up process table and scheduling queues */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */

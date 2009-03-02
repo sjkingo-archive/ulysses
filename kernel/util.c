@@ -44,3 +44,8 @@ void print_startup(void)
 #endif
 }
 
+void print_cpuinfo(void)
+{
+    kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
+}
+
