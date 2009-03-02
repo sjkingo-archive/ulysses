@@ -33,6 +33,8 @@ static void execute_cmd(void)
         startup_kernel();
     } else if (strcmp(shell.data, "init_proc") == 0) {
         init_proc();
+    } else if (strcmp(shell.data, "proc") == 0) {
+        print_current_proc();
     } else {
         kprintf("%s: command not found\n", shell.data);
     }
