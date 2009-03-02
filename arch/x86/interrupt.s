@@ -1,3 +1,7 @@
+
+[bits 32]
+[section .text]
+
 ; Macro for no error code
 %macro ISR_NOERRCODE 1
   global isr%1

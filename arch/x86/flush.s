@@ -1,4 +1,7 @@
 
+[bits 32]
+[section .text]
+
 ; Descriptor table flush.
 
 global gdt_flush
