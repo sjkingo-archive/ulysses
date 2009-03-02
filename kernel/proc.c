@@ -10,6 +10,12 @@ static pid_t new_pid(void)
     return PID_NONE; /* XXX */
 }
 
+static void idle_task(void)
+{
+    kprintf("idle_task()\n");
+    __asm__ __volatile__("sti ; hlt");
+}
+
 void init_proc(void)
 {
     register struct proc *p;
@@ -41,7 +47,9 @@ void init_proc(void)
     /* Set up the idle process */
     new_proc(-1, -1, -1, "IDLE");
     proc[0].pid = PID_IDLE; /* XXX ignore the auto-generated pid */
+    proc[0].task = &idle_task;
     sched(get_proc(PID_IDLE));
+
 #if DEBUG
     kprintf("init_proc(): IDLE process set up\n");
 #endif
@@ -79,8 +87,6 @@ struct proc *get_proc(pid_t pid)
 
 void sched(struct proc *p)
 {
-    register struct sched_q q;
-
     /* Pick the queue and update the process */
     if (p->uid == 0) {
         if (p->pid == PID_IDLE) p->sched_q = IDLE_Q;
@@ -88,17 +94,21 @@ void sched(struct proc *p)
     } else {
         p->sched_q = USER_Q;
     }
-    q = sched_queues[p->sched_q];
+
+    /* Ensure we're not going out of bounds by a misconfig in proc.h */
+    if (p->sched_q >= NR_SCHED_Q) {
+        panic("Assigned scheduling queue is out of range");
+    }
 
     p->next = NULL;
-    if (q.head == NULL) {
+    if (sched_queues[p->sched_q].head == NULL) {
         /* Add to head of queue */
-        q.head = p;
-        q.tail = p;
+        sched_queues[p->sched_q].head = p;
+        sched_queues[p->sched_q].tail = NULL;
     } else {
         /* Add to tail */
-        q.tail->next = p;
-        q.tail = p;
+        sched_queues[p->sched_q].tail->next = p;
+        sched_queues[p->sched_q].tail = p;
     }
 
 #if SCHED_DEBUG
@@ -118,9 +128,10 @@ void pick_proc(void)
                 next_proc = p;
                 curr_pid = p->pid;
 #if SCHED_DEBUG
-                kprintf("pick_proc(): %s, pid %d\n", p->name, 
-                        (unsigned int)p->pid);
+                kprintf("pick_proc(): pid %d (%s) is runnable\n", p->pid, 
+                        p->name);
 #endif
+                p->task();
                 return;
             }
             p = p->next;

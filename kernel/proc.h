@@ -32,6 +32,9 @@ struct proc {
 
     char *name; /* NULL-terminated process name */
 
+    void (*task)(void); /* XXX until context switching is added, we just
+                           have a pointer to a function as a "process" */
+
     unsigned short sched_q; /* scheduling queue this proc belongs to */
     flag_t ready; /* whether this process is ready to be run */
     unsigned short s_ticks_left; /* number of scheduling ticks left */
@@ -93,12 +96,6 @@ void sched(struct proc *p);
  *  process is found, point next_proc to it and return.
  */
 void pick_proc(void);
-
-/* idle_task()
- *  Switches back to ring 0 and halts the CPU with interrupts enabled. This
- *  has the effect of idling the CPU efficiently.
- */
-void idle_task(void);
 
 /* print_current_proc()
  *  Dumps information on the currently running process.
