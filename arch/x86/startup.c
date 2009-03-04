@@ -4,8 +4,7 @@
 
 #include <string.h>
 
-extern void init_a20(void);
-extern int check_a20(void);
+extern void init_a20(void); /* see a20.s */
 
 /* panic_handler()
  *  Generic handler for interrupts that must trigger a panic() only.
@@ -18,14 +17,21 @@ static void panic_handler(registers_t regs)
     }
 }
 
-/* init_isrs()
- *  Register interrupt handlers for common interrupts we may get.
+/* register_fatal_isrs()
+ *  Register interrupt handlers for fatal interrupts.
  */
-static void init_isrs(void)
+static void register_fatal_isrs(void)
 {
     register_interrupt_handler(0, &panic_handler);
     register_interrupt_handler(13, &panic_handler);
-    register_interrupt_handler(33, &keyboard_handler);
+}
+
+/* register_common_isrs()
+ *  Register interrupt handlers for non-fatal common interrupts.
+ */
+static void register_common_isrs(void)
+{
+    register_interrupt_handler(IRQ1, &keyboard_handler);
 }
 
 static void set_time(void)
@@ -68,25 +74,27 @@ void startup_x86(void *mdb, unsigned int magic)
      *  2. Save things given to us by multiboot
      *  3. Load GDT
      *  4. Load IDT
-     *  5. Enable the A20 address line
-     *  6. Enter protected mode
-     *  7. Activate memory paging
-     *  8. Set kernel load time from CMOS
-     *  9. Set up clock timer
-     *  10. Register handlers for common interrupts
-     *  11. Identify the CPU(s) attached to the system
+     *  5. Register handlers for fatal interrupts
+     *  6. Enable the A20 address line
+     *  7. Enter protected mode
+     *  8. Activate memory paging
+     *  9. Set kernel load time from CMOS
+     *  10. Set up clock timer
+     *  11. Register handlers for common interrupts
+     *  12. Identify the CPU(s) attached to the system
      */
     init_screen(); /* must be before any kprintf() or panic() */
     init_multiboot(mdb, magic);
     init_gdt();
     init_idt();
-    init_a20(); /* see a20.s */
+    register_fatal_isrs();
+    init_a20(); /* see flush.s */
     enter_pm(); /* see flush.s */
     init_paging();
     set_time();
     init_timer(TIMER_FREQ);
-    init_isrs();
     init_cpu();
+    register_common_isrs();
 
     /* And finally, enable interrupts */
     __asm__ __volatile__("sti");
