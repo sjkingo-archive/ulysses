@@ -147,7 +147,9 @@ flag_t init_paging(void)
     register_interrupt_handler(14, &page_fault);
     switch_page_dir(kernel_directory);
 
-    kheap = create_heap(KHEAP_START, KHEAP_START + KHEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
+    /* Create the kernel heap */
+    kheap = create_heap(KHEAP_START, KHEAP_START + KHEAP_INITIAL_SIZE, 
+            0xCFFFF000, 0, 0);
 
     return TRUE; /* clean return for kmain() */
 }

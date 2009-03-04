@@ -4,9 +4,18 @@
 #include "paging.h"
 #include "oarray.h"
 
-extern unsigned int end; /* end of linker script */
+extern unsigned int end; /* declared in linker.ld */
+extern page_dir_t *kernel_directory; /* declared in paging.c */
+
+/* placement_address
+ *  Physical address to place the kernel heap at. This is usually the end
+ *  of all segments, however this can be anywhere in physical memory.
+ */
 unsigned int placement_address = (unsigned int)&end;
-extern page_dir_t *kernel_directory;
+
+/* kheap
+ *  Pointer to the kernel heap.
+ */
 heap_t *kheap = 0;
 
 static unsigned char header_t_less_than(void*a, void *b)
@@ -14,99 +23,10 @@ static unsigned char header_t_less_than(void*a, void *b)
     return (((header_t *)a)->size < ((header_t *)b)->size) ? 1 : 0;
 }
 
-unsigned int kmalloc_int(unsigned int sz, int align, unsigned int *phys)
-{
-    if (kheap != 0) {
-        void *addr = alloc(sz, (unsigned char)align, kheap);
-        if (phys != 0) {
-            page_t *page = get_page((unsigned int)addr, 0, kernel_directory);
-            *phys = page->frame * 0x1000 + ((unsigned int)addr & 0xFFF);
-        }
-        return (unsigned int)addr;
-    } else {
-        unsigned int tmp;
-
-        /* Align the placement address */
-        if (align == 1 && (placement_address & 0xFFFFF000)) {
-            placement_address &= 0xFFFFF000;
-            placement_address += 0x1000;
-        }
-        if (phys) *phys = placement_address;
-        
-        tmp = placement_address;
-        placement_address += sz;
-        return tmp;
-    }
-}
-
-void kfree(void *p)
-{
-    free(p, kheap);
-}
-
-unsigned int kmalloc_a(unsigned int sz)
-{
-    return kmalloc_int(sz, 1, 0);
-}
-
-unsigned int kmalloc_p(unsigned int sz, unsigned int *phys)
-{
-    return kmalloc_int(sz, 0, phys);
-}
-
-unsigned int kmalloc_ap(unsigned int sz, unsigned int *phys)
-{
-    return kmalloc_int(sz, 1, phys);
-}
-
-unsigned int kmalloc(unsigned int sz)
-{
-    return kmalloc_int(sz, 0, 0);
-}
-
-static void expand(unsigned int new_size, heap_t *heap)
-{
-    unsigned int old_size, i;
-
-    /* Find the nearest page boundary following this */
-    if ((new_size & 0xFFFFF000) != 0) {
-        new_size &= 0xFFFFF000;
-        new_size += 0x1000;
-    }
-    old_size = heap->end_address-heap->start_address;
-
-    /* Allocate a new frame */
-    i = old_size;
-    while (i < new_size) {
-        alloc_frame(get_page(heap->start_address + i, 1, kernel_directory),
-                     (heap->supervisor) ? 1 : 0, (heap->readonly) ? 0 : 1);
-        i += 0x1000; /* page size */
-    }
-    heap->end_address = heap->start_address + new_size;
-}
-
-static unsigned int contract(unsigned int new_size, heap_t *heap)
-{
-    unsigned int old_size, i;
-
-    /* Find the nearest page boundary following this */
-    if (new_size & 0x1000) {
-        new_size &= 0x1000;
-        new_size += 0x1000;
-    }
-    if (new_size < HEAP_MIN_SIZE) new_size = HEAP_MIN_SIZE;
-
-    old_size = heap->end_address - heap->start_address;
-    i = old_size - 0x1000;
-    while (new_size < i) {
-        free_frame(get_page(heap->start_address + i, 0, kernel_directory));
-        i -= 0x1000;
-    }
-
-    heap->end_address = heap->start_address + new_size;
-    return new_size;
-}
-
+/* find_smallest_hole()
+ *  Find the smallest hole fitting the given size in the given heap
+ *  and return its index.
+ */
 static int find_smallest_hole(unsigned int size, unsigned char page_align, 
         heap_t *heap)
 {
@@ -144,39 +64,62 @@ static int find_smallest_hole(unsigned int size, unsigned char page_align,
     }
 }
 
-heap_t *create_heap(unsigned int start, unsigned int end_addr, 
-        unsigned int max, unsigned char supervisor, unsigned char readonly)
+/* expand()
+ *  Expand the given heap to the given size.
+ */
+static void expand(unsigned int new_size, heap_t *heap)
 {
-    heap_t *heap;
-    
-    /* Initialize the heap */
-    heap = (heap_t *)kmalloc(sizeof(heap_t));
-    heap->index = place_oarray((void *)start, HEAP_INDEX_SIZE, &header_t_less_than);
-    start += sizeof(type_t) * HEAP_INDEX_SIZE;
+    unsigned int old_size, i;
 
-    /* The start address needs to be page-aligned */
-    if ((start & 0xFFFFF000) != 0) {
-        start &= 0xFFFFF000;
-        start += 0x1000;
+    /* Find the nearest page boundary following this */
+    if ((new_size & 0xFFFFF000) != 0) {
+        new_size &= 0xFFFFF000;
+        new_size += 0x1000;
     }
+    old_size = heap->end_address-heap->start_address;
 
-    heap->start_address = start;
-    heap->end_address = end_addr;
-    heap->max_address = max;
-    heap->supervisor = supervisor;
-    heap->readonly = readonly;
-
-    /* The heap starts with one large hole in the index */
-    header_t *hole = (header_t *)start;
-    hole->size = end_addr-start;
-    hole->magic = HEAP_MAGIC;
-    hole->is_hole = 1;
-    insert_oarray((void *)hole, &heap->index);     
-
-    return heap;
+    /* Allocate a new frame */
+    i = old_size;
+    while (i < new_size) {
+        alloc_frame(get_page(heap->start_address + i, 1, kernel_directory),
+                     (heap->supervisor) ? 1 : 0, (heap->readonly) ? 0 : 1);
+        i += 0x1000; /* page size */
+    }
+    heap->end_address = heap->start_address + new_size;
 }
 
-void *alloc(unsigned int size, unsigned char page_align, heap_t *heap)
+/* contact()
+ *  Shrink the given heap to the given size. Note that new_size is the
+ *  *new* size, not the size to shrink!
+ */
+static unsigned int contract(unsigned int new_size, heap_t *heap)
+{
+    unsigned int old_size, i;
+
+    /* Find the nearest page boundary following this */
+    if (new_size & 0x1000) {
+        new_size &= 0x1000;
+        new_size += 0x1000;
+    }
+    if (new_size < HEAP_MIN_SIZE) new_size = HEAP_MIN_SIZE;
+
+    old_size = heap->end_address - heap->start_address;
+    i = old_size - 0x1000;
+    while (new_size < i) {
+        free_frame(get_page(heap->start_address + i, 0, kernel_directory));
+        i -= 0x1000;
+    }
+
+    heap->end_address = heap->start_address + new_size;
+    return new_size;
+}
+
+/* alloc()
+ *  Allocates a contiguous region of memory with the given size, in the 
+ *  given heap. If page_align is 1, align the block on a page boundary.
+ *  Returns a pointer to the block.
+ */
+static void *alloc(unsigned int size, unsigned char page_align, heap_t *heap)
 {
     int i;
     unsigned int new_size;
@@ -296,7 +239,10 @@ void *alloc(unsigned int size, unsigned char page_align, heap_t *heap)
     return (void *)((unsigned int)block_header + sizeof(header_t));
 }
 
-void free(void *p, heap_t *heap)
+/* free()
+ *  Deallocates a block allocated by alloc() in the given heap.
+ */
+static void free(void *p, heap_t *heap)
 {
     header_t *header, *test_header;
     footer_t *footer, *test_footer;
@@ -379,4 +325,85 @@ void free(void *p, heap_t *heap)
         insert_oarray((void *)header, &heap->index);
     }
 }
+
+/* kmalloc_int()
+ *  Internal implementation of kmalloc(): allocate a block with the given
+ *  size in the kernel heap.
+ */
+static void *kmalloc_int(unsigned int sz, int align, unsigned int *phys)
+{
+    if (kheap != 0) {
+        void *addr = alloc(sz, (unsigned char)align, kheap);
+        if (phys != 0) {
+            page_t *page = get_page((unsigned int)addr, 0, kernel_directory);
+            *phys = page->frame * 0x1000 + ((unsigned int)addr & 0xFFF);
+        }
+        return addr;
+    } else {
+        unsigned int tmp;
+
+        /* Align the placement address */
+        if (align == 1 && (placement_address & 0xFFFFF000)) {
+            placement_address &= 0xFFFFF000;
+            placement_address += 0x1000;
+        }
+        if (phys) *phys = placement_address;
+        
+        tmp = placement_address;
+        placement_address += sz;
+        return (void *)tmp;
+    }
+}
+
+heap_t *create_heap(unsigned int start, unsigned int end_addr, 
+        unsigned int max, unsigned char supervisor, unsigned char readonly)
+{
+    heap_t *heap;
+    
+    /* Initialize the heap */
+    heap = (heap_t *)kmalloc(sizeof(heap_t));
+    heap->index = place_oarray((void *)start, HEAP_INDEX_SIZE, &header_t_less_than);
+    start += sizeof(type_t) * HEAP_INDEX_SIZE;
+
+    /* The start address needs to be page-aligned */
+    if ((start & 0xFFFFF000) != 0) {
+        start &= 0xFFFFF000;
+        start += 0x1000;
+    }
+
+    heap->start_address = start;
+    heap->end_address = end_addr;
+    heap->max_address = max;
+    heap->supervisor = supervisor;
+    heap->readonly = readonly;
+
+    /* The heap starts with one large hole in the index */
+    header_t *hole = (header_t *)start;
+    hole->size = end_addr-start;
+    hole->magic = HEAP_MAGIC;
+    hole->is_hole = 1;
+    insert_oarray((void *)hole, &heap->index);     
+
+    return heap;
+}
+
+void *kmalloc(unsigned int size)
+{
+    return kmalloc_int(size, 0, 0);
+}
+
+void kfree(void *p)
+{
+    free(p, kheap);
+}
+
+void *kmalloc_a(unsigned int size)
+{
+    return kmalloc_int(size, 1, 0);
+}
+
+void *kmalloc_ap(unsigned int size, unsigned int *phys)
+{
+    return kmalloc_int(size, 1, phys);
+} 
 
