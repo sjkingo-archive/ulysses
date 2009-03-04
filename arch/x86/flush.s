@@ -1,13 +1,10 @@
 
-[bits 32]
-[section .text]
+bits 32
+section .text
 
 ; Descriptor table flush.
 
 global gdt_flush
-global idt_flush
-global enter_pm
-
 gdt_flush:
     ; get pointer to gdt struct and load it
     mov eax, [esp+4]
@@ -26,18 +23,21 @@ gdt_flush:
    ret
 
 ; Load the interrupt table - we should now have interrupts!
+global idt_flush
 idt_flush:
     mov eax, [esp+4]
     lidt [eax]
     ret
 
 ; Enter protected mode
+global enter_pm
 enter_pm:
-    cli ; not re-entrant
+    cli ; not reentrant
     mov eax, cr0
     or eax, 1 ; PM bit
     mov cr0, eax
     jmp 0x08:.pm ; far jump into protected mode
+
 .pm:
     sti
     ret
