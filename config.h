@@ -36,7 +36,7 @@
  *  Start the kernel shell straight after the architecture-specific
  *  startup routines, bypassing all of the higher-level kernel startup.
  */
-#define KERN_INTERACTIVE 1
+#define KERN_INTERACTIVE 0
 
 /* VERSION_NUM
  * VERSION_CN
