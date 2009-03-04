@@ -20,16 +20,14 @@ void init_vt(void)
         virtual_terms[i].stdin->buffer_len = 1024;
     }
 
-    if (!switch_vt(VT_LOG)) return FALSE;
-    kprintf("Switched to VT %d\n", active_vt);
+    switch_vt(VT_LOG);
 }
 
-flag_t switch_vt(unsigned short index)
+void switch_vt(unsigned short index)
 {
-    if (index >= NUM_VT) return FALSE;
+    if (index >= NUM_VT) return;
     active_vt = index;
     flush_vt();
-    return TRUE;
 }
 
 void flush_vt(void)

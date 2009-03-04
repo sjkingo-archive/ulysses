@@ -39,7 +39,7 @@ void init_vt(void);
  *  Change the active virtual terminal to the one at index. This will flush
  *  the VT to the screen.
  */
-flag_t switch_vt(unsigned short index);
+void switch_vt(unsigned short index);
 
 /* flush_vt()
  *  Flushes the active VT to screen using arch-specific methods.
