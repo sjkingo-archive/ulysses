@@ -9,8 +9,10 @@ void startup_kernel(void)
     
     init_vt();
     print_startup();
+#if DEBUG
     print_cpuinfo();
     print_meminfo();
+#endif
     init_proc(); /* set up process table and scheduling queues */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_shell("ulysses> "); /* this happens regardless of KERN_SHELL's val */
