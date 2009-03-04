@@ -2,7 +2,6 @@
 #include "x86.h"
 
 #include <string.h>
-#include <sys/types.h>
 
 static void idt_set_gate(unsigned char num, unsigned int base, 
         unsigned short sel, unsigned char flags)
@@ -14,7 +13,7 @@ static void idt_set_gate(unsigned char num, unsigned int base,
     idt_entries[num].flags = flags; /* ring 0 */
 }
 
-flag_t init_idt(void)
+void init_idt(void)
 {
     idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
     idt_ptr.base = (unsigned int)&idt_entries;
@@ -91,8 +90,6 @@ flag_t init_idt(void)
     idt_flush((unsigned int)&idt_ptr); /* declared in flush.s */
     
     memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
-
-    return TRUE; /* clean return for kmain() */
 }
 
 

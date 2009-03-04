@@ -5,7 +5,7 @@
 
 extern flag_t shell_active; /* declared in shell.h */
 
-flag_t init_vt(void)
+void init_vt(void)
 {
     unsigned short i, j;
 
@@ -22,7 +22,6 @@ flag_t init_vt(void)
 
     if (!switch_vt(VT_LOG)) return FALSE;
     kprintf("Switched to VT %d\n", active_vt);
-    return TRUE; /* ensure a sane return for _kmain() */
 }
 
 flag_t switch_vt(unsigned short index)

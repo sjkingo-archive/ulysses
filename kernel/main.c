@@ -7,7 +7,7 @@ void startup_kernel(void)
     static flag_t already_started = FALSE;
     if (already_started) panic("startup_kernel() already set up");
     
-    if (!init_vt()) panic("Virtual terminals failed initialisation");
+    init_vt();
     print_startup();
     print_cpuinfo();
     print_meminfo();

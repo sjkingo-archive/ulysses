@@ -33,7 +33,7 @@ unsigned short active_vt; /* the active VT that gets output */
  *  copy any output already written to screen into the first VT and flush it,
  *  so it is not lost.
  */
-flag_t init_vt(void);
+void init_vt(void);
 
 /* switch_vt()
  *  Change the active virtual terminal to the one at index. This will flush

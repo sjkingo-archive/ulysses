@@ -1,8 +1,6 @@
 
 #include "x86.h"
 
-#include <sys/types.h>
-
 static void gdt_set_gate(int num, unsigned int base, unsigned int limit, 
         unsigned char access, unsigned char gran)
 {
@@ -17,7 +15,7 @@ static void gdt_set_gate(int num, unsigned int base, unsigned int limit,
    gdt_entries[num].access = access;
 }
 
-flag_t init_gdt(void)
+void init_gdt(void)
 {
     gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
     gdt_ptr.base = (unsigned int)&gdt_entries;
@@ -29,7 +27,5 @@ flag_t init_gdt(void)
     gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); /* user-mode data */
 
     gdt_flush((unsigned int)&gdt_ptr); /* declared in flush.s */
-
-    return TRUE; /* clean return for kmain() */
 }
 

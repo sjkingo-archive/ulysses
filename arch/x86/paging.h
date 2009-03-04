@@ -13,7 +13,6 @@
  */
 
 #include "isr.h" /* for registers_t */
-#include <sys/types.h> /* for flag_t */
 
 #define INDEX_FROM_BIT(a) (a/32)
 #define OFFSET_FROM_BIT(a) (a%32)
@@ -41,7 +40,7 @@ typedef struct page_directory {
 /* init_paging()
  *  Set up paging and load the kernel's page directory into CPU.
  */
-flag_t init_paging(void);
+void init_paging(void);
 
 /* page_fault()
  *  Handler for CPU interrupt 14.

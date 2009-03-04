@@ -7,8 +7,6 @@
  * in protection and privilege granting for access.
  */
 
-#include <sys/types.h>
-
 struct gdt_entry_struct {
     unsigned short limit_low;
     unsigned short base_low; /* lowest 16 bits of the base */
@@ -32,7 +30,7 @@ gdt_entry_t gdt_entries[5];
  *  Initialise the global descriptor table with a lot of bitwise and
  *  assembler operations.
  */
-flag_t init_gdt(void);
+void init_gdt(void);
 
 /* See flush.s for assembler routines for these */
 extern void gdt_flush(unsigned int);

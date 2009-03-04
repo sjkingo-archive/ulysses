@@ -8,8 +8,6 @@
  * Interrupt handlers do not belong here: see isr.{c,h}.
  */
 
-#include <sys/types.h>
-
 struct idt_entry_struct {
     unsigned short base_low; /* lower 16 bits to jump to */
     unsigned short sel; /* segment selector */
@@ -31,7 +29,7 @@ idt_entry_t idt_entries[256]; /* that's a lot of interrupts */
 /* init_idt()
  *  Initialise the interrupt descriptor table.
  */
-flag_t init_idt(void);
+void init_idt(void);
 
 /* See flush.s for assembler routine for this */
 /* XXX move this to inline assembler */

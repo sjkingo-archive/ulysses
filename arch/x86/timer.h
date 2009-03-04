@@ -9,7 +9,7 @@
 
 unsigned long ticks;
 
-flag_t init_timer(unsigned int freq);
+void init_timer(unsigned int freq);
 
 void timer_tick(registers_t regs);
 

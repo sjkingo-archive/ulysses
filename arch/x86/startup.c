@@ -78,13 +78,13 @@ void startup_x86(void *mdb, unsigned int magic)
      */
     init_screen(); /* must be before any kprintf() or panic() */
     init_multiboot(mdb, magic);
-    if (!init_gdt()) panic("GDT failed initialisation\n");
-    if (!init_idt()) panic("IDT failed initialisation");
+    init_gdt();
+    init_idt();
     init_a20(); /* see a20.s */
     enter_pm(); /* see flush.s */
-    if (!init_paging()) panic("Paging failed initialisation");
+    init_paging();
     set_time();
-    if (!init_timer(TIMER_FREQ)) panic("Timer failed initialisation");
+    init_timer(TIMER_FREQ);
     init_isrs();
     init_cpu();
 

@@ -3,7 +3,6 @@
 #include "kheap.h"
 
 #include <string.h> /* for memset() */
-#include <sys/types.h> /* for flag_t */
 
 unsigned int *frames; /* pointer to first frame */
 unsigned int nframes; /* number of frames */
@@ -112,7 +111,7 @@ void free_frame(page_t *page)
     page->frame = 0x0;
 }
 
-flag_t init_paging(void)
+void init_paging(void)
 {
     unsigned int i, j, k;
 
@@ -150,8 +149,6 @@ flag_t init_paging(void)
     /* Create the kernel heap */
     kheap = create_heap(KHEAP_START, KHEAP_START + KHEAP_INITIAL_SIZE, 
             0xCFFFF000, 0, 0);
-
-    return TRUE; /* clean return for kmain() */
 }
 
 void page_fault(registers_t regs)
