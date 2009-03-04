@@ -25,5 +25,10 @@ void print_startup(void);
  */
 void print_cpuinfo(void);
 
+/* print_meminfo()
+ *  Output memory info.
+ */
+void print_meminfo(void);
+
 #endif
 
