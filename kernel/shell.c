@@ -35,6 +35,10 @@ static void execute_cmd(void)
         init_proc();
     } else if (strcmp(shell.data, "proc") == 0) {
         print_current_proc();
+    } else if (strcmp(shell.data, "cpuinfo") == 0) {
+        print_cpuinfo();
+    } else if (strcmp(shell.data, "meminfo") == 0) {
+        print_meminfo();
     } else {
         kprintf("%s: command not found\n", shell.data);
     }
