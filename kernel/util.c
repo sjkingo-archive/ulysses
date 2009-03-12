@@ -23,8 +23,6 @@ static void print_memory_map(void)
 
 void sanity_check(void)
 {
-    stub((char *)__func__);
-
     goto pass; /* default to passing */
     goto fail; /* to keep the compiler happy */
     fail:
@@ -35,9 +33,7 @@ void sanity_check(void)
 
 void stub(char *fname)
 {
-#if 0
     kprintf("stub: %s()\n", fname);
-#endif
 }
 
 void print_startup(void)
