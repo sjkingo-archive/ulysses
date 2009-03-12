@@ -54,5 +54,13 @@ void append_char(const char c, flag_t write, flag_t all);
 
 void append_stdin(const char c);
 
+/* up_pressed()
+ * down_pressed()
+ *  If the shell is active, tell it that the up key on the keyboard was
+ *  pressed, otherwise eat the keypress.
+ */
+void up_pressed(void);
+void down_pressed(void);
+
 #endif
 

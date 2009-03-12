@@ -148,6 +148,14 @@ void keyboard_handler(registers_t regs)
         case KB_F10:
             panic("F10 pressed");
 
+        case KP_UP:
+            up_pressed();
+            return;
+
+        case KP_DOWN:
+            down_pressed();
+            return;
+
         default:
             append_stdin(key);
     }

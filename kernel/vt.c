@@ -72,3 +72,20 @@ void append_stdin(const char c)
     }
 }
 
+void up_pressed(void)
+{
+    if (shell_active) {
+        shell_walk_history(TRUE);
+    } else {
+        /* XXX eat the keypress */
+    }
+}
+
+void down_pressed(void)
+{
+    if (shell_active) {
+        shell_walk_history(FALSE);
+    } else {
+        /* XXX eat the keypress */
+    }
+}
