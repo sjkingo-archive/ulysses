@@ -5,6 +5,7 @@
 #include <sys/types.h>
 
 #define SHELL_BUF_SIZE 1024
+#define SHELL_MAX_HISTORY 100
 
 struct _shell {
     int next_pos;
@@ -35,6 +36,13 @@ void buffer_key(const char c);
  *  driver.
  */
 void run_shell(void);
+
+/* shell_history()
+ *  Walk through the history and write previous commands to the shell buffer.
+ *  If dir is TRUE, walk backwards (from newest to oldest), otherwise walk 
+ *  forwards (oldest to newest).
+ */
+void shell_walk_history(flag_t dir);
 
 #endif
 
