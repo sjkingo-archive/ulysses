@@ -13,6 +13,7 @@ void startup_kernel(void)
     print_cpuinfo();
     print_meminfo();
 #endif
+    init_kthread();
     init_proc(); /* set up process table and scheduling queues */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_shell("ulysses> "); /* this happens regardless of KERN_SHELL's val */

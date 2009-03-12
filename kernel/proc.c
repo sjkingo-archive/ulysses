@@ -121,6 +121,10 @@ void pick_proc(void)
     register unsigned short i;
     register struct proc *p;
 
+    /* Run a kernel thread if one is ready */
+    kthread_run();
+
+    /* Now pick a user process to run */
     for (i = 0; i < NR_SCHED_Q; i++) {
         p = sched_queues[i].head; /* head of the queue */
         while (p != NULL) {

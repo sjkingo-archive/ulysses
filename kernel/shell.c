@@ -63,6 +63,10 @@ static void execute_cmd(void)
             if (last_up_index == i) kprintf(" <--");
             kprintf("\n");
         }
+    } else if (strcmp(shell.data, "kthread_fork") == 0) {
+        kthread_fork(kthread_spin);
+    } else if (strcmp(shell.data, "dump_kthreads") == 0) {
+        dump_kthreads();
     } else {
         kprintf("%s: command not found\n", shell.data);
     }
