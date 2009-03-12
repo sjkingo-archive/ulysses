@@ -21,6 +21,28 @@ static void reset_buffer(void)
     shell_active = TRUE;
 }
 
+/* update_history()
+ *  Copy whatever is in the shell buffer into the history array.
+ */
+static void update_history(void)
+{
+    /* Wrap the history */
+    if (last_cmd_index >= SHELL_MAX_HISTORY) {
+        last_cmd_index = 0;
+    }
+
+    /* Don't add duplicates */
+    if (last_cmd_index > 0 && 
+            strcmp(shell.data, last_cmds[last_cmd_index - 1]) == 0) {
+        return;
+    }
+
+    /* Copy the current command into a buffer for reuse */
+    last_cmds[last_cmd_index] = (char *)kmalloc(strlen(shell.data));
+    strcpy(last_cmds[last_cmd_index], shell.data);
+    last_up_index = last_cmd_index++;
+}
+
 /* execute_cmd()
  *  Execute the command currently in the buffer. Since strtok() is considered
  *  unsafe for in-kernel use, we assume the entire buffer (up until the NULL
@@ -71,15 +93,7 @@ static void execute_cmd(void)
         kprintf("%s: command not found\n", shell.data);
     }
 
-    /* Wrap the history */
-    if (last_cmd_index >= SHELL_MAX_HISTORY) {
-        last_cmd_index = 0;
-    }
-
-    /* Copy the current command into a buffer for reuse */
-    last_cmds[last_cmd_index] = (char *)kmalloc(strlen(shell.data));
-    strcpy(last_cmds[last_cmd_index], shell.data);
-    last_up_index = last_cmd_index++;
+    update_history();
 }
 
 void init_shell(char *prompt)
