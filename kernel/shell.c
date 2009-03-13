@@ -140,7 +140,7 @@ void shell_walk_history(flag_t dir)
     /* Copy the previous history command into the buffer */
     reset_buffer();
     strcpy(shell.data, last_cmds[last_up_index]);
-    shell.next_pos = strlen(last_cmds[last_up_index]) + 1;
+    shell.next_pos = strlen(last_cmds[last_up_index]);
     
     /* Move the history index if it's not out of bounds */
     if (dir) { /* up, backwards */
