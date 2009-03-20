@@ -10,12 +10,6 @@ static pid_t new_pid(void)
     return PID_NONE; /* XXX */
 }
 
-static void idle_task(void)
-{
-    kprintf("idle_task()\n");
-    __asm__ __volatile__("sti ; hlt");
-}
-
 void init_proc(void)
 {
     register struct proc *p;
@@ -42,16 +36,6 @@ void init_proc(void)
 
 #if DEBUG
     kprintf("init_proc(): proc table set up\n");
-#endif
-
-    /* Set up the idle process */
-    new_proc(-1, -1, -1, "IDLE");
-    proc[0].pid = PID_IDLE; /* XXX ignore the auto-generated pid */
-    proc[0].task = &idle_task;
-    sched(get_proc(PID_IDLE));
-
-#if DEBUG
-    kprintf("init_proc(): IDLE process set up\n");
 #endif
 }
 
@@ -89,8 +73,7 @@ void sched(struct proc *p)
 {
     /* Pick the queue and update the process */
     if (p->uid == 0) {
-        if (p->pid == PID_IDLE) p->sched_q = IDLE_Q;
-        else p->sched_q = ROOT_Q;
+        p->sched_q = ROOT_Q;
     } else {
         p->sched_q = USER_Q;
     }
