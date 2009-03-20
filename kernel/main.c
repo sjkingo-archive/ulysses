@@ -1,6 +1,15 @@
 
 #include "kernel.h"
 
+/* idle_task()
+ *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
+ *  to ensure the CPU has active interrupt lines.
+ */
+static void idle_task(void)
+{
+    while (1) __asm__ __volatile__("sti ; hlt");
+}
+
 void startup_kernel(void)
 {
     /* This can only be run once: ensure we don't get here again */
@@ -41,5 +50,11 @@ void _kmain(void *mdb, unsigned int magic)
 #else
     startup_kernel();
 #endif
+
+    /* Once startup is complete, the main kernel thread drops to an idle
+     * loop, placing the CPU in a S1 sleep state.
+     */
+    idle_task();
+    return; /* we should never get here */
 }
 
