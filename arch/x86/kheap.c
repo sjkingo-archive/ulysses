@@ -2,7 +2,7 @@
 #include "x86.h"
 #include "kheap.h"
 #include "paging.h"
-#include "oarray.h"
+#include "../../kernel/oarray.h"
 
 extern unsigned int end; /* declared in linker.ld */
 extern page_dir_t *kernel_directory; /* declared in paging.c */
