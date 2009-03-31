@@ -35,20 +35,24 @@ void flush_vt(void)
     flush_screen(virtual_terms[active_vt].data);
 }
 
+static void append_to_vt(const char c, unsigned short vt)
+{
+    if ((virtual_terms[vt].next + 1) >= MAX_CHARS) {
+        virtual_terms[vt].next = 0;
+    }
+    virtual_terms[vt].data[virtual_terms[vt].next++] = c;
+}
+
 void append_char(const char c, flag_t write, flag_t all)
 {
-    unsigned short i, max;
-
-    if (all) max = NUM_VT;
-    else max = active_vt;
-    
-    for (i = 0; i < max; i++) {
-        if ((virtual_terms[i].next + 1) >= MAX_CHARS) {
-            virtual_terms[i].next = 0;
+    if (all) {
+        unsigned short i;
+        for (i = 0; i < NUM_VT; i++) {
+            append_to_vt(c, i);
         }
-        virtual_terms[i].data[virtual_terms[i].next++] = c;
+    } else {
+        append_to_vt(c, active_vt);
     }
-
     if (write) put_char(c); /* write through to the screen directly */
 }
 

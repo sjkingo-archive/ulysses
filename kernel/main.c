@@ -32,7 +32,7 @@ void startup_kernel(void)
             kern.current_time_offset.tv_sec);
 
 #if KERN_SHELL
-    run_shell(); /* display shell */
+    run_shell_all(); /* display shell */
 #endif
 }
 

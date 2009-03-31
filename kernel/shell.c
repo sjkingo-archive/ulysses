@@ -129,7 +129,13 @@ void buffer_key(const char c)
     }
 }
 
-void run_shell()
+void run_shell_all(void)
+{
+    kprintf_all("%s", shell.prompt);
+    shell_active = TRUE;
+}
+
+void run_shell(void)
 {
     kprintf("%s", shell.prompt);
     shell_active = TRUE;

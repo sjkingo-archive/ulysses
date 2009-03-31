@@ -32,10 +32,16 @@ void init_shell(char *prompt);
 void buffer_key(const char c);
 
 /* run_shell()
- *  Display the prompt on screen and wait for input from the keyboard
+ *  Display the prompt on the current VT and wait for input from the keyboard
  *  driver.
  */
 void run_shell(void);
+
+/* run_shell_all()
+ *  Display the prompt on all VTs and wait for input from the keyboard
+ *  driver.
+ */
+void run_shell_all(void);
 
 /* shell_history()
  *  Walk through the history and write previous commands to the shell buffer.
