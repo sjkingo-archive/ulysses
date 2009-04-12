@@ -132,6 +132,8 @@ pid_t fork(void)
     task_t *child, *parent;
     page_dir_t *page_dir;
 
+    CLI;
+
     /* We need this later */
     parent = current_task;
 
@@ -182,6 +184,7 @@ pid_t fork(void)
         return child->pid;
     } else {
         /* Child, exit */
+        STI;
         return 0;
     }
 }

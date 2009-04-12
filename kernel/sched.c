@@ -73,15 +73,18 @@ static void idle_task(void)
 
 void add_to_queue(task_t *t)
 {
+    CLI;
     if (tasks_queue.head == NULL) {
         add_as_head(t);
     } else {
         add_as_tail(t);
     }
+    STI;
 }
 
 task_t *pick_next_task(void)
 {
+    CLI;
     task_t *t = tasks_queue.head;
     
     while (t != NULL) {
@@ -94,6 +97,7 @@ task_t *pick_next_task(void)
         }
         t = t->next;
     }
+    STI;
 
     /* No ready tasks found, idle instead */
     idle_task();
@@ -102,11 +106,13 @@ task_t *pick_next_task(void)
 
 void dump_all_tasks(void)
 {
+    CLI;
     task_t *t = tasks_queue.head;
     while (t != NULL) {
         kprintf("%d ", t->pid);
         t = t->next;
     }
     kprintf("\n");
+    STI;
 }
 
