@@ -12,6 +12,7 @@ static void add_as_head(task_t *t)
 {
     tasks_queue.head = t;
     tasks_queue.tail = NULL;
+    t->next = NULL;
 
 #if SCHED_DEBUG
     kprintf("add_as_head(): pid %d\n", t->pid);
@@ -29,6 +30,8 @@ static void add_as_tail(task_t *t)
         tasks_queue.tail->next = t;
         tasks_queue.tail = t;
     }
+
+    t->next = NULL;
 
 #if SCHED_DEBUG
         kprintf("add_as_tail(): pid %d\n", t->pid);
@@ -75,8 +78,6 @@ void add_to_queue(task_t *t)
     } else {
         add_as_tail(t);
     }
-
-    t->next = NULL; /* either way, it doesn't have a next task */
 }
 
 task_t *pick_next_task(void)
