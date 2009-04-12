@@ -64,5 +64,9 @@ void alloc_frame(page_t *page, int is_kernel, int is_writeable);
  */
 void free_frame(page_t *page);
 
+page_dir_t *clone_dir(page_dir_t *src);
+
+void move_stack(void *new_start, unsigned int size);
+
 #endif
 

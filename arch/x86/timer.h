@@ -5,7 +5,7 @@
 /* The CPU timer */
 
 #define CLOCK 1193180
-#define TIMER_FREQ 250
+#define TIMER_FREQ 50
 
 unsigned long ticks;
 

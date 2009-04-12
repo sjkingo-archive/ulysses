@@ -72,8 +72,6 @@ static void execute_cmd(void)
         startup_kernel();
     } else if (strcmp(shell.data, "init_proc") == 0) {
         init_proc();
-    } else if (strcmp(shell.data, "proc") == 0) {
-        print_current_proc();
     } else if (strcmp(shell.data, "cpuinfo") == 0) {
         print_cpuinfo();
     } else if (strcmp(shell.data, "meminfo") == 0) {
@@ -89,6 +87,8 @@ static void execute_cmd(void)
         kthread_fork(kthread_spin);
     } else if (strcmp(shell.data, "dump_kthreads") == 0) {
         dump_kthreads();
+    } else if (strcmp(shell.data, "fork") == 0) {
+        fork();
     } else {
         kprintf("%s: command not found\n", shell.data);
     }

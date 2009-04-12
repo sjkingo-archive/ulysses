@@ -14,7 +14,8 @@
  * IDLE *must* stay as the only process in the lowest priority queue!
  */
 
-#define NR_PROCS 100 /* max processes we can handle */
+#include "../arch/x86/paging.h"
+
 #define NR_SCHED_Q 2 /* number of scheduling queues to use */
 
 /* Core kernel process pids */
@@ -23,7 +24,7 @@
 /* An entry in the process table. When updating this, be sure to keep 
  * new_proc() updated as well.
  */
-struct proc {
+typedef struct proc {
     pid_t pid; /* process id */
     uid_t uid; /* user id */
     gid_t egid; /* effective group id */
@@ -31,21 +32,18 @@ struct proc {
 
     char *name; /* NULL-terminated process name */
 
-    void (*task)(void); /* XXX until context switching is added, we just
-                           have a pointer to a function as a "process" */
+    unsigned int esp; /* current stack pointer */
+    unsigned int ebp; /* base stack pointer */
+    unsigned int eip; /* current instruction pointer */
+    page_dir_t *page_dir;
 
     unsigned short sched_q; /* scheduling queue this proc belongs to */
     flag_t ready; /* whether this process is ready to be run */
     unsigned short s_ticks_left; /* number of scheduling ticks left */
     unsigned short s_quantum_size; /* quantum size in ticks */
-    struct proc *next; /* next proc in scheduling queue, or NULL if tail */
-};
 
-/* Process table */
-struct proc proc[NR_PROCS]; /* the process table itself */
-unsigned int last_proc; /* index of last proc in the table */
-#define BEG_PROC (&proc[0]) /* pointer to the start of proc table */
-#define END_PROC (&proc[NR_PROCS]) /* pointer to the end of the proc table */ 
+    struct proc *next; /* next proc in queue, or NULL if tail */
+} proc_t;
 
 #define USER_Q 1 /* user processes go here */
 #define ROOT_Q 0 /* root's processes go here so they are picked first */
@@ -59,9 +57,6 @@ struct sched_q {
 };
 
 struct sched_q sched_queues[NR_SCHED_Q]; /* all of the scheduling queues */
-struct proc *next_proc; /* next process to run */
-
-pid_t curr_pid; /* current pid running */
 
 /* init_proc()
  *  Initialises the process table and scheduling queues. This needs to be
@@ -70,35 +65,9 @@ pid_t curr_pid; /* current pid running */
  */
 void init_proc(void);
 
-/* new_proc()
- *  Add a new process to the process table. Note that this process will
- *  *not* be scheduled at this time. Call sched() for that.
- */
-void new_proc(uid_t uid, gid_t egid, gid_t rgid, char *name);
+pid_t fork(void);
 
-/* get_proc()
- *  Searches the process table for a process with the given pid. Returns
- *  a pointer to the process struct if found, or NULL if not.
- */
-struct proc *get_proc(pid_t pid);
-
-/* sched()
- *  Determines which scheduling queue to add the given process to, and
- *  adds it.
- */
-void sched(struct proc *p);
-
-/* pick_proc()
- *  Picks a process to be run next. This starts with the head of queue 0, and
- *  proceeds to the only process in the lowest queue - IDLE. Once a runnable
- *  process is found, point next_proc to it and return.
- */
-void pick_proc(void);
-
-/* print_current_proc()
- *  Dumps information on the currently running process.
- */
-void print_current_proc(void);
+pid_t getpid(void);
 
 void check_current_proc(void);
 

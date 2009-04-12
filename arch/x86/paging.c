@@ -14,6 +14,8 @@ page_dir_t *current_directory = 0; /* current page directory */
 extern unsigned int placement_address;
 extern heap_t *kheap;
 
+extern unsigned int initial_esp; /* main.c */
+
 static void set_frame(unsigned int frame_addr)
 {
     unsigned int frame = frame_addr / 0x1000;
@@ -48,10 +50,33 @@ static void switch_page_dir(page_dir_t *dir)
 {
     unsigned int cr0;
     current_directory = dir;
-    __asm__ __volatile__("mov %0, %%cr3" : : "r" (&dir->tables_phys));
+    __asm__ __volatile__("mov %0, %%cr3" : : "r" (dir->phys_addr));
     __asm__ __volatile__("mov %%cr0, %0" : "=r" (cr0));
-    cr0 |= 0x80000000;
+    cr0 |= 0x80000000; /* enable paging */
     __asm__ __volatile__("mov %0, %%cr0" : : "r" (cr0));
+}
+
+static page_table_t *clone_table(page_table_t *src, unsigned int *phys_addr)
+{
+    page_table_t *table;
+    int i;
+
+    table = (page_table_t *)kmalloc_ap(sizeof(page_table_t), phys_addr);
+    memset(table, 0, sizeof(page_dir_t)); /* XXX wtf? */
+
+    for (i = 0; i < 1024; i++) {
+        if (src->pages[i].frame) {
+            alloc_frame(&table->pages[i], 0, 0);
+            if (src->pages[i].present) table->pages[i].present = 1;
+            if (src->pages[i].rw) table->pages[i].rw = 1;
+            if (src->pages[i].user) table->pages[i].user = 1;
+            if (src->pages[i].accessed) table->pages[i].accessed = 1;
+            if (src->pages[i].dirty) table->pages[i].dirty = 1;
+            copy_page_physical(src->pages[i].frame * 0x1000, table->pages[i].frame * 0x1000);
+        }
+    }
+
+    return table;
 }
 
 /* get_page()
@@ -123,7 +148,7 @@ void init_paging(void)
     /* Set up a page directory */
     kernel_directory = (page_dir_t *)kmalloc_a(sizeof(page_dir_t));
     memset(kernel_directory, 0, sizeof(page_dir_t));
-    current_directory = kernel_directory;
+    kernel_directory->phys_addr = (unsigned int)kernel_directory->tables_phys;
 
     /* Map pages in the kernel heap */
     for (i = KHEAP_START; i < KHEAP_START + KHEAP_INITIAL_SIZE; i += 0x1000) {
@@ -149,6 +174,10 @@ void init_paging(void)
     /* Create the kernel heap */
     kheap = create_heap(KHEAP_START, KHEAP_START + KHEAP_INITIAL_SIZE, 
             0xCFFFF000, 0, 0);
+
+    /* Create kernel directory */
+    current_directory = clone_dir(kernel_directory);
+    switch_page_dir(current_directory);
 }
 
 void page_fault(registers_t regs)
@@ -169,3 +198,78 @@ void page_fault(registers_t regs)
     panic("Page fault");
 }
 
+page_dir_t *clone_dir(page_dir_t *src)
+{
+    int i;
+    unsigned int phys, offset;
+    page_dir_t *dir;
+
+    dir = (page_dir_t *)kmalloc_ap(sizeof(page_dir_t), &phys);
+    memset(dir, 0, sizeof(page_dir_t));
+
+    offset = (unsigned int)dir->tables_phys - (unsigned int)dir;
+    dir->phys_addr = phys + offset;
+
+    for (i = 0; i < 1024; i++) {
+        if (!src->tables[i]) {
+            continue;
+        }
+
+        if (kernel_directory->tables[i] == src->tables[i]) {
+            /* Kernel, just use the same pointer */
+            dir->tables[i] = src->tables[i];
+            dir->tables_phys[i] = src->tables_phys[i];
+        } else {
+            /* Outside of kernel, make a copy */
+            unsigned int p;
+            dir->tables[i] = clone_table(src->tables[i], &p);
+            dir->tables_phys[i] = phys | 0x07;
+        }
+    }
+
+    return dir;
+}
+
+void move_stack(void *new_start, unsigned int size)
+{
+    unsigned int i, pd_addr, offset;
+    unsigned int old_esp, old_ebp;
+    unsigned int new_esp, new_ebp;
+  
+    /* Allocate enough space for new stack */
+    for (i = (unsigned int)new_start; i >= ((unsigned int )new_start-size);
+            i -= 0x1000) {
+        alloc_frame(get_page(i, 1, current_directory), 0, 1);
+    }
+
+    /* Flush the TLB */
+    __asm__ __volatile__("mov %%cr3, %0" : "=r" (pd_addr));
+    __asm__ __volatile__("mov %0, %%cr3" : : "r" (pd_addr));
+
+    /* Get old stack pointers and work out new addresses */
+    __asm__ __volatile__("mov %%esp, %0" : "=r" (old_esp));
+    __asm__ __volatile__("mov %%ebp, %0" : "=r" (old_ebp));
+    offset = (unsigned int)new_start - initial_esp;
+    new_esp = old_esp + offset;
+    new_ebp = old_ebp + offset;
+
+    /* Copy the stack */
+    memcpy((void *)new_esp, (void *)old_esp, initial_esp - old_esp);
+
+    /* Copy each value from old stack to new */
+    for (i = (unsigned int)new_start; i > (unsigned int)new_start-size; 
+            i -= 4) {
+        unsigned int tmp = *(unsigned int *)i;
+        
+        /* Remap out of range values in old stack... really inefficient >_< */
+        if ((old_esp < tmp) && (tmp < initial_esp)) {
+            tmp = tmp + offset;
+            unsigned int *tmp2 = (unsigned int *)i;
+            *tmp2 = tmp;
+        }
+    }
+
+    /* Change stacks */
+    __asm__ __volatile__("mov %0, %%esp" : : "r" (new_esp));
+    __asm__ __volatile__("mov %0, %%ebp" : : "r" (new_ebp));
+}

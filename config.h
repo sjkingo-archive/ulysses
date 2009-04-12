@@ -23,7 +23,7 @@
 /* SCHED_DEBUG
  *  Whether or not to be verbose in logging the kernel scheduler.
  */
-#define SCHED_DEBUG 0
+#define SCHED_DEBUG 1
 
 /* KERN_SHELL
  *  The kernel shell is a builtin interpreter running in kernel-space.
