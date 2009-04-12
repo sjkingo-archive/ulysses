@@ -2,6 +2,9 @@
 #ifndef _UTIL_H
 #define _UTIL_H
 
+#define STI __asm__ __volatile__("sti ; nop")
+#define CLI __asm__ __volatile__("cli ; nop")
+
 /* Utility functions for the kernel */
 
 /* sanity_check()

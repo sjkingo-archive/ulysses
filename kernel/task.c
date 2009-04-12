@@ -178,7 +178,7 @@ pid_t fork(void)
         child->ebp = ebp;
         child->eip = eip;
         
-        __asm__ __volatile__("sti ; nop");
+        STI;
         return child->pid;
     } else {
         /* Child, exit */
@@ -197,7 +197,8 @@ void check_current_task(void)
         return;
     }
 
-    __asm__ __volatile__("cli");
+    /* This is not reentrant */
+    CLI;
 
     if (--current_task->s_ticks_left <= 0) {
 #if TASK_DEBUG

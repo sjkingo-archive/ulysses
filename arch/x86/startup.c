@@ -65,7 +65,7 @@ void startup_x86(void *mdb, unsigned int magic)
     /* Disable interrupts in case someone removes the cli instruction from
      * loader.s (hint: don't remove it from loader.s please :-))
      */
-    __asm__ __volatile__("cli");
+    CLI;
 
     /* Initialise the various low-level x86 stuff.
      *
@@ -97,6 +97,6 @@ void startup_x86(void *mdb, unsigned int magic)
     register_common_isrs();
 
     /* And finally, enable interrupts */
-    __asm__ __volatile__("sti");
+    STI;
 }
 
