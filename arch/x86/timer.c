@@ -13,7 +13,7 @@ void timer_tick(registers_t regs)
     }
 
     sanity_check();
-    check_current_proc();
+    check_current_task();
 }
 
 void init_timer(unsigned int freq)

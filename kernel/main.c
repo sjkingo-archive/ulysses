@@ -3,15 +3,6 @@
 
 unsigned int initial_esp;
 
-/* idle_task()
- *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
- *  to ensure the CPU has active interrupt lines.
- */
-static void idle_task(void)
-{
-    while (1) __asm__ __volatile__("sti ; hlt");
-}
-
 void startup_kernel(void)
 {
     /* This can only be run once: ensure we don't get here again */
@@ -25,7 +16,7 @@ void startup_kernel(void)
     print_meminfo();
 #endif
     init_kthread();
-    init_proc(); /* set up process table and scheduling queues */
+    init_task(); /* set up task management */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_shell("ulysses> "); /* this happens regardless of KERN_SHELL's val */
 
@@ -55,10 +46,6 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     startup_kernel();
 #endif
 
-    /* Once startup is complete, the main kernel thread drops to an idle
-     * loop, placing the CPU in a S1 sleep state.
-     */
-    idle_task();
     return; /* we should never get here */
 }
 

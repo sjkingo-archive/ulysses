@@ -70,8 +70,8 @@ static void execute_cmd(void)
 #endif
     } else if (strcmp(shell.data, "startup_kernel") == 0) {
         startup_kernel();
-    } else if (strcmp(shell.data, "init_proc") == 0) {
-        init_proc();
+    } else if (strcmp(shell.data, "init_task") == 0) {
+        init_task();
     } else if (strcmp(shell.data, "cpuinfo") == 0) {
         print_cpuinfo();
     } else if (strcmp(shell.data, "meminfo") == 0) {
@@ -87,6 +87,8 @@ static void execute_cmd(void)
         kthread_fork(kthread_spin);
     } else if (strcmp(shell.data, "dump_kthreads") == 0) {
         dump_kthreads();
+    } else if(strcmp(shell.data, "dump_tasks") == 0) {
+        dump_all_tasks();
     } else if (strcmp(shell.data, "fork") == 0) {
         fork();
     } else {
