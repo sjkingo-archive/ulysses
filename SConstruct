@@ -20,7 +20,7 @@ env = Environment(
     AS = 'nasm', 
     CC = 'gcc', 
     CFLAGS = '-m32 -g -Wall -Wextra -isystem include', 
-    LINKFLAGS = '-m32 -nostdlib -nostartfiles -nodefaultlibs -T %s' % 
+    LINKFLAGS = '-m32 -nostdinc -nostdlib -nostartfiles -nodefaultlibs -T %s' % 
             linker_script,
     ASFLAGS = '-f elf',
 )
