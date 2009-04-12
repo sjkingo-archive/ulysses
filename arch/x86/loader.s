@@ -29,6 +29,7 @@ mboot:
 
 ; call the kernel
 loader:
+    push esp ; top of stack pointer
     push eax ; multiboot magic num
     push ebx ; multiboot info struct
 

@@ -1,6 +1,8 @@
 
 #include "kernel.h"
 
+unsigned int initial_esp;
+
 /* idle_task()
  *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
  *  to ensure the CPU has active interrupt lines.
@@ -36,8 +38,10 @@ void startup_kernel(void)
 #endif
 }
 
-void _kmain(void *mdb, unsigned int magic)
+void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
+    initial_esp = initial_stack;
+
 #ifdef _ARCH_x86
     startup_x86(mdb, magic);
 #endif
