@@ -15,6 +15,7 @@ extern unsigned int placement_address;
 extern heap_t *kheap;
 
 extern unsigned int initial_esp; /* main.c */
+extern void copy_page_physical(unsigned int, unsigned int); /* task.s */
 
 static void set_frame(unsigned int frame_addr)
 {
