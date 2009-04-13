@@ -29,6 +29,8 @@ typedef struct task {
 
 void init_task(void);
 
+task_t *new_task(char *name);
+
 pid_t fork(void);
 
 pid_t getpid(void);

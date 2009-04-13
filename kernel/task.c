@@ -93,16 +93,26 @@ static void switch_task(void)
     panic("Context switch failed");
 }
 
-static task_t *create_init(void)
+void init_task(void)
+{
+    /* Only allow this function to be called once */
+    static flag_t initTask;
+    if (initTask) panic("init_task() already set up");
+    initTask = 1;
+
+    current_task = new_task("init");
+    add_to_queue(current_task);
+}
+
+task_t *new_task(char *name)
 {
     task_t *t = (task_t *)kmalloc(sizeof(task_t));
-    
     t->pid = new_pid();
     t->uid = 0;
     t->egid = 0;
     t->rgid = 0;
-    t->name = (char *)kmalloc(strlen("init") + 1);
-    strcpy(t->name, "init");
+    t->name = (char *)kmalloc(strlen(name) + 1);
+    strcpy(t->name, name);
     t->esp = 0;
     t->ebp = 0;
     t->eip = 0;
@@ -111,19 +121,7 @@ static task_t *create_init(void)
     t->s_ticks_left = SCHED_QUANTUM;
     t->s_quantum_size = SCHED_QUANTUM;
     t->next = NULL;
-
-    add_to_queue(t);
     return t;
-}
-
-void init_task(void)
-{
-    /* Only allow this function to be called once */
-    static flag_t initTask;
-    if (initTask) panic("init_task() already set up");
-    initTask = 1;
-
-    current_task = create_init();
 }
 
 pid_t fork(void)
@@ -141,21 +139,11 @@ pid_t fork(void)
     page_dir = clone_dir(current_directory);
 
     /* Set up the child task */
-    child = (task_t *)kmalloc(sizeof(task_t));
-    child->pid = new_pid();
+    child = new_task(parent->name);
     child->uid = parent->uid;
     child->egid = parent->egid;
     child->rgid = parent->rgid;
-    child->name = (char *)kmalloc(strlen(parent->name) + 1);
-    strcpy(child->name, parent->name);
-    child->esp = 0;
-    child->ebp = 0;
-    child->eip = 0;
     child->page_dir = page_dir;
-    child->ready = 1;
-    child->s_ticks_left = SCHED_QUANTUM;
-    child->s_quantum_size = SCHED_QUANTUM;
-    child->next = NULL;
 
 #if TASK_DEBUG
     kprintf("fork() parent: new child \"%s\", pid %d, uid %d, egid %d, "
