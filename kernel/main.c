@@ -16,6 +16,8 @@ void startup_kernel(void)
     print_meminfo();
 #endif
     init_kthread();
+    move_stack((void*)0xE0000000, 0x2000);
+    init_sched();
     init_task(); /* set up task management */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_shell("ulysses> "); /* this happens regardless of KERN_SHELL's val */

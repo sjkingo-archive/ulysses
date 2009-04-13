@@ -71,33 +71,36 @@ static void idle_task(void)
     while (1) __asm__ __volatile__("sti ; hlt");
 }
 
+void init_sched(void)
+{
+    tasks_queue.head = NULL;
+    tasks_queue.tail = NULL;
+}
+
 void add_to_queue(task_t *t)
 {
-    CLI;
     if (tasks_queue.head == NULL) {
         add_as_head(t);
     } else {
         add_as_tail(t);
     }
-    STI;
 }
 
 task_t *pick_next_task(void)
 {
-    CLI;
     task_t *t = tasks_queue.head;
-    
+
     while (t != NULL) {
         if (t->ready) {
 #if SCHED_DEBUG
             kprintf("pick_next_task(): pid %d ready\n", t->pid);
+            dump_all_tasks();
 #endif
             move_to_tail(t);
             return t;
         }
         t = t->next;
     }
-    STI;
 
     /* No ready tasks found, idle instead */
     idle_task();
@@ -106,13 +109,11 @@ task_t *pick_next_task(void)
 
 void dump_all_tasks(void)
 {
-    CLI;
     task_t *t = tasks_queue.head;
     while (t != NULL) {
         kprintf("%d ", t->pid);
         t = t->next;
     }
     kprintf("\n");
-    STI;
 }
 

@@ -4,6 +4,8 @@
 
 #include "task.h"
 
+void init_sched(void);
+
 void add_to_queue(task_t *t);
 
 task_t *pick_next_task(void);
