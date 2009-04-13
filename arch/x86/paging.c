@@ -63,7 +63,7 @@ static page_table_t *clone_table(page_table_t *src, unsigned int *phys_addr)
     int i;
 
     table = (page_table_t *)kmalloc_ap(sizeof(page_table_t), phys_addr);
-    memset(table, 0, sizeof(page_dir_t)); /* XXX wtf? */
+    memset(table, 0, sizeof(page_table_t));
 
     for (i = 0; i < 1024; i++) {
         if (src->pages[i].frame) {
@@ -203,7 +203,7 @@ page_dir_t *clone_dir(page_dir_t *src)
 {
     int i;
     unsigned int phys, offset;
-    page_dir_t *dir;
+    page_dir_t *dir = NULL;
 
     dir = (page_dir_t *)kmalloc_ap(sizeof(page_dir_t), &phys);
     memset(dir, 0, sizeof(page_dir_t));
@@ -222,8 +222,8 @@ page_dir_t *clone_dir(page_dir_t *src)
             dir->tables_phys[i] = src->tables_phys[i];
         } else {
             /* Outside of kernel, make a copy */
-            unsigned int p;
-            dir->tables[i] = clone_table(src->tables[i], &p);
+            unsigned int phys;
+            dir->tables[i] = clone_table(src->tables[i], &phys);
             dir->tables_phys[i] = phys | 0x07;
         }
     }
