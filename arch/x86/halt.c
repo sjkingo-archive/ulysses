@@ -5,11 +5,15 @@
 
 #include "x86.h"
 #include "../halt.h"
+#include "../../kernel/kernel.h"
+#include "../../kernel/util.h"
 
 void halt(void)
 {
-    kprintf("\nCPU halt");
-    __asm__ __volatile__("cli ; hlt");
+    CLI;
+    kprintf("\nKernel uptime %d seconds\n", kern.current_time_offset.tv_sec);
+    kprintf("CPU halt\n");
+    while (1) __asm__ __volatile__("hlt");
     kprintf("\nCPU woken from halt, suiciding instead...");
     HALT_SUICIDE;
 }

@@ -9,8 +9,11 @@
 /* panic()
  *  Prints the panic message to all VTs and halts the CPU. 
  *  Makes no effort to clean up and shut down processes cleanly.
+ *  The macro exists to insert the file and line number of the callee for
+ *  debugging purposes.
  */
-void panic(const char *msg);
+#define panic(msg) do_panic(msg, __FILE__, __LINE__)
+void do_panic(const char *msg, const char *file, int line);
 
 /* shutdown()
  *  Cleanly shuts down the operating system.

@@ -17,7 +17,7 @@ void halt(void);
  */
 #define HALT_SUICIDE \
     do { \
-        kprintf("\nCPU halt (via suicide)"); \
+        kprintf("\nCPU halt (via suicide)\n"); \
         void (*suicide)(void); \
         suicide = (void (*)(void)) - 1; \
         suicide(); \

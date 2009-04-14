@@ -1,12 +1,13 @@
 
 #include "kernel.h"
 
-void panic(const char *msg)
+void do_panic(const char *msg, const char *file, int line)
 {
     static int panicking = 0;
     if (panicking++) return; /* prevent recursive panics - thanks AST */
 
-    kprintf_all("\nKernel panic: %s\n", msg);
+    kprintf_all("\n\nKernel panic: %s\n", msg);
+    kprintf_all("called from %s:%d\n", file, line);
 
 #if __GNUC__
     /* GCC provides us with some nice debugging internals: dump them if built
