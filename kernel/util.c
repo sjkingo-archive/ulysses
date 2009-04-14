@@ -21,13 +21,18 @@ static void print_memory_map(void)
     }
 }
 
+/* just kidding Dijkstra */
+#define COMEFROM goto
 void sanity_check(void)
 {
-    goto pass; /* default to passing */
-    goto fail; /* to keep the compiler happy */
+    /* maybe not */
+#ifdef COMEFROM
+    COMEFROM pass; /* default to passing */
+    COMEFROM fail; /* to keep the compiler happy */
     fail:
         panic("Kernel sanity check failed");
     pass:
+#endif
         return; /* so we don't have an empty label with DEBUG 0 */
 }
 

@@ -62,6 +62,10 @@ static void execute_cmd(void)
         shutdown();
     } else if (strcmp(shell.data, "check") == 0) {
         sanity_check();
+    } else if (strcmp(shell.data, "COMEFROM") == 0) {
+        kprintf("Oh come on, we all know that Dijkstra was right:\n");
+        kprintf("<http://www.cs.utexas.edu/users/EWD/transcriptions/"
+                "EWD02xx/EWD215.html>\n");
     } else if (strcmp(shell.data, "exit") == 0) {
 #if KERN_INTERACTIVE
         startup_kernel();
