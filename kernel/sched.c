@@ -1,7 +1,6 @@
-
-#include <ulysses/task.h>
-#include <ulysses/shutdown.h>
 #include <ulysses/kprintf.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/task.h>
 
 struct queue {
     task_t *head;
@@ -117,4 +116,3 @@ void dump_all_tasks(void)
     }
     kprintf("\n");
 }
-

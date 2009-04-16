@@ -1,4 +1,3 @@
-
 #ifndef _IDT_H
 #define _IDT_H
 
@@ -36,4 +35,3 @@ void init_idt(void);
 extern void idt_flush(unsigned int);
 
 #endif
-

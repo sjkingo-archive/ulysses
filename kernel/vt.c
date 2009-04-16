@@ -1,4 +1,3 @@
-
 #include <ulysses/vt.h>
 
 extern flag_t shell_active; /* declared in shell.h */
@@ -90,4 +89,3 @@ void down_pressed(void)
     } else {
         /* XXX eat the keypress */
     }
-}

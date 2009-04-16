@@ -1,8 +1,7 @@
-
 #include <ulysses/cpu.h>
+#include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/shutdown.h>
-#include <ulysses/kernel.h>
 
 #include <string.h>
 
@@ -100,4 +99,3 @@ void init_cpu(void)
     kern.cpu_vendor = vendor_id();
     kern.cpu_model = model_id();
 }
-

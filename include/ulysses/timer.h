@@ -1,4 +1,3 @@
-
 #ifndef _x86_TIMER_H
 #define _x86_TIMER_H
 
@@ -16,4 +15,3 @@ void init_timer(unsigned int freq);
 void timer_tick(registers_t regs);
 
 #endif
-

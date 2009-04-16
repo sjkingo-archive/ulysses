@@ -1,6 +1,5 @@
-
-#include <ulysses/oarray.h>
 #include <ulysses/kheap.h>
+#include <ulysses/oarray.h>
 
 #include <string.h>
 
@@ -83,4 +82,3 @@ void remove_oarray(unsigned int i, oarray_t *array)
     }
     array->size--;
 }
-

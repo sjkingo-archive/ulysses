@@ -1,4 +1,3 @@
-
 #ifndef _KERNEL_H
 #define _KERNEL_H
 
@@ -39,4 +38,3 @@ struct kernel kern;
 void startup_kernel(void);
 
 #endif
-

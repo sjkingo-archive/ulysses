@@ -1,4 +1,3 @@
-
 #ifndef _VFS_H
 #define _VFS_H
 
@@ -67,4 +66,3 @@ struct dirent *readdir_fs(fs_node_t *node, unsigned int index);
 fs_node_t *finddir_fs(fs_node_t *node, char *name);
 
 #endif
-

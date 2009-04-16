@@ -1,4 +1,3 @@
-
 #ifndef _CMOS_H
 #define _CMOS_H
 
@@ -19,4 +18,3 @@
 struct timeval cmos_datetime(void);
 
 #endif
-

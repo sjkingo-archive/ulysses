@@ -1,4 +1,3 @@
-
 #ifndef _KPRINTF_H
 #define _KPRINTF_H
 
@@ -18,4 +17,3 @@ void kprintf(const char *fmt, ...);
 void kprintf_all(const char *fmt, ...);
 
 #endif
-

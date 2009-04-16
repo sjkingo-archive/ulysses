@@ -1,4 +1,3 @@
-
 #include <ulysses/vfs.h>
 
 #include <sys/types.h>
@@ -52,4 +51,3 @@ fs_node_t *finddir_fs(fs_node_t *node, char *name)
         return 0;
     }
 }
-

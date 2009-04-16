@@ -1,15 +1,15 @@
-
-#include <ulysses/kernel.h>
-#include <ulysses/util.h>
-#include <ulysses/shell.h>
-#include <ulysses/kprintf.h>
-#include <ulysses/shutdown.h>
-#include <ulysses/vt.h>
-#include <ulysses/kthread.h>
-#include <ulysses/sched.h>
-#include <ulysses/task.h>
-#include <ulysses/paging.h>
 #include <ulysses/initrd.h>
+#include <ulysses/kernel.h>
+#include <ulysses/kprintf.h>
+#include <ulysses/kthread.h>
+#include <ulysses/paging.h>
+#include <ulysses/sched.h>
+#include <ulysses/shell.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/task.h>
+#include <ulysses/util.h>
+#include <ulysses/vt.h>
+
 #include "../arch/x86/x86.h" 
 
 unsigned int initial_esp;
@@ -61,4 +61,3 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 
     return; /* we should never get here */
 }
-

@@ -1,12 +1,12 @@
-
 /* This is the x86-specific halt code. First we try to disable interrupts
  * and halt the CPU. Fall back to suiciding if that doesn't work.
  */
 
-#include "../halt.h"
-#include <ulysses/util.h>
-#include <ulysses/kprintf.h>
 #include <ulysses/kernel.h>
+#include <ulysses/kprintf.h>
+#include <ulysses/util.h>
+
+#include "../halt.h"
 
 void halt(void)
 {
@@ -17,4 +17,3 @@ void halt(void)
     kprintf("\nCPU woken from halt, suiciding instead...");
     HALT_SUICIDE;
 }
-

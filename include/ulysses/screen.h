@@ -1,4 +1,3 @@
-
 #ifndef _x86_SCREEN_H
 #define _x86_SCREEN_H
 
@@ -59,4 +58,3 @@ void flush_screen(const char *data);
 void clear_last_line(void);
 
 #endif
-

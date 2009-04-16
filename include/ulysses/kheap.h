@@ -1,4 +1,3 @@
-
 #ifndef KHEAP_H
 #define KHEAP_H
 
@@ -62,4 +61,3 @@ void *kmalloc_a(unsigned int size);
 void *kmalloc_ap(unsigned int size, unsigned int *phys);
 
 #endif
-

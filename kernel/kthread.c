@@ -1,6 +1,5 @@
-
-#include <ulysses/kthread.h>
 #include <ulysses/kheap.h>
+#include <ulysses/kthread.h>
 #include <ulysses/shutdown.h>
 
 #include <sys/types.h>
@@ -179,4 +178,3 @@ void dump_kthreads(void)
                 i, all_kthreads[i]->state);
     }
 }
-

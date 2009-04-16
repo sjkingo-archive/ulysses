@@ -1,18 +1,17 @@
-
-#include <ulysses/isr.h>
-#include <ulysses/idt.h>
-#include <ulysses/gdt.h>
-#include <ulysses/screen.h>
-#include <ulysses/multiboot.h>
-#include <ulysses/timer.h>
-#include <ulysses/keyboard.h>
 #include <ulysses/cmos.h>
 #include <ulysses/cpu.h>
-#include <ulysses/kheap.h>
-#include <ulysses/shutdown.h>
-#include <ulysses/util.h>
-#include <ulysses/paging.h>
+#include <ulysses/gdt.h>
+#include <ulysses/idt.h>
+#include <ulysses/isr.h>
 #include <ulysses/kernel.h>
+#include <ulysses/keyboard.h>
+#include <ulysses/kheap.h>
+#include <ulysses/multiboot.h>
+#include <ulysses/paging.h>
+#include <ulysses/screen.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/timer.h>
+#include <ulysses/util.h>
 
 #include <string.h>
 
@@ -110,5 +109,4 @@ void startup_x86(void *mdb, unsigned int magic)
 
     /* And finally, enable interrupts */
     STI;
-}
 

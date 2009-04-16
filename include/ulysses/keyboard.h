@@ -1,4 +1,3 @@
-
 #ifndef _KEYBOARD_H
 #define _KEYBOARD_H
 
@@ -88,4 +87,3 @@ void keyboard_handler(registers_t regs);
 char read_next_key(void);
 
 #endif
-

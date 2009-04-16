@@ -1,4 +1,3 @@
-
 #include <ulysses/gdt.h>
 
 static void gdt_set_gate(int num, unsigned int base, unsigned int limit, 
@@ -28,4 +27,3 @@ void init_gdt(void)
 
     gdt_flush((unsigned int)&gdt_ptr); /* declared in flush.s */
 }
-

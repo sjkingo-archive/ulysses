@@ -1,4 +1,3 @@
-
 #include <ulysses/cmos.h>
 #include <ulysses/util.h>
 
@@ -27,4 +26,3 @@ struct timeval cmos_datetime(void)
             BCD_INT(read_cmos(DT_MIN)), BCD_INT(read_cmos(DT_SEC)));
 #endif
 }
-

@@ -1,4 +1,3 @@
-
 #ifndef _UTIL_H
 #define _UTIL_H
 
@@ -49,4 +48,3 @@ void outb(const unsigned int port, unsigned int value);
 unsigned char inb(unsigned int port);
 
 #endif
-

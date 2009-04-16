@@ -1,4 +1,3 @@
-
 #include <ulysses/util.h>
 
 void outb(const unsigned int port, unsigned int value)
@@ -13,4 +12,3 @@ unsigned char inb(unsigned int port)
     __asm__ __volatile__("inb %w1, %b0" : "=a" (b) : "d" (port));
     return b;
 }
-

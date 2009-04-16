@@ -1,4 +1,3 @@
-
 #ifndef _x86_GDT_H
 #define _x86_GDT_H
 
@@ -37,4 +36,3 @@ extern void gdt_flush(unsigned int);
 extern void enter_pm(void);
 
 #endif
-

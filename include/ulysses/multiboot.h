@@ -1,4 +1,3 @@
-
 #ifndef _x86_MULTIBOOT_H
 #define _x86_MULTIBOOT_H
 
@@ -71,4 +70,3 @@ typedef struct memory_map {
 } memory_map_t;
 
 #endif
-

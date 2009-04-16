@@ -1,4 +1,3 @@
-
 #include <ulysses/idt.h>
 #include <ulysses/isr.h>
 #include <ulysses/util.h>
@@ -93,5 +92,3 @@ void init_idt(void)
     
     memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 }
-
-

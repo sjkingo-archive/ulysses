@@ -1,4 +1,3 @@
-
 #ifndef _TASK_H
 #define _TASK_H
 
@@ -38,4 +37,3 @@ pid_t getpid(void);
 void check_current_task(void);
 
 #endif
-

@@ -1,4 +1,3 @@
-
 #ifndef _VT_H
 #define _VT_H
 
@@ -63,4 +62,3 @@ void up_pressed(void);
 void down_pressed(void);
 
 #endif
-

@@ -1,4 +1,3 @@
-
 #ifndef _x86_PAGING_H
 #define _x86_PAGING_H
 
@@ -70,4 +69,3 @@ page_dir_t *clone_dir(page_dir_t *src);
 void move_stack(void *new_start, unsigned int size);
 
 #endif
-

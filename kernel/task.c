@@ -1,8 +1,7 @@
-
-#include <ulysses/task.h>
-#include <ulysses/sched.h>
 #include <ulysses/kheap.h>
+#include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/task.h>
 #include <ulysses/util.h>
 
 #include <string.h>
@@ -204,4 +203,3 @@ void check_current_task(void)
         switch_task();
     }
 }
-

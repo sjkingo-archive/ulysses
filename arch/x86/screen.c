@@ -1,4 +1,3 @@
-
 #include <ulysses/screen.h>
 #include <ulysses/util.h>
 
@@ -119,4 +118,3 @@ void clear_last_line(void)
     move_cursor(0, screen.next_y);
     screen.next_x = 0;
 }
-

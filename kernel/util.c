@@ -1,10 +1,10 @@
-
-#include <ulysses/util.h>
-#include <ulysses/kheap.h>
 #include <ulysses/kernel.h>
-#include <ulysses/shutdown.h>
-#include <ulysses/multiboot.h>
+#include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
+#include <ulysses/multiboot.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/util.h>
+
 #include "../config.h"
 
 static void print_memory_map(void)
@@ -77,4 +77,3 @@ void print_meminfo(void)
     print_memory_map();
     kprintf("Kernel heap at %p\n", KHEAP_START);
 }
-

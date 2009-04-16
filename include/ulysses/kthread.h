@@ -1,4 +1,3 @@
-
 #ifndef _KTHREAD_H
 #define _KTHREAD_H
 
@@ -97,4 +96,3 @@ void kthread_run(void);
 void dump_kthreads(void);
 
 #endif
-

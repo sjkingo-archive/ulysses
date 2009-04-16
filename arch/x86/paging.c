@@ -1,6 +1,5 @@
-
-#include <ulysses/paging.h>
 #include <ulysses/kheap.h>
+#include <ulysses/paging.h>
 #include <ulysses/shutdown.h>
 
 #include <string.h> /* for memset() */

@@ -1,4 +1,3 @@
-
 #ifndef _SHUTDOWN_H
 #define _SHUTDOWN_H
 
@@ -21,4 +20,3 @@ void do_panic(const char *msg, const char *file, int line);
 void shutdown(void);
 
 #endif
-

@@ -1,4 +1,3 @@
-
 #ifndef _OARRAY_H
 #define _OARRAY_H
 
@@ -34,4 +33,3 @@ type_t lookup_oarray(unsigned int i, oarray_t *array);
 void remove_oarray(unsigned int i, oarray_t *array);
 
 #endif
-

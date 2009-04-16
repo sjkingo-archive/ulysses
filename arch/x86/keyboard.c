@@ -1,9 +1,8 @@
-
 #include <ulysses/keyboard.h>
-#include <ulysses/util.h>
-#include <ulysses/vt.h>
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/util.h>
+#include <ulysses/vt.h>
 
 unsigned short map_unshifted[] = {
     KB_UNKNOWN, ASCII_ESC, '1', '2',                /* 0x00 - 0x03 */
@@ -162,4 +161,3 @@ void keyboard_handler(registers_t regs)
             append_stdin(key);
     }
 }
-

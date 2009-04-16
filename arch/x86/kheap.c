@@ -1,7 +1,6 @@
-
 #include <ulysses/kheap.h>
-#include <ulysses/paging.h>
 #include <ulysses/oarray.h>
+#include <ulysses/paging.h>
 
 extern unsigned int end; /* declared in linker.ld */
 extern page_dir_t *kernel_directory; /* declared in paging.c */
@@ -405,4 +404,3 @@ void *kmalloc_ap(unsigned int size, unsigned int *phys)
 {
     return kmalloc_int(size, 1, phys);
 } 
-

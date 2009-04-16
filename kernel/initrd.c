@@ -1,7 +1,6 @@
-
 #include <ulysses/initrd.h>
-#include <ulysses/vfs.h>
 #include <ulysses/kheap.h>
+#include <ulysses/vfs.h>
 
 #include <string.h>
 
@@ -141,4 +140,3 @@ fs_node_t *init_initrd(unsigned int loc)
 
     return initrd_root;
 }
-

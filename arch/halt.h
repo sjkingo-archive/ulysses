@@ -1,4 +1,3 @@
-
 #ifndef _HALT_H
 #define _HALT_H
 
@@ -24,4 +23,3 @@ void halt(void);
     } while (0)
 
 #endif
-

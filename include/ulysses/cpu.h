@@ -1,4 +1,3 @@
-
 #ifndef _CPU_H
 #define _CPU_H
 
@@ -26,4 +25,3 @@ struct cpu_ident {
 void init_cpu(void);
 
 #endif
-

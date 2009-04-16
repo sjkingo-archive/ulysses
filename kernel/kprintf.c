@@ -1,7 +1,6 @@
-
 #include <ulysses/kprintf.h>
-#include <ulysses/vt.h>
 #include <ulysses/screen.h>
+#include <ulysses/vt.h>
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -138,4 +137,3 @@ void kprintf_all(const char *fmt, ...)
     kprint(fmt, argp, TRUE); /* print to all VTs */
     va_end(argp);
 }
-

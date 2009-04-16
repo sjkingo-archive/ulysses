@@ -1,4 +1,3 @@
-
 #ifndef _SHELL_H
 #define _SHELL_H
 
@@ -51,4 +50,3 @@ void run_shell_all(void);
 void shell_walk_history(flag_t dir);
 
 #endif
-
