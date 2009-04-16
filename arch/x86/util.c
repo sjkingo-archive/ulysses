@@ -1,5 +1,5 @@
 
-#include "util.h"
+#include <ulysses/util.h>
 
 void outb(const unsigned int port, unsigned int value)
 {

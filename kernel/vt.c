@@ -1,7 +1,6 @@
 
-#include "kernel.h"
-
-#include "vt.h"
+#include <ulysses/kernel.h>
+#include <ulysses/vt.h>
 
 extern flag_t shell_active; /* declared in shell.h */
 

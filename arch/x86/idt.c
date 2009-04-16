@@ -1,7 +1,9 @@
 
-#include "x86.h"
+#include <ulysses/idt.h>
+#include <ulysses/isr.h>
+#include <ulysses/util.h>
 
-#include <string.h>
+#include <string.h> /* for memset() */
 
 static void idt_set_gate(unsigned char num, unsigned int base, 
         unsigned short sel, unsigned char flags)

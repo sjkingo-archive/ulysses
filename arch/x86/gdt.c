@@ -1,5 +1,5 @@
 
-#include "x86.h"
+#include <ulysses/gdt.h>
 
 static void gdt_set_gate(int num, unsigned int base, unsigned int limit, 
         unsigned char access, unsigned char gran)

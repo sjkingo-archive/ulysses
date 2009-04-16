@@ -1,5 +1,5 @@
 
-#include "kernel.h"
+#include <ulysses/kernel.h>
 
 void do_panic(const char *msg, const char *file, int line)
 {

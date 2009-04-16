@@ -8,22 +8,21 @@
  */
 
 /* Our own headers */
-#include "../config.h" /* must be first */
-#include "../arch/halt.h" /* halt code to fall back on */
-#include "initrd.h"
-#include "kprintf.h"
-#include "kthread.h"
-#include "task.h"
-#include "sched.h"
-#include "shell.h"
-#include "shutdown.h"
-#include "util.h"
-#include "vt.h"
+#include "../../config.h" /* must be first */
+#include "../../arch/halt.h" /* halt code to fall back on */
+#include <ulysses/initrd.h>
+#include <ulysses/kprintf.h>
+#include <ulysses/kthread.h>
+#include <ulysses/task.h>
+#include <ulysses/sched.h>
+#include <ulysses/shell.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/util.h>
+#include <ulysses/vt.h>
+#include <ulysses/multiboot.h>
 
-/* Arch-specific headers */
-#ifdef _ARCH_x86
-#include "../arch/x86/x86.h"
-#else
+/* Ensure a valid architecture was declared */
+#ifndef _ARCH_x86
 #error No _ARCH_* defined!
 #endif
 

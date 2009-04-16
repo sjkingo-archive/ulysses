@@ -1,5 +1,8 @@
 
-#include "x86.h"
+#include <ulysses/isr.h>
+#include <ulysses/kprintf.h>
+#include <ulysses/util.h>
+#include <ulysses/shutdown.h>
 
 void isr_handler(registers_t regs)
 {

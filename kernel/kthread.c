@@ -1,6 +1,7 @@
 
-#include "kernel.h"
-#include "kthread.h"
+#include <ulysses/kernel.h>
+#include <ulysses/kthread.h>
+#include <ulysses/kheap.h>
 
 #include <sys/types.h>
 

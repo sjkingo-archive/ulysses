@@ -2,7 +2,7 @@
 #ifndef _INITRD_H
 #define _INITRD_H
 
-#include "vfs.h"
+#include <ulysses/vfs.h>
 
 typedef struct {
     unsigned int nfiles; /* number of files in the ram disk */

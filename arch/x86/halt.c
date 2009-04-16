@@ -3,10 +3,9 @@
  * and halt the CPU. Fall back to suiciding if that doesn't work.
  */
 
-#include "x86.h"
 #include "../halt.h"
-#include "../../kernel/kernel.h"
-#include "../../kernel/util.h"
+#include <ulysses/kernel.h>
+#include <ulysses/util.h>
 
 void halt(void)
 {

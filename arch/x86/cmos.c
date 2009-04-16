@@ -1,7 +1,6 @@
 
-#include "cmos.h"
-#include "util.h"
-#include "../../kernel/kernel.h"
+#include <ulysses/cmos.h>
+#include <ulysses/util.h>
 
 #include <sys/time.h>
 #include <sys/types.h>

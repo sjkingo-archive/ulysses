@@ -1,5 +1,6 @@
 
-#include "x86.h"
+#include <ulysses/screen.h>
+#include <ulysses/util.h>
 
 void init_screen(void)
 {

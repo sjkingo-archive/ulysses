@@ -1,8 +1,8 @@
 
-#include "kernel.h"
-
-#include "initrd.h"
-#include "vfs.h"
+#include <ulysses/kernel.h>
+#include <ulysses/initrd.h>
+#include <ulysses/vfs.h>
+#include <ulysses/kheap.h>
 
 #include <string.h>
 

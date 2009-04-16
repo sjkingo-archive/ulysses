@@ -4,24 +4,6 @@
 
 /* Put x86-specific stuff here. */
 
-#include "cmos.h"
-#include "cpu.h"
-#include "gdt.h" /* global descriptor table */
-#include "idt.h" /* IDT */
-#include "isr.h" /* interrupts */
-#include "keyboard.h"
-#include "kheap.h"
-#include "multiboot.h"
-#include "paging.h"
-#include "timer.h"
-#include "screen.h"
-#include "util.h"
-
-/* kernel includes */
-#include "../config.h"
-#include "../kernel/kprintf.h"
-#include "../kernel/shutdown.h"
-
 /* startup_x86()
  *  Perform x86-specific startup.
  */

@@ -1,6 +1,6 @@
 
-#include "x86.h"
-#include "../../kernel/kernel.h"
+#include <ulysses/timer.h>
+#include <ulysses/kernel.h>
 
 void timer_tick(registers_t regs)
 {

@@ -1,5 +1,6 @@
 
-#include "kernel.h"
+#include <ulysses/oarray.h>
+#include <ulysses/kheap.h>
 
 #include <string.h>
 

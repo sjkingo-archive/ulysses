@@ -2,7 +2,7 @@
 #ifndef _SCHED_H
 #define _SCHED_H
 
-#include "task.h"
+#include <ulysses/task.h>
 
 void init_sched(void);
 

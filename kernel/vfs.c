@@ -1,5 +1,5 @@
 
-#include "vfs.h"
+#include <ulysses/vfs.h>
 
 #include <sys/types.h>
 

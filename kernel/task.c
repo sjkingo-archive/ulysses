@@ -1,7 +1,8 @@
 
-#include "kernel.h"
-#include "task.h"
-#include "sched.h"
+#include <ulysses/kernel.h>
+#include <ulysses/task.h>
+#include <ulysses/sched.h>
+#include <ulysses/kheap.h>
 
 #include <string.h>
 

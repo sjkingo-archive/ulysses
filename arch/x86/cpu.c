@@ -1,6 +1,7 @@
 
-#include "cpu.h"
-#include "../../kernel/kernel.h"
+#include <ulysses/cpu.h>
+#include <ulysses/kernel.h>
+#include <ulysses/kheap.h>
 
 #include <string.h>
 

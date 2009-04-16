@@ -2,7 +2,7 @@
 #ifndef _TASK_H
 #define _TASK_H
 
-#include "../arch/x86/paging.h"
+#include <ulysses/paging.h>
 
 /* An entry in the task table. */
 typedef struct task {

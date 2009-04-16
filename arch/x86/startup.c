@@ -1,6 +1,15 @@
 
-#include "x86.h"
-#include "../../kernel/kernel.h"
+#include <ulysses/kernel.h>
+#include <ulysses/isr.h>
+#include <ulysses/idt.h>
+#include <ulysses/gdt.h>
+#include <ulysses/screen.h>
+#include <ulysses/multiboot.h>
+#include <ulysses/timer.h>
+#include <ulysses/keyboard.h>
+#include <ulysses/cmos.h>
+#include <ulysses/cpu.h>
+#include <ulysses/kheap.h>
 
 #include <string.h>
 

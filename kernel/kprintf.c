@@ -1,5 +1,7 @@
 
-#include "kernel.h"
+#include <ulysses/kprintf.h>
+#include <ulysses/vt.h>
+#include <ulysses/screen.h>
 
 #include <stdarg.h>
 #include <stdlib.h>

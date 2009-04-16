@@ -1,7 +1,7 @@
 
-#include "keyboard.h"
-#include "util.h" /* for inb() */
-#include "../../kernel/kernel.h"
+#include <ulysses/keyboard.h>
+#include <ulysses/util.h>
+#include <ulysses/kernel.h>
 
 unsigned short map_unshifted[] = {
     KB_UNKNOWN, ASCII_ESC, '1', '2',                /* 0x00 - 0x03 */

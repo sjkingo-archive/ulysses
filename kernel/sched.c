@@ -1,6 +1,6 @@
 
-#include "kernel.h"
-#include "task.h"
+#include <ulysses/kernel.h>
+#include <ulysses/task.h>
 
 struct queue {
     task_t *head;

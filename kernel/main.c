@@ -1,5 +1,5 @@
 
-#include "kernel.h"
+#include <ulysses/kernel.h>
 
 unsigned int initial_esp;
 

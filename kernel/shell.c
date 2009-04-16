@@ -1,7 +1,7 @@
 
-#include "kernel.h"
-
-#include "shell.h"
+#include <ulysses/kernel.h>
+#include <ulysses/shell.h>
+#include <ulysses/kheap.h>
 
 #include <string.h>
 #include <sys/types.h>

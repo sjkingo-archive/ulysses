@@ -1,7 +1,7 @@
 
-#include "kernel.h"
-
-#include "util.h"
+#include <ulysses/kernel.h>
+#include <ulysses/util.h>
+#include <ulysses/kheap.h>
 
 static void print_memory_map(void)
 {
