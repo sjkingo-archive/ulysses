@@ -1,7 +1,8 @@
 
 #include <ulysses/cpu.h>
-#include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/kernel.h>
 
 #include <string.h>
 

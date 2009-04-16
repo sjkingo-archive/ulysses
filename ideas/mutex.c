@@ -1,5 +1,4 @@
 
-#include "kernel.h"
 #include "mutex.h"
 
 void spinlock_am(const unsigned char *bit)

@@ -1,5 +1,4 @@
 
-#include <ulysses/kernel.h>
 #include <ulysses/initrd.h>
 #include <ulysses/vfs.h>
 #include <ulysses/kheap.h>

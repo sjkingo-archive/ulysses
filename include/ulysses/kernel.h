@@ -10,26 +10,14 @@
 /* Our own headers */
 #include "../../config.h" /* must be first */
 #include "../../arch/halt.h" /* halt code to fall back on */
-#include <ulysses/initrd.h>
-#include <ulysses/kprintf.h>
-#include <ulysses/kthread.h>
-#include <ulysses/task.h>
-#include <ulysses/sched.h>
-#include <ulysses/shell.h>
-#include <ulysses/shutdown.h>
-#include <ulysses/util.h>
-#include <ulysses/vt.h>
+
+#include <sys/time.h>
 #include <ulysses/multiboot.h>
 
 /* Ensure a valid architecture was declared */
 #ifndef _ARCH_x86
 #error No _ARCH_* defined!
 #endif
-
-/* POSIX system includes */
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 /* The main kernel data structure */
 struct kernel {

@@ -1,7 +1,14 @@
 
-#include <ulysses/kernel.h>
 #include <ulysses/shell.h>
 #include <ulysses/kheap.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/kprintf.h>
+#include <ulysses/util.h>
+#include <ulysses/kernel.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/kthread.h>
+#include <ulysses/task.h>
+#include <ulysses/sched.h>
 
 #include <string.h>
 #include <sys/types.h>

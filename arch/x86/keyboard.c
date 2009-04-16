@@ -1,7 +1,9 @@
 
 #include <ulysses/keyboard.h>
 #include <ulysses/util.h>
-#include <ulysses/kernel.h>
+#include <ulysses/vt.h>
+#include <ulysses/shell.h>
+#include <ulysses/shutdown.h>
 
 unsigned short map_unshifted[] = {
     KB_UNKNOWN, ASCII_ESC, '1', '2',                /* 0x00 - 0x03 */

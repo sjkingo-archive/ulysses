@@ -1,5 +1,7 @@
 
-#include <ulysses/kernel.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/kprintf.h>
+#include "../arch/halt.h"
 
 void do_panic(const char *msg, const char *file, int line)
 {

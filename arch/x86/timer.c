@@ -1,6 +1,9 @@
 
 #include <ulysses/timer.h>
+#include <ulysses/shutdown.h>
 #include <ulysses/kernel.h>
+#include <ulysses/sched.h>
+#include <ulysses/util.h>
 
 void timer_tick(registers_t regs)
 {

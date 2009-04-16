@@ -1,7 +1,7 @@
 
-#include <ulysses/kernel.h>
 #include <ulysses/kthread.h>
 #include <ulysses/kheap.h>
+#include <ulysses/shutdown.h>
 
 #include <sys/types.h>
 

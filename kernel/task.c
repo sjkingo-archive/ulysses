@@ -1,8 +1,9 @@
 
-#include <ulysses/kernel.h>
 #include <ulysses/task.h>
 #include <ulysses/sched.h>
 #include <ulysses/kheap.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/util.h>
 
 #include <string.h>
 

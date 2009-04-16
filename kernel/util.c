@@ -1,7 +1,11 @@
 
-#include <ulysses/kernel.h>
 #include <ulysses/util.h>
 #include <ulysses/kheap.h>
+#include <ulysses/kernel.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/multiboot.h>
+#include <ulysses/kprintf.h>
+#include "../config.h"
 
 static void print_memory_map(void)
 {

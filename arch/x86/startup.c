@@ -1,5 +1,4 @@
 
-#include <ulysses/kernel.h>
 #include <ulysses/isr.h>
 #include <ulysses/idt.h>
 #include <ulysses/gdt.h>
@@ -10,6 +9,10 @@
 #include <ulysses/cmos.h>
 #include <ulysses/cpu.h>
 #include <ulysses/kheap.h>
+#include <ulysses/shutdown.h>
+#include <ulysses/util.h>
+#include <ulysses/paging.h>
+#include <ulysses/kernel.h>
 
 #include <string.h>
 

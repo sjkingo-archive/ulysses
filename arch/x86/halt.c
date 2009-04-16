@@ -4,8 +4,9 @@
  */
 
 #include "../halt.h"
-#include <ulysses/kernel.h>
 #include <ulysses/util.h>
+#include <ulysses/kprintf.h>
+#include <ulysses/kernel.h>
 
 void halt(void)
 {
