@@ -1,7 +1,8 @@
 #ifndef _CPU_H
 #define _CPU_H
 
-/* Here is the CPU-specific code for x86.
+/* Intel 8086 derivatives provide the CPUID instruction for getting the
+ * CPU information.
  */
 
 #define CPUID_VENDOR_LEN 13 /* 12 + \0 */

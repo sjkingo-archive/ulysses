@@ -89,3 +89,4 @@ void down_pressed(void)
     } else {
         /* XXX eat the keypress */
     }
+}

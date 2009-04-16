@@ -109,4 +109,4 @@ void startup_x86(void *mdb, unsigned int magic)
 
     /* And finally, enable interrupts */
     STI;
-
+}
