@@ -14,6 +14,15 @@
 
 unsigned int initial_esp;
 
+/* idle_cpu()
+ *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
+ *  to ensure the CPU has active interrupt lines.
+ */
+static void idle_cpu(void)
+{
+    while(1) __asm__ __volatile__("sti ; hlt");
+}
+
 void startup_kernel(void)
 {
     /* This can only be run once: ensure we don't get here again */
@@ -57,6 +66,11 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 #else
     startup_kernel();
 #endif
+ 
+    /* This is the kernel task (pid 0), so drop to an idle */
+    idle_cpu();
 
-    return; /* we should never get here */
+    /* we should never get here */
+    panic("kernel task died");
+    return;
 }

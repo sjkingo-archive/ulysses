@@ -61,18 +61,6 @@ static void move_to_tail(task_t *t)
     add_as_tail(t);
 }
 
-/* idle_task()
- *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
- *  to ensure the CPU has active interrupt lines.
- */
-static void idle_task(void)
-{
-#if SCHED_DEBUG
-    kprintf("idle_task()\n");
-#endif
-    while (1) __asm__ __volatile__("sti ; hlt");
-}
-
 void init_sched(void)
 {
     tasks_queue.head = NULL;
@@ -104,8 +92,6 @@ task_t *pick_next_task(void)
         t = t->next;
     }
 
-    /* No ready tasks found, idle instead */
-    idle_task();
     return NULL;
 }
 
