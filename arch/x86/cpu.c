@@ -22,7 +22,10 @@ cpu_info model_map[] = {
     { 5, 4, "GenuineIntel", "Intel Pentium w/ MMX 166/200/233" },
     { 6, 1, "GenuineIntel", "Intel Pentium Pro" },
     { 6, 3, "GenuineIntel", "Intel Pentium II" },
-    { 6, 5, "GenuineIntel", "Future Intel P6" },
+    { 6, 5, "GenuineIntel", "Intel Pentium II or older model Xeon" },
+    { 6, 6, "GenuineIntel", "Intel Celeron" },
+    { 6, 7, "GenuineIntel", "Intel Pentium III Xeon" },
+
     { 5, 0, "AuthenticAMD", "AMD-K5-PR75/90/100" },
     { 5, 1, "AuthenticAMD", "AMD-K5-PR120/133" },
     { 5, 2, "AuthenticAMD", "AMD-K5-PR150/166" },
