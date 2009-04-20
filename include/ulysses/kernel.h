@@ -10,8 +10,10 @@
 #include "../../config.h" /* must be first */
 #include "../../arch/halt.h" /* halt code to fall back on */
 
-#include <sys/time.h>
+#include <ulysses/datetime.h>
 #include <ulysses/multiboot.h>
+
+#include <sys/time.h>
 
 /* Ensure a valid architecture was declared */
 #ifndef _ARCH_x86
@@ -28,6 +30,7 @@ struct kernel {
     char *cpu_vendor; /* VendorID of CPU */
     char *cpu_model; /* Model name of CPU */
 
+    struct datetime startup_datetime;
     struct timeval loaded_time; /* time when kernel was first loaded */
     struct timeval current_time_offset; /* current time since loaded_time */
 };

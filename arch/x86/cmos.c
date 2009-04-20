@@ -1,4 +1,5 @@
 #include <ulysses/cmos.h>
+#include <ulysses/datetime.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
@@ -15,17 +16,15 @@ static unsigned char read_cmos(unsigned char reg)
     return v;
 }
 
-struct timeval cmos_datetime(void)
+struct datetime cmos_datetime(void)
 {
     TRACE_ONCE;
-    struct timeval t;
-    t.tv_sec = 0;
+    struct datetime t;
+    t.year = BCD_INT(read_cmos(DT_YR));
+    t.month = BCD_INT(read_cmos(DT_MTH));
+    t.day = BCD_INT(read_cmos(DT_MDAY));
+    t.hour = BCD_INT(read_cmos(DT_HR));
+    t.min = BCD_INT(read_cmos(DT_MIN));
+    t.sec = BCD_INT(read_cmos(DT_SEC));
     return t;
-
-#if 0
-    kprintf("Datetime from CMOS: %d-%d-%d %d:%d:%d\n", 
-            BCD_INT(read_cmos(DT_YR)), BCD_INT(read_cmos(DT_MTH)), 
-            BCD_INT(read_cmos(DT_MDAY)), BCD_INT(read_cmos(DT_HR)), 
-            BCD_INT(read_cmos(DT_MIN)), BCD_INT(read_cmos(DT_SEC)));
-#endif
 }

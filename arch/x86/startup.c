@@ -49,7 +49,8 @@ static void register_common_isrs(void)
 
 static void set_time(void)
 {
-    kern.loaded_time = cmos_datetime();
+    kern.startup_datetime = cmos_datetime();
+    kern.loaded_time.tv_sec = 0;
     kern.current_time_offset.tv_sec = 0;
 }
 
@@ -84,19 +85,20 @@ void startup_x86(void *mdb, unsigned int magic)
      *
      * The order here is important:
      *  1. Set up the video memory ready for printing
-     *  2. Save things given to us by multiboot
-     *  3. Load GDT
-     *  4. Load IDT
-     *  5. Register handlers for fatal interrupts
-     *  6. Enable the A20 address line
-     *  7. Enter protected mode
-     *  8. Activate memory paging
-     *  9. Set kernel load time from CMOS
+     *  2. Set kernel load time from CMOS
+     *  3. Save things given to us by multiboot
+     *  4. Load GDT
+     *  5. Load IDT
+     *  6. Register handlers for fatal interrupts
+     *  7. Enable the A20 address line
+     *  8. Enter protected mode
+     *  9. Activate memory paging
      *  10. Set up clock timer
      *  11. Register handlers for common interrupts
      *  12. Identify the CPU(s) attached to the system
      */
     init_screen(); /* must be before any kprintf() or panic() */
+    set_time();
     init_multiboot(mdb, magic);
     init_gdt();
     init_idt();
@@ -104,7 +106,6 @@ void startup_x86(void *mdb, unsigned int magic)
     init_a20(); /* see flush.s */
     enter_pm(); /* see flush.s */
     init_paging();
-    set_time();
     init_timer(TIMER_FREQ);
     init_cpu();
     register_common_isrs();

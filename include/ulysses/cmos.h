@@ -1,6 +1,8 @@
 #ifndef _CMOS_H
 #define _CMOS_H
 
+#include <ulysses/datetime.h>
+
 #include <sys/time.h>
 
 /* CMOS indexes for datetime */
@@ -13,8 +15,8 @@
 #define DT_YR 9
 
 /* cmos_datetime()
- *  Returns the current CMOS timestamp in a timeval struct.
+ *  Returns the current CMOS timestamp.
  */
-struct timeval cmos_datetime(void);
+struct datetime cmos_datetime(void);
 
 #endif

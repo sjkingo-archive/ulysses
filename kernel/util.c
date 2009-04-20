@@ -36,22 +36,34 @@ void print_startup(void)
     TRACE_ONCE;
     kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
+
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
 #endif
+
 #ifdef __GNUC__
     kprintf("Compiled by gcc %s\n", __VERSION__);
+#else
+    kprintf("Warning: not compiled by gcc; this disables a lot of nice "
+            "debugging symbols\n");
 #endif
+
 #ifdef __LP64__
     kprintf("Compiled with 64-bit long int support\n");
 #endif
 #ifdef __STRICT_ANSI__
-    kprintf("Warning: compiled with -ansi\n");
+    kprintf("Warning: compiled with -ansi (how did that even work?)\n");
 #endif
 #ifdef __OPTIMIZE__
     kprintf("Warning: compiled with -Ox optimisations; expect limited "
             "debugging capacity\n");
 #endif
+
+    kprintf("CMOS-provided time %d-%d-%d %d:%d:%d (no timezone; "
+            "probably UTC)\n", 
+            kern.startup_datetime.year, kern.startup_datetime.month,
+            kern.startup_datetime.day, kern.startup_datetime.hour,
+            kern.startup_datetime.min, kern.startup_datetime.sec);
     kprintf("Kernel heap located at %p\n", KHEAP_START);
     kprintf("Kernel stack located at %p\n", STACK_LOC);
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
