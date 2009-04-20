@@ -54,6 +54,9 @@ void print_startup(void)
 #endif
     kprintf("Kernel heap located at %p\n", KHEAP_START);
     kprintf("Kernel stack located at %p\n", STACK_LOC);
+    kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
+            kern.mbi->mem_lower, kern.mbi->mem_upper);
+
 }
 
 void print_cpuinfo(void)
