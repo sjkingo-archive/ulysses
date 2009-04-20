@@ -56,11 +56,5 @@ void print_startup(void)
     kprintf("Kernel stack located at %p\n", STACK_LOC);
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
             kern.mbi->mem_lower, kern.mbi->mem_upper);
-
-}
-
-void print_cpuinfo(void)
-{
-    TRACE_ONCE;
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
 }

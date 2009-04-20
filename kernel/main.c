@@ -39,7 +39,6 @@ void startup_kernel(void)
     
     init_vt();
     print_startup();
-    print_cpuinfo();
     init_sched();
     init_task();
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */

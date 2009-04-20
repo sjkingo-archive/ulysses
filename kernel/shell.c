@@ -91,8 +91,6 @@ static void execute_cmd(void)
         startup_kernel();
     } else if (strcmp(shell.data, "init_task") == 0) {
         init_task();
-    } else if (strcmp(shell.data, "cpuinfo") == 0) {
-        print_cpuinfo();
     } else if (strcmp(shell.data, "history") == 0) {
         int i;
         for (i = SHELL_MAX_HISTORY; i >= 0; i--) {

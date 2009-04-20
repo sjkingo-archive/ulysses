@@ -22,16 +22,6 @@ void stub(char *fname);
  */
 void print_startup(void);
 
-/* print_cpuinfo()
- *  Output detected CPU information.
- */
-void print_cpuinfo(void);
-
-/* print_meminfo()
- *  Output memory info.
- */
-void print_meminfo(void);
-
 /* BCD_INT()
  *  Convert a binary-coded decimal to an integer.
  */
