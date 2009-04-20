@@ -96,12 +96,12 @@ static void kprint(const char *fmt, va_list argp, flag_t all)
 
                 case 'p': /* pointer, print a 0x and fall through */
                     kputs("0x", all);
-                case 'x': /* lowercase hex */
-                    kputx(va_arg(argp, unsigned long), HEX_LOWER, all);
-                    break;
-
                 case 'X': /* uppercase hex */
                     kputx(va_arg(argp, unsigned long), HEX_UPPER, all);
+                    break;
+
+                case 'x': /* lowercase hex */
+                    kputx(va_arg(argp, unsigned long), HEX_LOWER, all);
                     break;
 
                 case '%':
