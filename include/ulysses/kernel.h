@@ -18,6 +18,8 @@
 #error No _ARCH_* defined!
 #endif
 
+#define STACK_LOC 0xE0000000
+
 /* The main kernel data structure */
 struct kernel {
     multiboot_info_t *mbi; /* multiboot info struct as passed by loader */

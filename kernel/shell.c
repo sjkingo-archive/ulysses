@@ -93,8 +93,6 @@ static void execute_cmd(void)
         init_task();
     } else if (strcmp(shell.data, "cpuinfo") == 0) {
         print_cpuinfo();
-    } else if (strcmp(shell.data, "meminfo") == 0) {
-        print_meminfo();
     } else if (strcmp(shell.data, "history") == 0) {
         int i;
         for (i = SHELL_MAX_HISTORY; i >= 0; i--) {

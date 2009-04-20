@@ -11,12 +11,13 @@
 #include <ulysses/util.h>
 #include <ulysses/vt.h>
 
+#include "../config.h"
 #include "../arch/x86/x86.h" 
 
 #include <sys/types.h>
 
 unsigned int initial_esp;
-extern flag_t sched_active;
+extern flag_t sched_active; /* sched.c */
 
 /* idle_cpu()
  *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
@@ -31,19 +32,16 @@ static void idle_cpu(void)
 void startup_kernel(void)
 {
     TRACE_ONCE;
+
     /* This can only be run once: ensure we don't get here again */
     static flag_t already_started = FALSE;
     if (already_started) panic("startup_kernel() already set up");
     
-    move_stack((void*)0xE0000000, 0x2000);
     init_vt();
     print_startup();
-#if DEBUG
     print_cpuinfo();
-    print_meminfo();
-#endif
     init_sched();
-    init_task(); /* set up task management */
+    init_task();
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
     init_shell("ulysses> "); /* this happens regardless of KERN_SHELL's val */
 
@@ -59,11 +57,18 @@ void startup_kernel(void)
 void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
     TRACE_ONCE;
-    initial_esp = initial_stack;
 
+    initial_esp = initial_stack; /* as given to us by multiboot */
+    
 #ifdef _ARCH_x86
     startup_x86(mdb, magic);
 #endif
+    
+    /* Before we do anything with the higher-level kernel, move the kernel 
+     * stack to a known location. This has to copy and remap all absolute
+     * memory addresses, so can be quite slow if left until later.
+     */
+    move_stack((void *)STACK_LOC, 0x2000);
 
 #if KERN_INTERACTIVE
     print_startup();

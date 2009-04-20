@@ -8,31 +8,13 @@
 
 #include "../config.h"
 
-static void print_memory_map(void)
-{
-    TRACE_ONCE;
-    memory_map_t *mmap;
-
-    kprintf("Lower memory: %u KB\nUpper memory: %u KB\n", kern.mbi->mem_lower,
-                kern.mbi->mem_upper);
-    kprintf("Memory map; addr %p, length %p\n", kern.mbi->mmap_addr,
-            kern.mbi->mmap_length);
-    for (mmap = (memory_map_t *)kern.mbi->mmap_addr; (unsigned long)mmap <
-            (kern.mbi->mmap_addr + kern.mbi->mmap_length);
-            mmap = (memory_map_t *)((unsigned long)mmap + mmap->size +
-            sizeof(mmap->size))) {
-        kprintf("\tsize %p\tlength %p%x\ttype %x\tbase_addr %p%x\n",
-                mmap->size, mmap->length_high, mmap->length_low, mmap->type,
-                mmap->base_addr_high, mmap->base_addr_low);
-    }
-}
-
 /* just kidding Dijkstra */
 #define COMEFROM goto
 void sanity_check(void)
 {
     TRACE_ONCE;
-    /* maybe not */
+
+    /* ... maybe not */
 #ifdef COMEFROM
     COMEFROM pass; /* default to passing */
     COMEFROM fail; /* to keep the compiler happy */
@@ -70,17 +52,12 @@ void print_startup(void)
     kprintf("Warning: compiled with -Ox optimisations; expect limited "
             "debugging capacity\n");
 #endif
+    kprintf("Kernel heap located at %p\n", KHEAP_START);
+    kprintf("Kernel stack located at %p\n", STACK_LOC);
 }
 
 void print_cpuinfo(void)
 {
     TRACE_ONCE;
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
-}
-
-void print_meminfo(void)
-{
-    TRACE_ONCE;
-    print_memory_map();
-    kprintf("Kernel heap at %p\n", KHEAP_START);
 }
