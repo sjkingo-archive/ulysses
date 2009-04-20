@@ -11,6 +11,7 @@
 #include <ulysses/screen.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/timer.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <string.h>
@@ -22,6 +23,7 @@ extern void init_a20(void); /* see a20.s */
  */
 static void panic_handler(registers_t regs)
 {
+    TRACE_ONCE;
     switch (regs.int_no) {
         case 0: panic("Divide by zero error");
         case 13: panic("General protection fault");
