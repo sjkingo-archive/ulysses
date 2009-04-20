@@ -15,11 +15,6 @@
  */
 #define _ARCH_x86
 
-/* DEBUG
- *  Whether or not to be verbose in kernel logging.
- */
-#define DEBUG 1
-
 /* SCHED_DEBUG
  * TASK_DEBUG
  *  Whether or not to be verbose in logging the kernel scheduler and task

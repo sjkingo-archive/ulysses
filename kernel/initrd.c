@@ -1,5 +1,6 @@
 #include <ulysses/initrd.h>
 #include <ulysses/kheap.h>
+#include <ulysses/kprintf.h>
 #include <ulysses/vfs.h>
 
 #include <string.h>
@@ -90,9 +91,7 @@ fs_node_t *init_initrd(unsigned int loc)
     initrd_root->finddir = &initrd_finddir;
     initrd_root->ptr = 0;
     initrd_root->impl = 0;
-#if DEBUG
     kprintf("init_initrd(): / filesystem set up\n");
-#endif
 
     /* /dev */
     initrd_dev = (fs_node_t *)kmalloc(sizeof(fs_node_t));
@@ -111,9 +110,7 @@ fs_node_t *init_initrd(unsigned int loc)
     initrd_dev->finddir = &initrd_finddir;
     initrd_dev->ptr = 0;
     initrd_dev->impl = 0;
-#if DEBUG
     kprintf("init_initrd(): /dev filesystem set up\n");
-#endif
 
     root_nodes = (fs_node_t *)kmalloc(sizeof(fs_node_t) * 
             initrd_header->nfiles);

@@ -22,7 +22,7 @@ void sanity_check(void)
         panic("Kernel sanity check failed");
     pass:
 #endif
-        return; /* so we don't have an empty label with DEBUG 0 */
+        return; /* so we don't have an empty label */
 }
 
 void stub(char *fname)

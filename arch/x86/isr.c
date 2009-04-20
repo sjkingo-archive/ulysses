@@ -7,13 +7,11 @@
 void isr_handler(registers_t regs)
 {
     TRACE_ONCE;
-#if DEBUG
     kprintf("\nInterrupt: %d, err_code %d; dumping registers:\n", 
             regs.int_no, regs.err_code);
     kprintf("\tedi %p\tesi %p\tebp %p\tesp %p\n\tebx %p\tedx %p"
             "\tecx %p\teax %p\n", regs.edi, regs.esi, regs.ebp, regs.esp,
             regs.ebx, regs.edx, regs.ecx, regs.eax);
-#endif
 
     /* If a handler exists, call it */
     isr_t handler = interrupt_handlers[regs.int_no];
@@ -35,9 +33,7 @@ void irq_handler(registers_t regs)
      */
     isr_t handler = interrupt_handlers[regs.int_no];
     if (handler != NULL) handler(regs);
-#if DEBUG
     else kprintf("Unhandled IRQ%d\n", regs.int_no-IRQ0);
-#endif
 
     /* Write an end of interrupt signal to the PICs */
     if (regs.int_no >= IRQ0) {
