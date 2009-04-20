@@ -19,7 +19,7 @@ void init_vt(void)
         virtual_terms[i].stdin->buffer_len = 1024;
     }
 
-    switch_vt(VT_LOG);
+    active_vt = VT_LOG; /* we don't actually want to flush anything */
 }
 
 void switch_vt(unsigned short index)
