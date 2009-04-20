@@ -12,7 +12,10 @@
 
 #include "../arch/x86/x86.h" 
 
+#include <sys/types.h>
+
 unsigned int initial_esp;
+extern flag_t sched_active;
 
 /* idle_cpu()
  *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
@@ -68,6 +71,7 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 #endif
  
     /* This is the kernel task (pid 0), so drop to an idle */
+    sched_active = 1;
     idle_cpu();
 
     /* we should never get here */

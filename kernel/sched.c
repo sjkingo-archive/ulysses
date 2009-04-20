@@ -4,11 +4,15 @@
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
 
+#include <sys/types.h>
+
 struct queue {
     task_t *head;
     task_t *tail;
 };
 struct queue tasks_queue;
+
+flag_t sched_active;
 
 static void add_as_head(task_t *t)
 {
@@ -65,6 +69,7 @@ void init_sched(void)
 {
     tasks_queue.head = NULL;
     tasks_queue.tail = NULL;
+    sched_active = 0;
 }
 
 void add_to_queue(task_t *t)

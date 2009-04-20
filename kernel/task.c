@@ -100,6 +100,10 @@ void init_task(void)
     if (initTask) panic("init_task() already set up");
     initTask = 1;
 
+    /* The kernel task is the execution thread for kernel startup. It will 
+     * continue to start the kernel and will always get picked to idle the
+     * CPU if there is nothing else to do.
+     */
     current_task = new_task("kernel");
     add_to_queue(current_task);
 }
