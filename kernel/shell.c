@@ -6,6 +6,7 @@
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <string.h>

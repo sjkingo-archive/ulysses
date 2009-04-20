@@ -1,5 +1,7 @@
+#include "../config.h"
 #include <ulysses/kprintf.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 
 #include "../arch/halt.h"
 
@@ -19,6 +21,9 @@ void do_panic(const char *msg, const char *file, int line)
     kprintf_all("\tlast function: %p\n", __builtin_return_address(1));
     kprintf_all("\tframe: %p\n", __builtin_frame_address(1));
 #endif
+
+    /* Dump a function call trace to screen for use in debugging */
+    func_trace(50);
 
     halt(); /* bye bye */
 }
