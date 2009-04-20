@@ -12,11 +12,6 @@
  */
 void sanity_check(void);
 
-/* stub()
- *  Print stub information for a function name given if DEBUG.
- */
-void stub(char *fname);
-
 /* print_startup()
  *  Output kernel information.
  */

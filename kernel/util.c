@@ -25,12 +25,6 @@ void sanity_check(void)
         return; /* so we don't have an empty label */
 }
 
-void stub(char *fname)
-{
-    TRACE_ONCE;
-    kprintf("stub: %s()\n", fname);
-}
-
 void print_startup(void)
 {
     TRACE_ONCE;
