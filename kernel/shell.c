@@ -15,6 +15,11 @@ char *last_cmds[SHELL_MAX_HISTORY]; /* array of all commands entered */
 int last_cmd_index; /* last index in last_cmds[] array */
 int last_up_index; /* last index for walking in history */
 
+static void dummy_thread(void)
+{
+    kprintf("thread\n");
+}
+
 /* reset_buffer()
  *  Reset the shell data buffer to its start for new data.
  */
@@ -92,10 +97,8 @@ static void execute_cmd(void)
             if (last_up_index == i) kprintf(" <--");
             kprintf("\n");
         }
-    } else if (strcmp(shell.data, "kthread_fork") == 0) {
-        kthread_fork(kthread_spin);
-    } else if (strcmp(shell.data, "dump_kthreads") == 0) {
-        dump_kthreads();
+    } else if (strcmp(shell.data, "new_kt") == 0) {
+        new_kthread(dummy_thread);
     } else if(strcmp(shell.data, "dump_tasks") == 0) {
         dump_all_tasks();
     } else if (strcmp(shell.data, "fork") == 0) {

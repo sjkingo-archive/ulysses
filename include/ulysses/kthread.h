@@ -11,6 +11,8 @@
  * http://www.cs.utk.edu/~plank/plank/classes/cs560/560/notes/KThreads2/lecture.html
  */
 
+#include <sys/types.h>
+
 /* Kernel thread states -- a thread is always in one (and one only) of these
  * states. Apart from STATE_STARTING and STATE_DESTROYING, the transitions
  * between states are not restricted.
@@ -37,62 +39,11 @@
 #define STATE_SLEEPING 5
 #define STATE_DESTROYING 6
 
-#define MAX_KTHREADS 100
-
-typedef struct kernel_thread {
+typedef struct kthread {
     void (*func)(void); /* function to call */
-    unsigned int tid; /* thread id */
     unsigned int state; /* current state; see STATE_*, above */
-} kt;
+} kthread_t;
 
-/* init_kthread()
- *  Initialise kernel threads ready for use.
- */
-void init_kthread(void);
-
-/* kthread_fork()
- *  Create a new kernel thread and schedule it for running. The thread's
- *  state will be set to STATE_STARTING. Returns the thread's ID.
- */
-unsigned int kthread_fork(void (*func)(void));
-
-/* kthread_destory()
- *  Destroys the given kernel thread (or current thread if NULL is given).
- *  If the currently running thread calls this, yield first.
- */
-void kthread_destroy(kt *kthread);
-
-/* kthread_yield()
- *  Yields the currently running thread and allows a new thread to be run.
- *  This only makes sense to be called by the currently running thread.
- */
-void kthread_yield(void);
-
-/* kthread_block()
- *  Blocks the given thread (or current thread if NULL is given), and allows
- *  a new thread to be run.
- */
-void kthread_block(kt *kthread);
-
-/* kthread_whoami()
- *  Returns a pointer to the currently executing thread struct.
- */
-kt *kthread_whoami(void);
-
-/* kthread_spin()
- *  Spin 10 times and yield.
- */
-void kthread_spin(void);
-
-/* kthread_run()
- *  Pick a kernel thread in the RUNNABLE state and run it. If there are no
- *  threads in the runnable state, do nothing and silently return.
- */
-void kthread_run(void);
-
-/* dump_kthreads()
- *  Dump information on all known kernel threads.
- */
-void dump_kthreads(void);
+pid_t new_kthread(void (*func)(void));
 
 #endif

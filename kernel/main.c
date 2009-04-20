@@ -20,14 +20,13 @@ void startup_kernel(void)
     static flag_t already_started = FALSE;
     if (already_started) panic("startup_kernel() already set up");
     
+    move_stack((void*)0xE0000000, 0x2000);
     init_vt();
     print_startup();
 #if DEBUG
     print_cpuinfo();
     print_meminfo();
 #endif
-    init_kthread();
-    move_stack((void*)0xE0000000, 0x2000);
     init_sched();
     init_task(); /* set up task management */
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
