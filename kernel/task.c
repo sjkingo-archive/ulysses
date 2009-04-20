@@ -93,21 +93,6 @@ static void switch_task(void)
     panic("Context switch failed");
 }
 
-void init_task(void)
-{
-    /* Only allow this function to be called once */
-    static flag_t initTask;
-    if (initTask) panic("init_task() already set up");
-    initTask = 1;
-
-    /* The kernel task is the execution thread for kernel startup. It will 
-     * continue to start the kernel and will always get picked to idle the
-     * CPU if there is nothing else to do.
-     */
-    current_task = new_task("kernel");
-    add_to_queue(current_task);
-}
-
 static void setup_stack(task_t *t)
 {
     /* We offset the stack for flags register */
@@ -133,6 +118,21 @@ static void setup_stack(task_t *t)
     *--stack = 0x10;        /* GS */
 
     t->esp = &stack; /* the rest of the stack */
+}
+
+void init_task(void)
+{
+    /* Only allow this function to be called once */
+    static flag_t initTask;
+    if (initTask) panic("init_task() already set up");
+    initTask = 1;
+
+    /* The kernel task is the execution thread for kernel startup. It will 
+     * continue to start the kernel and will always get picked to idle the
+     * CPU if there is nothing else to do.
+     */
+    current_task = new_task("kernel");
+    add_to_queue(current_task);
 }
 
 task_t *new_task(char *name)
