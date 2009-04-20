@@ -1,6 +1,7 @@
 #ifndef _TASK_H
 #define _TASK_H
 
+#include <ulysses/kthread.h>
 #include <ulysses/paging.h>
 
 /* An entry in the task table. */
@@ -20,6 +21,8 @@ typedef struct task {
     flag_t ready; /* whether this process is ready to be run */
     unsigned short s_ticks_left; /* number of scheduling ticks left */
     unsigned short s_quantum_size; /* quantum size in ticks */
+
+    struct kthread *kthread; /* NULL if not a kernel thread */
 
     struct task *next; /* next proc in queue, or NULL if tail */
 } task_t;

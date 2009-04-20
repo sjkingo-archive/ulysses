@@ -1,4 +1,7 @@
+#include "../config.h"
+#include <ulysses/isr.h>
 #include <ulysses/kheap.h>
+#include <ulysses/kprintf.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
@@ -21,11 +24,13 @@ static pid_t new_pid(void)
 static void switch_task(void)
 {
     unsigned int esp, ebp, eip;
-    task_t *new;
 
     if (current_task == NULL) {
         return;
     }
+
+    /* This is really important code that can't be interrupted! */
+    CLI;
 
     /* We need these registers later */
     __asm__ __volatile__("mov %%esp, %0" : "=r" (esp));
@@ -47,16 +52,7 @@ static void switch_task(void)
     current_task->esp = esp;
     current_task->ebp = ebp;
 
-    /* Ask the scheduler for a "new" task to run, or just return if we get the
-     * same task back. This avoids a costly context switch for no reason.
-     * Otherwise, update the current task.
-     */
-    new = pick_next_task();
-    if (new == current_task) {
-        return;
-    } else {
-        current_task = new;
-    }
+    current_task = pick_next_task();
 
     /* Get the registers of the "new" task to run */
     eip = current_task->eip;
@@ -65,20 +61,23 @@ static void switch_task(void)
 
     /* Update the page directory */
     current_directory = current_task->page_dir;
+    
+#if TASK_DEBUG
+    kprintf("switch_task(): switching to pid %d (%s)\n", current_task->pid,
+            current_task->name);
+#endif
 
     /* Perform the actual context switch:
-     *  1. Disable interrupts: this is not reentrant,
-     *  2. Temporarily put the new instruction pointer in a GP register,
-     *  3. Load the stack and base pointers from the "new" task,
-     *  4. Change the page directory,
-     *  5. Put a dummy val in EAX so we recognise that we just task switched,
-     *  6. Enable interrupts,
-     *  7. Do nothing so the pipelined sti actually takes effect,
-     *  8. Jumps to the instruction pointer we put in EAX, which "continues"
+     *  1. Temporarily put the new instruction pointer in a GP register,
+     *  2. Load the stack and base pointers from the "new" task,
+     *  3. Change the page directory,
+     *  4. Put a dummy val in EAX so we recognise that we just task switched,
+     *  5. Enable interrupts,
+     *  6. Do nothing so the pipelined sti actually takes effect,
+     *  7. Jumps to the instruction pointer we put in ECX, which "continues"
      *     executing the "new" task.
      */
     __asm__ __volatile__("       \
-            cli;                 \
             mov %0, %%ecx;       \
             mov %1, %%esp;       \
             mov %2, %%ebp;       \
@@ -101,8 +100,35 @@ void init_task(void)
     if (initTask) panic("init_task() already set up");
     initTask = 1;
 
-    current_task = new_task("init");
+    current_task = new_task("kernel");
     add_to_queue(current_task);
+}
+
+static void setup_stack(task_t *t)
+{
+    /* We offset the stack for flags register */
+    unsigned int *stack = kmalloc(2048) + 2048; /* 4 KiB stack */
+
+    *--stack = 0x202;       /* EFLAGS */
+    *--stack = 0x08;        /* CS */
+    *--stack = t->eip;      /* EIP */
+
+    *--stack = 0;           /* EDI */
+    *--stack = 0;           /* ESI */
+    *--stack = 0;           /* EBP */
+    *--stack = 0;           /* NULL */
+
+    *--stack = 0;           /* EBX */
+    *--stack = 0;           /* EDX */
+    *--stack = 0;           /* ECX */
+    *--stack = 0;           /* EAX */
+
+    *--stack = 0x10;        /* DS */
+    *--stack = 0x10;        /* ES */
+    *--stack = 0x10;        /* FS */
+    *--stack = 0x10;        /* GS */
+
+    t->esp = &stack; /* the rest of the stack */
 }
 
 task_t *new_task(char *name)
@@ -121,7 +147,9 @@ task_t *new_task(char *name)
     t->ready = 1;
     t->s_ticks_left = SCHED_QUANTUM;
     t->s_quantum_size = SCHED_QUANTUM;
+    t->kthread = NULL;
     t->next = NULL;
+    setup_stack(t);
     return t;
 }
 
@@ -131,6 +159,7 @@ pid_t fork(void)
     task_t *child, *parent;
     page_dir_t *page_dir;
 
+    /* This is really important code that can't be interrupted! */
     CLI;
 
     /* We need this later */
@@ -157,13 +186,12 @@ pid_t fork(void)
 
     /* Entry point for the new task */
     eip = read_eip();
-
     if (current_task == parent) {
         /* Parent, set up the pointers for the child */
         unsigned int esp, ebp;
         
-        __asm__ __volatile("mov %%esp, %0" : "=r" (esp));
         __asm__ __volatile("mov %%ebp, %0" : "=r" (ebp));
+        __asm__ __volatile("mov %%esp, %0" : "=r" (esp));
 
         child->esp = esp;
         child->ebp = ebp;
@@ -173,7 +201,6 @@ pid_t fork(void)
         return child->pid;
     } else {
         /* Child, exit */
-        STI;
         return 0;
     }
 }
@@ -188,9 +215,6 @@ void check_current_task(void)
     if (current_task == NULL) {
         return;
     }
-
-    /* This is not reentrant */
-    CLI;
 
     if (--current_task->s_ticks_left <= 0) {
 #if TASK_DEBUG
