@@ -1,6 +1,7 @@
 #include <ulysses/kheap.h>
 #include <ulysses/paging.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 
 #include <string.h> /* for memset() */
 
@@ -112,6 +113,7 @@ page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
  */
 void alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
+    TRACE_ONCE;
     unsigned int index; /* index of first free frame */
 
     if (page->frame != 0) return; /* already allocated */
@@ -139,10 +141,11 @@ void free_frame(page_t *page)
 
 void init_paging(void)
 {
+    TRACE_ONCE;
     unsigned int i, j, k;
 
     /* Set up page frames */
-    nframes = 0x1000000 / 0x1000;
+    nframes = 0x1000000 / 0x1000; /* XXX assume 16 MB phys */
     frames = (unsigned int *)kmalloc(INDEX_FROM_BIT(nframes));
     memset(frames, 0, INDEX_FROM_BIT(nframes));
 

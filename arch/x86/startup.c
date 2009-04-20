@@ -76,6 +76,8 @@ static void init_multiboot(void *mdb, unsigned int magic)
 
 void startup_x86(void *mdb, unsigned int magic)
 {
+    TRACE_ONCE;
+
     /* Disable interrupts in case someone removes the cli instruction from
      * loader.s (hint: don't remove it from loader.s please :-))
      */
