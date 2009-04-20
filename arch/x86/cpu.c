@@ -2,6 +2,7 @@
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 
 #include <string.h>
 
@@ -35,6 +36,7 @@ cpu_info model_map[] = {
 
 static cpuid_t cpuid(unsigned int number) 
 {
+    TRACE_ONCE;
     cpuid_t result;
 
     __asm__ __volatile__(
@@ -51,6 +53,7 @@ static cpuid_t cpuid(unsigned int number)
 
 static char *vendor_id(void)
 {
+    TRACE_ONCE;
     unsigned short i;
     char *str;
     cpuid_t regs;
@@ -70,6 +73,7 @@ static char *vendor_id(void)
 
 static char *model_id(void)
 {
+    TRACE_ONCE;
     cpuid_t regs = cpuid(0x01);
     unsigned int family, model, stepping, i;
     char *model_name;
@@ -96,6 +100,7 @@ static char *model_id(void)
 
 void init_cpu(void)
 {
+    TRACE_ONCE;
     kern.cpu_vendor = vendor_id();
     kern.cpu_model = model_id();
 }

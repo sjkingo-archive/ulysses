@@ -1,9 +1,11 @@
+#include <ulysses/trace.h>
 #include <ulysses/vt.h>
 
 extern flag_t shell_active; /* declared in shell.h */
 
 void init_vt(void)
 {
+    TRACE_ONCE;
     unsigned short i, j;
 
     /* Init all the VTs to a blank state */
@@ -22,6 +24,7 @@ void init_vt(void)
 
 void switch_vt(unsigned short index)
 {
+    TRACE_ONCE;
     if (index >= NUM_VT) return;
     active_vt = index;
     flush_vt();
@@ -29,11 +32,13 @@ void switch_vt(unsigned short index)
 
 void flush_vt(void)
 {
+    TRACE_ONCE;
     flush_screen(virtual_terms[active_vt].data);
 }
 
 static void append_to_vt(const char c, unsigned short vt)
 {
+    TRACE_ONCE;
     if ((virtual_terms[vt].next + 1) >= MAX_CHARS) {
         virtual_terms[vt].next = 0;
     }
@@ -42,6 +47,7 @@ static void append_to_vt(const char c, unsigned short vt)
 
 void append_char(const char c, flag_t write, flag_t all)
 {
+    TRACE_ONCE;
     if (all) {
         unsigned short i;
         for (i = 0; i < NUM_VT; i++) {
@@ -55,6 +61,7 @@ void append_char(const char c, flag_t write, flag_t all)
 
 void append_stdin(const char c)
 {
+    TRACE_ONCE;
     if (virtual_terms[active_vt].stdin->buffer_pos >=
             virtual_terms[active_vt].stdin->buffer_len) {
         virtual_terms[active_vt].stdin->buffer_pos = 0;
@@ -75,6 +82,7 @@ void append_stdin(const char c)
 
 void up_pressed(void)
 {
+    TRACE_ONCE;
     if (shell_active) {
         shell_walk_history(TRUE);
     } else {
@@ -84,6 +92,7 @@ void up_pressed(void)
 
 void down_pressed(void)
 {
+    TRACE_ONCE;
     if (shell_active) {
         shell_walk_history(FALSE);
     } else {

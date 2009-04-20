@@ -1,6 +1,7 @@
 #include <ulysses/keyboard.h>
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 #include <ulysses/vt.h>
 
@@ -90,6 +91,7 @@ flag_t caps_state = FALSE;
 
 void keyboard_handler(registers_t regs)
 {
+    TRACE_ONCE;
     unsigned int scancode = inb(0x60); /* read the scancode */
     unsigned int key;
 

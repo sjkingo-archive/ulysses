@@ -7,6 +7,7 @@
 
 void do_panic(const char *msg, const char *file, int line)
 {
+    TRACE_ONCE;
     static int panicking = 0;
     if (panicking++) return; /* prevent recursive panics - thanks AST */
 
@@ -30,6 +31,7 @@ void do_panic(const char *msg, const char *file, int line)
 
 void shutdown(void)
 {
+    TRACE_ONCE;
     kprintf_all("Shutting down Ulysses\n");
     halt(); /* XXX but for now, just halt */
 }

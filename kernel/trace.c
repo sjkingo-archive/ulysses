@@ -5,7 +5,7 @@
 #include <string.h>
 
 typedef struct symbol {
-    char *name;
+    const char *name;
     void *addr;
     struct symbol *next;
 } symbol_t;
@@ -33,8 +33,7 @@ void add_trace_symbol(const char func_name[], void *addr)
     }
 
     symbol_t *s = kmalloc(sizeof(symbol_t));
-    s->name = kmalloc(strlen(func_name));
-    strcpy(s->name, func_name);
+    s->name = func_name;
     s->addr = addr;
     s->next = NULL;
 
@@ -52,6 +51,7 @@ void add_trace_symbol(const char func_name[], void *addr)
 
 void func_trace(unsigned int max_frames)
 {
+    TRACE_ONCE;
     unsigned int i, *ebp;
 
     kprintf("Function call trace (from top of stack to bottom):\n");

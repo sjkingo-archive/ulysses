@@ -7,6 +7,7 @@
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 #include <ulysses/vt.h>
 
@@ -23,11 +24,13 @@ extern flag_t sched_active;
  */
 static void idle_cpu(void)
 {
+    TRACE_ONCE;
     while(1) __asm__ __volatile__("sti ; hlt");
 }
 
 void startup_kernel(void)
 {
+    TRACE_ONCE;
     /* This can only be run once: ensure we don't get here again */
     static flag_t already_started = FALSE;
     if (already_started) panic("startup_kernel() already set up");
@@ -55,6 +58,7 @@ void startup_kernel(void)
 
 void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
+    TRACE_ONCE;
     initial_esp = initial_stack;
 
 #ifdef _ARCH_x86

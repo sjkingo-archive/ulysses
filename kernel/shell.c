@@ -18,6 +18,7 @@ int last_up_index; /* last index for walking in history */
 
 static void dummy_thread(void)
 {
+    TRACE_ONCE;
     kprintf("thread\n");
 }
 
@@ -26,6 +27,7 @@ static void dummy_thread(void)
  */
 static void reset_buffer(void)
 {
+    TRACE_ONCE;
     shell_active = FALSE;
     shell.data[shell.next_pos] = '\0';
     shell.next_pos = 0;
@@ -37,6 +39,7 @@ static void reset_buffer(void)
  */
 static void update_history(void)
 {
+    TRACE_ONCE;
     /* Wrap the history */
     if (last_cmd_index >= SHELL_MAX_HISTORY) {
         last_cmd_index = 0;
@@ -61,6 +64,7 @@ static void update_history(void)
  */
 static void execute_cmd(void)
 {
+    TRACE_ONCE;
     if (strcmp(shell.data, "") == 0) {
         /* no command, ignore */
         last_up_index = last_cmd_index; /* reset */
@@ -113,6 +117,7 @@ static void execute_cmd(void)
 
 void init_shell(char *prompt)
 {
+    TRACE_ONCE;
     shell_active = FALSE;
     shell.next_pos = 0;
     shell.prompt = (char *)kmalloc(strlen(prompt) + 1);
@@ -129,6 +134,7 @@ void init_shell(char *prompt)
 
 void buffer_key(const char c)
 {
+    TRACE_ONCE;
     /* Wrap the next_pos if the buffer overflows */
     if ((shell.next_pos + 1) >= SHELL_BUF_SIZE) {
         shell.next_pos = 0;
@@ -146,18 +152,21 @@ void buffer_key(const char c)
 
 void run_shell_all(void)
 {
+    TRACE_ONCE;
     kprintf_all("%s", shell.prompt);
     shell_active = TRUE;
 }
 
 void run_shell(void)
 {
+    TRACE_ONCE;
     kprintf("%s", shell.prompt);
     shell_active = TRUE;
 }
 
 void shell_walk_history(flag_t dir)
 {
+    TRACE_ONCE;
     /* Copy the previous history command into the buffer */
     reset_buffer();
     strcpy(shell.data, last_cmds[last_up_index]);

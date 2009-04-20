@@ -3,6 +3,7 @@
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 
 #include <sys/types.h>
 
@@ -16,6 +17,7 @@ flag_t sched_active;
 
 static void add_as_head(task_t *t)
 {
+    TRACE_ONCE;
     tasks_queue.head = t;
     tasks_queue.tail = NULL;
     t->next = NULL;
@@ -27,6 +29,7 @@ static void add_as_head(task_t *t)
 
 static void add_as_tail(task_t *t)
 {
+    TRACE_ONCE;
     if (tasks_queue.tail == NULL) {
         /* one task on queue */
         tasks_queue.tail = t;
@@ -46,6 +49,7 @@ static void add_as_tail(task_t *t)
 
 static void move_to_tail(task_t *t)
 {
+    TRACE_ONCE;
     if (tasks_queue.head != t) {
         panic("Requested task be moved to tail when it was not the head!");
     }
@@ -67,6 +71,7 @@ static void move_to_tail(task_t *t)
 
 void init_sched(void)
 {
+    TRACE_ONCE;
     tasks_queue.head = NULL;
     tasks_queue.tail = NULL;
     sched_active = 0;
@@ -74,6 +79,7 @@ void init_sched(void)
 
 void add_to_queue(task_t *t)
 {
+    TRACE_ONCE;
     if (tasks_queue.head == NULL) {
         add_as_head(t);
     } else {
@@ -83,6 +89,7 @@ void add_to_queue(task_t *t)
 
 task_t *pick_next_task(void)
 {
+    TRACE_ONCE;
     task_t *t = tasks_queue.head;
 
     while (t != NULL) {
@@ -102,6 +109,7 @@ task_t *pick_next_task(void)
 
 void dump_all_tasks(void)
 {
+    TRACE_ONCE;
     task_t *t = tasks_queue.head;
     while (t != NULL) {
         kprintf("%d ", t->pid);

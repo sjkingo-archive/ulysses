@@ -3,12 +3,14 @@
 #include <ulysses/kprintf.h>
 #include <ulysses/multiboot.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include "../config.h"
 
 static void print_memory_map(void)
 {
+    TRACE_ONCE;
     memory_map_t *mmap;
 
     kprintf("Lower memory: %u KB\nUpper memory: %u KB\n", kern.mbi->mem_lower,
@@ -29,6 +31,7 @@ static void print_memory_map(void)
 #define COMEFROM goto
 void sanity_check(void)
 {
+    TRACE_ONCE;
     /* maybe not */
 #ifdef COMEFROM
     COMEFROM pass; /* default to passing */
@@ -42,11 +45,13 @@ void sanity_check(void)
 
 void stub(char *fname)
 {
+    TRACE_ONCE;
     kprintf("stub: %s()\n", fname);
 }
 
 void print_startup(void)
 {
+    TRACE_ONCE;
     kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
 #ifdef _ARCH_x86
@@ -69,11 +74,13 @@ void print_startup(void)
 
 void print_cpuinfo(void)
 {
+    TRACE_ONCE;
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
 }
 
 void print_meminfo(void)
 {
+    TRACE_ONCE;
     print_memory_map();
     kprintf("Kernel heap at %p\n", KHEAP_START);
 }

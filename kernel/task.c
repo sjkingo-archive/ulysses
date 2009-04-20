@@ -5,6 +5,7 @@
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <string.h>
@@ -18,11 +19,13 @@ extern unsigned int read_eip(void);
 
 static pid_t new_pid(void)
 {
+    TRACE_ONCE;
     return next_pid++;
 }
 
 static void switch_task(void)
 {
+    TRACE_ONCE;
     unsigned int esp, ebp, eip;
 
     if (current_task == NULL) {
@@ -95,6 +98,7 @@ static void switch_task(void)
 
 static void setup_stack(task_t *t)
 {
+    TRACE_ONCE;
     /* We offset the stack for flags register */
     unsigned int *stack = kmalloc(2048) + 2048; /* 4 KiB stack */
 
@@ -122,6 +126,7 @@ static void setup_stack(task_t *t)
 
 void init_task(void)
 {
+    TRACE_ONCE;
     /* Only allow this function to be called once */
     static flag_t initTask;
     if (initTask) panic("init_task() already set up");
@@ -137,6 +142,7 @@ void init_task(void)
 
 task_t *new_task(char *name)
 {
+    TRACE_ONCE;
     task_t *t = (task_t *)kmalloc(sizeof(task_t));
     t->pid = new_pid();
     t->uid = 0;
@@ -159,6 +165,7 @@ task_t *new_task(char *name)
 
 pid_t fork(void)
 {
+    TRACE_ONCE;
     unsigned int eip;
     task_t *child, *parent;
     page_dir_t *page_dir;
@@ -211,11 +218,13 @@ pid_t fork(void)
 
 pid_t getpid(void)
 {
+    TRACE_ONCE;
     return current_task->pid;
 }
 
 void check_current_task(void)
 {
+    TRACE_ONCE;
     if (current_task == NULL) {
         return;
     }

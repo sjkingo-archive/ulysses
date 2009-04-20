@@ -1,10 +1,12 @@
 #include <ulysses/isr.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 void isr_handler(registers_t regs)
 {
+    TRACE_ONCE;
 #if DEBUG
     kprintf("\nInterrupt: %d, err_code %d; dumping registers:\n", 
             regs.int_no, regs.err_code);
@@ -21,11 +23,13 @@ void isr_handler(registers_t regs)
 
 void register_interrupt_handler(unsigned char n, isr_t handler)
 {
+    TRACE_ONCE;
     interrupt_handlers[n] = handler;
 }
 
 void irq_handler(registers_t regs)
 {
+    TRACE_ONCE;
     /* Since we don't care about a lot of IRQs, we can just ignore any
      * that don't have a handler.
      */
