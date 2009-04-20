@@ -9,7 +9,7 @@ void do_panic(const char *msg, const char *file, int line)
 {
     TRACE_ONCE;
     static int panicking = 0;
-    if (panicking++) return; /* prevent recursive panics - thanks AST */
+    if (panicking++) halt(); /* prevent recursive panics - thanks AST */
 
     kprintf_all("\n\nKernel panic: %s\n", msg);
     kprintf_all("called from %s:%d\n", file, line);
