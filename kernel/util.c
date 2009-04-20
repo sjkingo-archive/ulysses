@@ -53,14 +53,15 @@ void print_startup(void)
             "debugging capacity\n");
 #endif
 
+    kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
+            kern.mbi->mem_lower, kern.mbi->mem_upper);
+    kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
     kprintf("CMOS-provided time %d-%d-%d %d:%d:%d (no timezone; "
             "probably UTC)\n", 
             kern.startup_datetime.year, kern.startup_datetime.month,
             kern.startup_datetime.day, kern.startup_datetime.hour,
             kern.startup_datetime.min, kern.startup_datetime.sec);
     kprintf("Kernel heap located at %p\n", KHEAP_START);
-    kprintf("Kernel stack located at %p with size %d KB\n", STACK_LOC, STACK_SIZE);
-    kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
-            kern.mbi->mem_lower, kern.mbi->mem_upper);
-    kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
+    kprintf("Kernel stack located at %p with size %d bytes\n", STACK_LOC, 
+            STACK_SIZE);
 }
