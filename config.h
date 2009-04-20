@@ -5,13 +5,13 @@
 /* Main kernel configuration file. 
  *
  * This is for global pre-processor definitions only - all global variables 
- * should go in kernel/kernel.h instead.
+ * should go in <ulysses/kernel.h> instead.
  */
 
 /* _ARCH_x
  *  The architecture to build the kernel for. x must be a directory in
  *  arch/ with targets set in SConstruct, and have a corresponding include in 
- *  kernel/kernel.h for this to work.
+ *  <ulysses/kernel.h> for this to work.
  */
 #define _ARCH_x86
 
