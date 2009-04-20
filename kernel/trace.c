@@ -4,12 +4,6 @@
 
 #include <string.h>
 
-typedef struct symbol {
-    const char *name;
-    void *addr;
-    struct symbol *next;
-} symbol_t;
-
 symbol_t *head = NULL;
 symbol_t *tail = NULL;
 
@@ -54,25 +48,25 @@ void func_trace(unsigned int max_frames)
     TRACE_ONCE;
     unsigned int i, *ebp;
 
-    kprintf("Function call trace (from top of stack to bottom):\n");
+    kprintf_all("Function call trace (from top of stack):\n");
 
     ebp = &max_frames - 2;
-    for (i = 0; i < max_frames; ++i) {
+    for (i = 0; i < max_frames; i++) {
         unsigned int eip;
         symbol_t *sym;
 
         /* Make sure we don't walk over the end of the stack */
         eip = ebp[1];
-        if (eip == 0) {
+        if (eip <= 0x10) {
             break;
         }
 
         /* Lookup the symbol */
         sym = lookup_symbol(eip);
         if (sym == NULL) {
-            kprintf("\t%d: %p\n", i, eip);
+            kprintf_all("#%d %p in ???\n", i, eip);
         } else {
-            kprintf("\t%d: %p (%s)\n", i, eip, sym->name);
+            kprintf_all("#%d %p in %s ()\n", i, eip, sym->name);
         }
 
         ebp = (unsigned int *)ebp[0]; /* unwind to previous */

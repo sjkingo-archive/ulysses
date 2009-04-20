@@ -108,6 +108,8 @@ static void execute_cmd(void)
         dump_all_tasks();
     } else if (strcmp(shell.data, "fork") == 0) {
         fork();
+    } else if (strcmp(shell.data, "pagefault") == 0) {
+        __asm__ __volatile__("jmp 0x0");
     } else {
         kprintf("%s: command not found\n", shell.data);
     }
