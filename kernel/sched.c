@@ -1,4 +1,6 @@
+#include "../config.h"
 #include <ulysses/kprintf.h>
+#include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
 
