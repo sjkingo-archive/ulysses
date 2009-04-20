@@ -20,7 +20,9 @@
 #error No _ARCH_* defined!
 #endif
 
+/* Kernel stack is 8 KB */
 #define STACK_LOC 0xE0000000
+#define STACK_SIZE 0x2000
 
 /* The main kernel data structure */
 struct kernel {

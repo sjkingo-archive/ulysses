@@ -67,7 +67,7 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
      * stack to a known location. This has to copy and remap all absolute
      * memory addresses, so can be quite slow if left until later.
      */
-    move_stack((void *)STACK_LOC, 0x2000);
+    move_stack((void *)STACK_LOC, STACK_SIZE);
 
 #if KERN_INTERACTIVE
     print_startup();
