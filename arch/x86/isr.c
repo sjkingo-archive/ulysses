@@ -33,7 +33,6 @@ void irq_handler(registers_t regs)
      */
     isr_t handler = interrupt_handlers[regs.int_no];
     if (handler != NULL) handler(regs);
-    else kprintf("Unhandled IRQ%d\n", regs.int_no-IRQ0);
 
     /* Write an end of interrupt signal to the PICs */
     if (regs.int_no >= IRQ0) {
