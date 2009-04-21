@@ -84,7 +84,7 @@ struct shell_command cmds[] = {
     { "startup_kernel()", &startup_kernel, NULL },
     { "init_task()", &init_task, NULL },
     { "fork()", &fork, NULL },
-    { "switch_to_user_mode()", &switch_to_user_mode, NULL },
+    { "switch_to_ring3()", &switch_to_ring3, NULL },
 
     { NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };

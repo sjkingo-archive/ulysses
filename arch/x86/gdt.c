@@ -73,7 +73,7 @@ void set_kernel_stack(unsigned int stack)
     tss_entry.esp0 = stack;
 }
 
-void switch_to_user_mode(void)
+void switch_to_ring3(void)
 {
     TRACE_ONCE;
     CLI;

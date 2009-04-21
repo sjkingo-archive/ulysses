@@ -33,7 +33,7 @@ void init_gdt(void);
 
 void set_kernel_stack(unsigned int stack);
 
-void switch_to_user_mode(void);
+void switch_to_ring3(void);
 
 /* See flush.s for assembler routines for these */
 extern void gdt_flush(unsigned int);
