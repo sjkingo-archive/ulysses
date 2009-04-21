@@ -39,5 +39,17 @@ int strcmp(const char *s1, const char *s2);
  */
 char *strchr(const char *s, int c);
 
+/* strpbrk()
+ *   Locate the first occurance of any characters in ct in the string cs and
+ *   return a pointer to the first location.
+ *   Thanks to Linux for this.
+ */
+char *strpbrk(const char *cs, const char *ct);
+
+/* strsep()
+ *   A non-crazy and reentrant version of strtok() taken from Linux.
+ */
+char *strsep(char **s, const char *ct);
+
 #endif
 
