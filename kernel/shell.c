@@ -29,7 +29,12 @@ static void reset_buffer(void)
 {
     TRACE_ONCE;
     shell_active = FALSE;
-    shell.data[shell.next_pos] = '\0';
+    
+    if (shell.data == NULL) {
+        shell.data = kmalloc(SHELL_BUF_SIZE);
+    }
+    memset(shell.data, 0, SHELL_BUF_SIZE);
+    
     shell.next_pos = 0;
     shell_active = TRUE;
 }
@@ -120,6 +125,8 @@ void init_shell(char *prompt)
     shell.next_pos = 0;
     shell.prompt = (char *)kmalloc(strlen(prompt) + 1);
     strcpy(shell.prompt, prompt);
+    shell.data = NULL;
+    reset_buffer();
 
     /* Initialise the history */
     unsigned int i;
@@ -140,8 +147,8 @@ void buffer_key(const char c)
     
     kprintf("%c", c);
     if (c == '\n') {
-        reset_buffer();
         execute_cmd();
+        reset_buffer();
         run_shell(); /* give us a new prompt */
     } else {
         shell.data[shell.next_pos++] = c;

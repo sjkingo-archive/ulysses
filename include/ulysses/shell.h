@@ -8,7 +8,7 @@
 
 struct _shell {
     int next_pos;
-    char data[SHELL_BUF_SIZE];
+    char *data;
     char *prompt;
 } shell;
 
