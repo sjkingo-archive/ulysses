@@ -69,6 +69,11 @@ void func_trace(unsigned int max_frames)
             kprintf_all("#%d %p in %s ()\n", i, eip, sym->name);
         }
 
+        /* Since we don't have symbols before _kmain, just stop here */
+        if (strcmp(sym->name, "_kmain") == 0) {
+            break;
+        }
+
         ebp = (unsigned int *)ebp[0]; /* unwind to previous */
     }
 }
