@@ -2,6 +2,7 @@
 #include <ulysses/screen.h>
 #include <ulysses/vt.h>
 
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdlib.h>
 
@@ -65,6 +66,14 @@ static void kputx(const unsigned long hex, const char hex_table[16],
     kputs(ptr, all);
 }
 
+static void do_padding(unsigned int num, char c, flag_t all)
+{
+    unsigned int i;
+    for (i = 0; i < num; i++) {
+        kputc(c, all);
+    }
+}
+
 /* kprint()
  *  Formats and puts individual chars from the format string fmt. This does
  *  the actual work of kprintf() and kprintf_all().
@@ -72,10 +81,12 @@ static void kputx(const unsigned long hex, const char hex_table[16],
  */
 static void kprint(const char *fmt, va_list argp, flag_t all)
 {
+    int padding = 0;
     while (*fmt != '\0') {
         /* Format specifier, read ahead and format the arg into a string */
         if (*fmt == '%') {
             fmt++; /* skip the % since it's no longer important */
+do_format: /* yuk, but the only way to get back here */
             switch (*fmt) {
                 case 's':
                     kputs(va_arg(argp, char *), all);
@@ -91,7 +102,14 @@ static void kprint(const char *fmt, va_list argp, flag_t all)
 
                 case 'i': /* signed int */
                 case 'd':
-                    kputd(va_arg(argp, int), all);
+                    if (padding > 0) {
+                        int d = va_arg(argp, int);
+                        do_padding((padding - numdigits(d, 10)), '0', all);
+                        kputd(d, all);
+                        padding = 0;
+                    } else {
+                        kputd(va_arg(argp, int), all);
+                    }
                     break;
 
                 case 'p': /* pointer, print a 0x and fall through */
@@ -102,6 +120,16 @@ static void kprint(const char *fmt, va_list argp, flag_t all)
 
                 case 'x': /* lowercase hex */
                     kputx(va_arg(argp, unsigned long), HEX_LOWER, all);
+                    break;
+
+                case '0': /* pad with 0's */
+                    fmt++;
+                    if (isdigit(*fmt)) {
+                        char s[] = { *fmt, '\0' }; /* XXX assume len is 1 */
+                        padding = strtol(s, NULL, 10);
+                        fmt++;
+                        goto do_format; /* process to %d now */
+                    }
                     break;
 
                 case '%':

@@ -56,7 +56,7 @@ void print_startup(void)
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
             kern.mbi->mem_lower, kern.mbi->mem_upper);
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
-    kprintf("CMOS-provided time %d-%d-%d %d:%d:%d (no timezone; "
+    kprintf("CMOS-provided time 2%03d-%02d-%02d %02d:%02d:%02d (no timezone; "
             "probably UTC)\n", 
             kern.startup_datetime.year, kern.startup_datetime.month,
             kern.startup_datetime.day, kern.startup_datetime.hour,
