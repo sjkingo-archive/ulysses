@@ -1,6 +1,7 @@
 #include <ulysses/isr.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/syscall.h>
+#include <ulysses/trace.h>
 
 #define NUM_SYSCALLS 1
 
@@ -10,6 +11,7 @@ void *syscalls[] = {
 
 void syscall_handler(registers_t regs)
 {
+    TRACE_ONCE;
     void *syscall_loc;
     int ret;
 
@@ -41,5 +43,6 @@ void syscall_handler(registers_t regs)
 }
 
 void do_dummy(void) {
+    TRACE_ONCE;
     kprintf("Dummy syscall; why was this called?\n");
 }

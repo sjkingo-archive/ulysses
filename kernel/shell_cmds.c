@@ -5,6 +5,7 @@
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <stdlib.h>
@@ -14,16 +15,19 @@ extern char *last_cmds[];
 
 static void cmd_test(char **args)
 {
+    TRACE_ONCE;
     kprintf("test with args %s\n", *args);
 }
 
 static void cmd_uptime(void)
 {
+    TRACE_ONCE;
     kprintf("up %d seconds\n", kern.current_time_offset.tv_sec);
 }
 
 static void cmd_comefrom(void)
 {
+    TRACE_ONCE;
     kprintf("Oh come on, we all know that Dijkstra was right:\n");
     kprintf("<http://www.cs.utexas.edu/users/EWD/transcriptions/"
             "EWD02xx/EWD215.html>\n");
@@ -31,6 +35,7 @@ static void cmd_comefrom(void)
 
 static void cmd_exit(void)
 {
+    TRACE_ONCE;
 #if KERN_INTERACTIVE
     startup_kernel();
 #else
@@ -40,11 +45,13 @@ static void cmd_exit(void)
 
 static void cmd_pf(void)
 {
+    TRACE_ONCE;
     __asm__ __volatile__("jmp 0x0");
 }
 
 static void cmd_history(void)
 {
+    TRACE_ONCE;
     int i;
     for (i = SHELL_MAX_HISTORY; i >= 0; i--) {
         kprintf("%s", last_cmds[i]);
@@ -54,6 +61,7 @@ static void cmd_history(void)
 
 static void cmd_int_80(char **args)
 {
+    TRACE_ONCE;
     int a;
     __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (strtol(*args, NULL, 10)));
 }
