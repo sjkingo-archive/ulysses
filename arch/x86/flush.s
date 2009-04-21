@@ -42,3 +42,9 @@ enter_pm:
     sti
     ret
 
+; Tell the CPU about our single TSS for task switching
+global tss_flush
+tss_flush:
+    mov ax, 0x2b ; rpl of 3
+    ltr ax ; load into task state reg
+    ret
