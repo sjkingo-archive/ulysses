@@ -50,3 +50,13 @@ unsigned char toupper(unsigned char c)
     return c;
 }
 
+/* erg this is so sloooooow */
+unsigned int numdigits(unsigned int d, unsigned int base)
+{
+    unsigned int i = 0;
+    while (d > 0) {
+        d /= base;
+        i++;
+    }
+    return i;
+}

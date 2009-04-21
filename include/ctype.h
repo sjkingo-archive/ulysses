@@ -32,4 +32,6 @@ extern unsigned char _ctype[];
 unsigned char toupper(unsigned char c);
 unsigned char tolower(unsigned char c);
 
+unsigned int numdigits(unsigned int d, unsigned int base);
+
 #endif
