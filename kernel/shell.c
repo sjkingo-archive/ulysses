@@ -1,13 +1,9 @@
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
-#include <ulysses/kthread.h>
-#include <ulysses/sched.h>
 #include <ulysses/shell.h>
-#include <ulysses/shutdown.h>
-#include <ulysses/task.h>
+#include <ulysses/shell_cmds.h>
 #include <ulysses/trace.h>
-#include <ulysses/util.h>
 
 #include <string.h>
 #include <sys/types.h>
@@ -16,11 +12,7 @@ char *last_cmds[SHELL_MAX_HISTORY]; /* array of all commands entered */
 int last_cmd_index; /* last index in last_cmds[] array */
 int last_up_index; /* last index for walking in history */
 
-static void dummy_thread(void)
-{
-    TRACE_ONCE;
-    kprintf("thread\n");
-}
+extern struct shell_command cmds[];
 
 /* reset_buffer()
  *  Reset the shell data buffer to its start for new data.
@@ -70,52 +62,37 @@ static void update_history(void)
 static void execute_cmd(void)
 {
     TRACE_ONCE;
-    if (strcmp(shell.data, "") == 0) {
-        /* no command, ignore */
+
+    char *cmd, *args;
+    unsigned int i;
+    
+    /* Extract the command */
+    cmd = strsep(&shell.data, " ");
+    if (cmd == NULL || (strcmp(cmd, "") == 0)) {
         last_up_index = last_cmd_index; /* reset */
         return;
-    } else if (strcmp(shell.data, "ver") == 0) {
-        print_startup();
-    } else if (strcmp(shell.data, "uptime") == 0) {
-        kprintf("up %d seconds\n", kern.current_time_offset.tv_sec);
-    } else if (strcmp(shell.data, "halt") == 0) {
-        shutdown();
-    } else if (strcmp(shell.data, "check") == 0) {
-        sanity_check();
-    } else if (strcmp(shell.data, "COMEFROM") == 0) {
-        kprintf("Oh come on, we all know that Dijkstra was right:\n");
-        kprintf("<http://www.cs.utexas.edu/users/EWD/transcriptions/"
-                "EWD02xx/EWD215.html>\n");
-    } else if (strcmp(shell.data, "exit") == 0) {
-#if KERN_INTERACTIVE
-        startup_kernel();
-#else
-        shutdown();
-#endif
-    } else if (strcmp(shell.data, "startup_kernel") == 0) {
-        startup_kernel();
-    } else if (strcmp(shell.data, "init_task") == 0) {
-        init_task();
-    } else if (strcmp(shell.data, "history") == 0) {
-        int i;
-        for (i = SHELL_MAX_HISTORY; i >= 0; i--) {
-            kprintf("%s", last_cmds[i]);
-            if (last_up_index == i) kprintf(" <--");
-            kprintf("\n");
+    }
+    
+    /* Extract the arguments */
+    args = strsep(&shell.data, " ");
+
+    /* Find and execute the function */
+    i = 0;
+    while (cmds[i].cmd != NULL) {
+        if (strcmp(cmds[i].cmd, cmd) == 0) {
+            if (cmds[i].func_noargs != NULL) {
+                cmds[i].func_noargs();
+            } else if (cmds[i].func_args != NULL) {
+                cmds[i].func_args(&args);
+            }
+            update_history();
+            return;
         }
-    } else if (strcmp(shell.data, "new_kt") == 0) {
-        new_kthread(dummy_thread);
-    } else if(strcmp(shell.data, "dump_tasks") == 0) {
-        dump_all_tasks();
-    } else if (strcmp(shell.data, "fork") == 0) {
-        fork();
-    } else if (strcmp(shell.data, "pagefault") == 0) {
-        __asm__ __volatile__("jmp 0x0");
-    } else {
-        kprintf("%s: command not found\n", shell.data);
+        i++;
     }
 
-    update_history();
+    /* Will only get here if the command couldn't be found */
+    kprintf("%s: command not found\n", cmd);
 }
 
 void init_shell(char *prompt)
