@@ -4,6 +4,8 @@
 #include <ulysses/kthread.h>
 #include <ulysses/paging.h>
 
+#define KERNEL_STACK_SIZE 8192
+
 /* An entry in the task table. */
 typedef struct task {
     pid_t pid; /* process id */
@@ -17,6 +19,7 @@ typedef struct task {
     unsigned int ebp; /* base stack pointer */
     unsigned int eip; /* current instruction pointer */
     page_dir_t *page_dir;
+    unsigned int kernel_stack; /* location of kernel stack */
 
     flag_t ready; /* whether this process is ready to be run */
     unsigned short s_ticks_left; /* number of scheduling ticks left */
@@ -38,5 +41,7 @@ pid_t fork(void);
 pid_t getpid(void);
 
 void check_current_task(void);
+
+void switch_kernel_stack(void);
 
 #endif

@@ -62,8 +62,9 @@ static void switch_task(void)
     esp = current_task->esp;
     ebp = current_task->ebp;
 
-    /* Update the page directory */
+    /* Update the page directory and kernel stack */
     current_directory = current_task->page_dir;
+    switch_kernel_stack();
     
 #if TASK_DEBUG
     kprintf("switch_task(): switching to pid %d (%s)\n", current_task->pid,
@@ -154,6 +155,7 @@ task_t *new_task(char *name)
     t->ebp = 0;
     t->eip = 0;
     t->page_dir = current_directory;
+    t->kernel_stack = kmalloc_a(KERNEL_STACK_SIZE);
     t->ready = 1;
     t->s_ticks_left = SCHED_QUANTUM;
     t->s_quantum_size = SCHED_QUANTUM;
@@ -239,4 +241,9 @@ void check_current_task(void)
         current_task->s_ticks_left = current_task->s_quantum_size;
         switch_task();
     }
+}
+
+void switch_kernel_stack(void)
+{
+    set_kernel_stack(current_task->kernel_stack + KERNEL_STACK_SIZE);
 }

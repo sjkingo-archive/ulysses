@@ -1,3 +1,4 @@
+#include <ulysses/gdt.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shell.h>
@@ -83,6 +84,7 @@ struct shell_command cmds[] = {
     { "startup_kernel()", &startup_kernel, NULL },
     { "init_task()", &init_task, NULL },
     { "fork()", &fork, NULL },
+    { "switch_to_user_mode()", &switch_to_user_mode, NULL },
 
     { NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };

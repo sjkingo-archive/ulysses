@@ -1,5 +1,7 @@
 #include <ulysses/gdt.h>
+#include <ulysses/task.h>
 #include <ulysses/tss.h>
+#include <ulysses/util.h>
 
 #include <string.h>
 
@@ -62,4 +64,32 @@ void init_gdt(void)
     /* declared in flush.s */
     gdt_flush((unsigned int)&gdt_ptr);
     tss_flush();
+}
+
+void set_kernel_stack(unsigned int stack)
+{
+    tss_entry.esp0 = stack;
+}
+
+void switch_to_user_mode(void)
+{
+    CLI;
+    switch_kernel_stack();
+
+    __asm__ __volatile__("  \
+            mov $0x23, %ax; \
+            mov %ax, %ds;   \
+            mov %ax, %es;   \
+            mov %ax, %fs;   \
+            mov %ax, %gs;   \
+                            \
+            mov %esp, %eax; \
+            pushl $0x23;    \
+            pushl %esp;     \
+            pushf;          \
+            pushl $0x1B;    \
+            push $1f;       \
+            iret;           \
+            1:"
+    );
 }

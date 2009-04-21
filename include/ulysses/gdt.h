@@ -31,6 +31,10 @@ gdt_entry_t gdt_entries[5];
  */
 void init_gdt(void);
 
+void set_kernel_stack(unsigned int stack);
+
+void switch_to_user_mode(void);
+
 /* See flush.s for assembler routines for these */
 extern void gdt_flush(unsigned int);
 extern void enter_pm(void);
