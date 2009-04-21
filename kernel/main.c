@@ -77,7 +77,7 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 #else
     startup_kernel();
 #endif
- 
+
     /* This is the kernel task (pid 0), so drop to an idle */
     sched_active = 1;
     idle_cpu();

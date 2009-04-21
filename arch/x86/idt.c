@@ -69,6 +69,7 @@ void init_idt(void)
     idt_set_gate(29, (unsigned int)isr29, 0x08, 0x8E);
     idt_set_gate(30, (unsigned int)isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned int)isr31, 0x08, 0x8E);
+    idt_set_gate(SYSCALL, (unsigned int)isr128, 0x08, 0x8E);
 
     /* Register an interrupt vector for each IRQ */
     idt_set_gate(32, (unsigned int)irq0, 0x08, 0x8E);

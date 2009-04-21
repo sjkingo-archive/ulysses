@@ -10,6 +10,7 @@
 #include <ulysses/paging.h>
 #include <ulysses/screen.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/syscall.h>
 #include <ulysses/timer.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
@@ -45,6 +46,7 @@ static void register_fatal_isrs(void)
 static void register_common_isrs(void)
 {
     register_interrupt_handler(IRQ1, &keyboard_handler);
+    register_interrupt_handler(SYSCALL, &syscall_handler);
 }
 
 static void set_time(void)

@@ -80,6 +80,9 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+#define SYSCALL 128 /* 0x80 */
+extern void isr128(); /* system call */
+
 /* Vectors 32 to 256 are configurable by us */
 
 /* Since we remap IRQs to interrupt vectors >= 32, assign a useful name to
