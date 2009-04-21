@@ -66,9 +66,12 @@ static void kputx(const unsigned long hex, const char hex_table[16],
     kputs(ptr, all);
 }
 
-static void do_padding(unsigned int num, char c, flag_t all)
+static void do_padding(int num, char c, flag_t all)
 {
-    unsigned int i;
+    int i;
+    if (num <= 0) {
+        return;
+    }
     for (i = 0; i < num; i++) {
         kputc(c, all);
     }
