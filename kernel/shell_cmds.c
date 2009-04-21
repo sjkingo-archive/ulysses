@@ -7,6 +7,8 @@
 #include <ulysses/task.h>
 #include <ulysses/util.h>
 
+#include <stdlib.h>
+
 /* shell.c; needed for cmd_history */
 extern char *last_cmds[];
 
@@ -50,9 +52,17 @@ static void cmd_history(void)
     }
 }
 
+static void cmd_int_80(char **args)
+{
+    int a;
+    __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (strtol(*args, NULL, 10)));
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test },
+    { "int", NULL, &cmd_int_80 },
+
     { "ver", &print_startup, NULL },
     { "uptime", &cmd_uptime, NULL },
     { "halt", &shutdown, NULL },
