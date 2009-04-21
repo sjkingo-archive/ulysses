@@ -36,6 +36,7 @@ static void panic_handler(registers_t regs)
  */
 static void register_fatal_isrs(void)
 {
+    TRACE_ONCE;
     register_interrupt_handler(0, &panic_handler);
     register_interrupt_handler(13, &panic_handler);
 }
@@ -45,12 +46,14 @@ static void register_fatal_isrs(void)
  */
 static void register_common_isrs(void)
 {
+    TRACE_ONCE;
     register_interrupt_handler(IRQ1, &keyboard_handler);
     register_interrupt_handler(SYSCALL, &syscall_handler);
 }
 
 static void set_time(void)
 {
+    TRACE_ONCE;
     kern.startup_datetime = cmos_datetime();
     kern.loaded_time.tv_sec = 0;
     kern.current_time_offset.tv_sec = 0;
@@ -58,6 +61,7 @@ static void set_time(void)
 
 static void init_multiboot(void *mdb, unsigned int magic)
 {
+    TRACE_ONCE;
     if (magic != MULTIBOOT_LOADER_MAGIC) {
         panic("Kernel not booted by a Multiboot loader");
     }

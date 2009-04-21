@@ -1,4 +1,5 @@
 #include <ulysses/screen.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 void init_screen(void)
@@ -9,6 +10,7 @@ void init_screen(void)
 
 void clear_screen(void)
 {
+    TRACE_ONCE;
     register unsigned int i;
     for (i = 0; i < (WIDTH * HEIGHT * 2); i++) {
         screen.mem[i] = ' ';
@@ -21,6 +23,7 @@ void clear_screen(void)
 
 void move_cursor(const unsigned int x, const unsigned int y)
 {
+    TRACE_ONCE;
     unsigned int index = x + (WIDTH * y);
 
     /* High byte */
@@ -39,6 +42,7 @@ void move_cursor(const unsigned int x, const unsigned int y)
  */
 static void scroll_screen(void)
 {
+    TRACE_ONCE;
     /* Each char in memory is 2 bytes wide, so we need to deal with both when
      * moving.
      */
@@ -58,6 +62,7 @@ static void scroll_screen(void)
 
 void put_char(const char c)
 {
+    TRACE_ONCE;
     unsigned int index;
 
     /* Handle any cursor manipulations given by format specifiers */
@@ -99,6 +104,7 @@ void put_char(const char c)
 
 void flush_screen(const char *data)
 {
+    TRACE_ONCE;
     clear_screen();
     while (*data) {
         put_char(*data);
@@ -108,6 +114,7 @@ void flush_screen(const char *data)
 
 void clear_last_line(void)
 {
+    TRACE_ONCE;
     register unsigned int i;
 
     for (i = ((screen.next_y * 2) * WIDTH); i < (WIDTH * 2); i++) {

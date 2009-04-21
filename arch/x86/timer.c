@@ -2,10 +2,12 @@
 #include <ulysses/timer.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 void timer_tick(registers_t regs)
 {
+    TRACE_ONCE;
     if (regs.int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
     ticks++;
 
@@ -20,6 +22,7 @@ void timer_tick(registers_t regs)
 
 void init_timer(unsigned int freq)
 {
+    TRACE_ONCE;
     ticks = 0;
     register_interrupt_handler(IRQ0, &timer_tick);
 

@@ -245,5 +245,6 @@ void check_current_task(void)
 
 void switch_kernel_stack(void)
 {
+    TRACE_ONCE;
     set_kernel_stack(current_task->kernel_stack + KERNEL_STACK_SIZE);
 }
