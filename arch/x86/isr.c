@@ -7,11 +7,20 @@
 void isr_handler(registers_t regs)
 {
     TRACE_ONCE;
-    kprintf("\nInterrupt: %d, err_code %d; dumping registers:\n", 
-            regs.int_no, regs.err_code);
-    kprintf("\tedi %p\tesi %p\tebp %p\tesp %p\n\tebx %p\tedx %p"
-            "\tecx %p\teax %p\n", regs.edi, regs.esi, regs.ebp, regs.esp,
-            regs.ebx, regs.edx, regs.ecx, regs.eax);
+    symbol_t *sym;
+    void *addr = __builtin_return_address(1);
+
+    kprintf("\nInterrupt %d at %p, inside %p ", regs.int_no, regs.eip, addr);
+    
+    /* Try to translate the last func's eip into a symbol */
+    sym = lookup_symbol(addr);
+    if (sym == NULL) kprintf("in ??? ()\n");
+    else kprintf("in %s ()\n", sym->name);
+
+    kprintf("err_code %d; dumping registers:\n", regs.err_code);
+    kprintf("edi %p\tesi %p\tebp %p\tesp %p\n"
+            "ebx %p\tedx %p\tecx %p\teax %p\n", regs.edi, regs.esi, 
+            regs.ebp, regs.esp, regs.ebx, regs.edx, regs.ecx, regs.eax);
 
     /* If a handler exists, call it */
     isr_t handler = interrupt_handlers[regs.int_no];
