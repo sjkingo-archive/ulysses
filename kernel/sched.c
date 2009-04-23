@@ -7,10 +7,6 @@
 
 #include <sys/types.h>
 
-struct queue {
-    task_t *head;
-    task_t *tail;
-};
 struct queue tasks_queue;
 
 flag_t sched_active;

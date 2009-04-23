@@ -14,6 +14,9 @@
 /* shell.c; needed for cmd_history */
 extern char *last_cmds[];
 
+/* sched.c; needed for cmd_ps */
+extern struct queue tasks_queue;
+
 static void cmd_test(char **args)
 {
     TRACE_ONCE;
@@ -67,6 +70,17 @@ static void cmd_int_80(char **args)
     __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (strtol(*args, NULL, 10)));
 }
 
+static void cmd_ps(void)
+{
+    TRACE_ONCE;
+    kprintf("PID\tPPID\tUID\tNAME\n");
+    task_t *t = tasks_queue.head;
+    while (t != NULL) {
+        kprintf("%d\t%d\t%d\t%s\n", t->pid, t->ppid, t->uid, t->name);
+        t = t->next;
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test },
@@ -80,6 +94,7 @@ struct shell_command cmds[] = {
     { "dump_tasks", &dump_all_tasks, NULL },
     { "pf", &cmd_pf, NULL },
     { "history", &cmd_history, NULL },
+    { "ps", &cmd_ps, NULL },
     
     { "startup_kernel()", &startup_kernel, NULL },
     { "init_task()", &init_task, NULL },

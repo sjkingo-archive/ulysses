@@ -146,6 +146,7 @@ task_t *new_task(char *name)
     TRACE_ONCE;
     task_t *t = (task_t *)kmalloc(sizeof(task_t));
     t->pid = new_pid();
+    t->ppid = 0;
     t->uid = 0;
     t->egid = 0;
     t->rgid = 0;
@@ -183,6 +184,7 @@ pid_t fork(void)
 
     /* Set up the child task */
     child = new_task(parent->name);
+    child->ppid = parent->pid;
     child->uid = parent->uid;
     child->egid = parent->egid;
     child->rgid = parent->rgid;

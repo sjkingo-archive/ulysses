@@ -9,6 +9,7 @@
 /* An entry in the task table. */
 typedef struct task {
     pid_t pid; /* process id */
+    pid_t ppid; /* parent's process id */
     uid_t uid; /* user id */
     gid_t egid; /* effective group id */
     gid_t rgid; /* real group id */
