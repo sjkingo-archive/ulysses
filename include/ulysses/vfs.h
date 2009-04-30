@@ -1,5 +1,9 @@
-#ifndef _VFS_H
-#define _VFS_H
+#ifndef _ULYSSES_VFS_H
+#define _ULYSSES_VFS_H
+
+/* Virtual file system. This provides an abstraction from the format of the 
+ * underlying data storage device.
+ */
 
 #include <sys/types.h>
 

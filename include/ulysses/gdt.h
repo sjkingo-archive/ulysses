@@ -1,5 +1,5 @@
-#ifndef _x86_GDT_H
-#define _x86_GDT_H
+#ifndef _ULYSSES_GDT_H
+#define _ULYSSES_GDT_H
 
 /* This is the global descriptor table that we need to load into the CPU. 
  * The GDT tells the CPU information about global memory segments, assisting
@@ -31,8 +31,15 @@ gdt_entry_t gdt_entries[5];
  */
 void init_gdt(void);
 
+/* set_kernel_stack()
+ *  Change to the given kernel stack in the GDT.
+ */
 void set_kernel_stack(unsigned int stack);
 
+/* switch_to_ring3()
+ *  Switch to privilege ring 3. This assumes we are in ring 0 -- the behaviour
+ *  coming from any other ring is undefined.
+ */
 void switch_to_ring3(void);
 
 /* See flush.s for assembler routines for these */

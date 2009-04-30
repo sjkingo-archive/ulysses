@@ -1,5 +1,5 @@
-#ifndef _ISR_H
-#define _ISR_H
+#ifndef _ULYSSES_ISR_H
+#define _ULYSSES_ISR_H
 
 /* Interrupt service routines. This declares the handling for interrupts
  * generated after we load the IDT. We handle both CPU-generated interrupts
@@ -80,10 +80,11 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
-#define SYSCALL 128 /* 0x80 */
-extern void isr128(); /* system call */
-
 /* Vectors 32 to 256 are configurable by us */
+
+/* System call interrupt vector */
+#define SYSCALL 128 /* 0x80 */
+extern void isr128();
 
 /* Since we remap IRQs to interrupt vectors >= 32, assign a useful name to
  * each of them.

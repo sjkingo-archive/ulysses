@@ -1,10 +1,9 @@
-#ifndef _KTHREAD_H
-#define _KTHREAD_H
+#ifndef _ULYSSES_KTHREAD_H
+#define _ULYSSES_KTHREAD_H
 
-/* This is the kernel threads (kthreads) implementation.
- *
- * Kernel threads are non-preemptable. Instead we rely on the thread to 
- * yield the CPU. This greatly simplifies the threading code.
+/* This is the kernel threads (kthreads) implementation. It defines basic
+ * functions to deal with kthreads, but leaves all of the task management
+ * to the tasker and scheduler.
  *
  * Ideas and basic structure based on Jim Plank and Rich Wolski's kthreads
  * lecture, available at:
@@ -44,6 +43,11 @@ typedef struct kthread {
     unsigned int state; /* current state; see STATE_*, above */
 } kthread_t;
 
+/* new_kthread()
+ *  Start a new kthread with the given function pointer as an entry point.
+ *  This only sets up a new thread and calls the scheduler to manage it; it
+ *  does not actually run the thread.
+ */
 pid_t new_kthread(void (*func)(void));
 
 #endif

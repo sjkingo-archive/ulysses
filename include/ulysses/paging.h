@@ -1,5 +1,5 @@
-#ifndef _x86_PAGING_H
-#define _x86_PAGING_H
+#ifndef _ULYSSES_PAGING_H
+#define _ULYSSES_PAGING_H
 
 /* This is the x86 paging code. It sets up a page table and tells the CPU
  * about it. This provides us with virtual memory!
@@ -64,8 +64,15 @@ void alloc_frame(page_t *page, int is_kernel, int is_writeable);
  */
 void free_frame(page_t *page);
 
+/* clone_dir()
+ *  Clone the given page directory and return a pointer to the new one.
+ */
 page_dir_t *clone_dir(page_dir_t *src);
 
+/* move_stack()
+ *  Move the kernel stack to a new location. This updates the absolute
+ *  addresses of each frame in the stack. This should only be called once.
+ */
 void move_stack(void *new_start, unsigned int size);
 
 #endif

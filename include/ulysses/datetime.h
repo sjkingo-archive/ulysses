@@ -1,5 +1,7 @@
-#ifndef _DATETIME_H
-#define _DATETIME_H
+#ifndef _ULYSSES_DATETIME_H
+#define _ULYSSES_DATETIME_H
+
+/* Datetime definitions that do not exist in POSIX's <sys/time.h>. */
 
 struct datetime {
   unsigned int year;

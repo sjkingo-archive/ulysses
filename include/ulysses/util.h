@@ -1,10 +1,14 @@
-#ifndef _UTIL_H
-#define _UTIL_H
+#ifndef _ULYSSES_UTIL_H
+#define _ULYSSES_UTIL_H
 
+/* Utility functions for the kernel that don't really belong anywhere else. */
+
+/* Shortcuts for enabling and disabling interrupts. */
 #define STI __asm__ __volatile__("sti ; nop")
 #define CLI __asm__ __volatile__("cli ; nop")
 
-/* Utility functions for the kernel */
+/*  Convert a binary-coded decimal to an integer. */
+#define BCD_INT(bcd) (((bcd & 0xF0) >> 4) * 10 + (bcd & 0x0F))
 
 /* sanity_check()
  *  Perform a sanity check of the kernel's data structures and physical memory
@@ -16,11 +20,6 @@ void sanity_check(void);
  *  Output kernel information.
  */
 void print_startup(void);
-
-/* BCD_INT()
- *  Convert a binary-coded decimal to an integer.
- */
-#define BCD_INT(bcd) (((bcd & 0xF0) >> 4) * 10 + (bcd & 0x0F))
 
 /* outb()
  *  Write a value directly to a hardware port.

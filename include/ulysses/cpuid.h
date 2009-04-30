@@ -1,5 +1,5 @@
-#ifndef _ULYSSES_CPU_H
-#define _ULYSSES_CPU_H
+#ifndef _ULYSSES_CPUID_H
+#define _ULYSSES_CPUID_H
 
 /* CPU identification.
  * Intel 8086 derivatives provide the CPUID instruction for getting the

@@ -1,5 +1,5 @@
-#ifndef _IDT_H
-#define _IDT_H
+#ifndef _ULYSSES_IDT_H
+#define _ULYSSES_IDT_H
 
 /* Interrupt descriptor table. We load this into the CPU so it can determine
  * interrupt vectors and exception handling responses.
@@ -31,7 +31,6 @@ idt_entry_t idt_entries[256]; /* that's a lot of interrupts */
 void init_idt(void);
 
 /* See flush.s for assembler routine for this */
-/* XXX move this to inline assembler */
 extern void idt_flush(unsigned int);
 
 #endif

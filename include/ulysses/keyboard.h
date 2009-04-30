@@ -1,5 +1,5 @@
-#ifndef _KEYBOARD_H
-#define _KEYBOARD_H
+#ifndef _ULYSSES_KEYBOARD_H
+#define _ULYSSES_KEYBOARD_H
 
 /* This is the keyboard driver. A callback into this module is placed at 
  * startup to intercept IRQ1. We then read from the PIC that sent the IRQ
@@ -11,7 +11,7 @@
  * libc.
  */
 
-#include "isr.h" /* for registers_t */
+#include <ulysses/isr.h> /* for registers_t */
 
 #define KB_BUFFER_SIZE 255
 

@@ -1,10 +1,7 @@
-#ifndef _KPRINTF_H
-#define _KPRINTF_H
+#ifndef _ULYSSES_KPRINTF_H
+#define _ULYSSES_KPRINTF_H
 
 #include <sys/types.h> /* for flag_t */
-
-/* In case someone gets sloppy... */
-#define printf kprintf
 
 /* kprintf()
  *  printf() for the kernel. Takes a format string and variable arguments

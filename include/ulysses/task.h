@@ -1,5 +1,12 @@
-#ifndef _TASK_H
-#define _TASK_H
+#ifndef _ULYSSES_TASK_H
+#define _ULYSSES_TASK_H
+
+/* This is the task manager (tasker). It is responsible for managing all
+ * tasks (kernel threads and user processes) on the system.
+ *
+ * It does not, however, manage *when* these tasks will be executed -- the
+ * scheduler is responsible for that.
+ */
 
 #include <ulysses/kthread.h>
 #include <ulysses/paging.h>
@@ -33,16 +40,39 @@ typedef struct task {
 
 #define SCHED_QUANTUM 50 /* default quantum for processes */
 
+/* init_task()
+ *  Set up the task manager. This creates a hand-crafted kernel process 
+ *  (pid 0) that provides a sane environment for new_task() and fork() to 
+ *  clone off.
+ */
 void init_task(void);
 
+/* new_task()
+ *  Create a new task with the given name and return its task structure.
+ *  This creates a default stack for the task, but does not call the scheduler
+ *  to manage the task.
+ */
 task_t *new_task(char *name);
 
+/* fork()
+ *  Clone the current task and run it. Returns 0 to the child and the child's
+ *  pid to the parent.
+ */
 pid_t fork(void);
 
+/* getpid()
+ *  Return the pid of the currently executing task.
+ */
 pid_t getpid(void);
 
+/* check_current_task()
+ *  Check the current task's quantum and preempt it if needed.
+ */
 void check_current_task(void);
 
+/* switch_kernel_stack()
+ *  Change the current stack when switching processes.
+ */
 void switch_kernel_stack(void);
 
 #endif

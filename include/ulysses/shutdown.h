@@ -1,5 +1,5 @@
-#ifndef _SHUTDOWN_H
-#define _SHUTDOWN_H
+#ifndef _ULYSSES_SHUTDOWN_H
+#define _ULYSSES_SHUTDOWN_H
 
 /* Exit point for the kernel. Here we declare functions for shutting the
  * system down, both cleanly and uncleanly.

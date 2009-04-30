@@ -1,5 +1,5 @@
-#ifndef _VT_H
-#define _VT_H
+#ifndef _ULYSSES_VT_H
+#define _ULYSSES_VT_H
 
 /* Virtual terminals are abstractions of a screen, buffered in memory. They
  * are hardware-independant, and rely on the underlying arch-specific screen
@@ -51,6 +51,9 @@ void flush_vt(void);
  */
 void append_char(const char c, flag_t write, flag_t all);
 
+/* append_stdin()
+ *  Append a character to the terminal's standard input.
+ */
 void append_stdin(const char c);
 
 /* up_pressed()

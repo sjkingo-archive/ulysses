@@ -1,5 +1,5 @@
-#ifndef _x86_SCREEN_H
-#define _x86_SCREEN_H
+#ifndef _ULYSSES_SCREEN_H
+#define _ULYSSES_SCREEN_H
 
 /* This is the abstraction for a screen in video memory. We declare this 
  * screen to be a "square" in video memory.

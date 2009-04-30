@@ -1,5 +1,9 @@
-#ifndef _CMOS_H
-#define _CMOS_H
+#ifndef _ULYSSES_CMOS_H
+#define _ULYSSES_CMOS_H
+
+/* CMOS-specific functions.
+ * This module provides access to the CMOS clock for the chip's datetime.
+ */
 
 #include <ulysses/datetime.h>
 
@@ -15,7 +19,7 @@
 #define DT_YR 9
 
 /* cmos_datetime()
- *  Returns the current CMOS timestamp.
+ *  Returns the current CMOS timestamp in a datetime struct.
  */
 struct datetime cmos_datetime(void);
 

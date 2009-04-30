@@ -1,9 +1,8 @@
-#ifndef _KERNEL_H
-#define _KERNEL_H
+#ifndef _ULYSSES_KERNEL_H
+#define _ULYSSES_KERNEL_H
 
 /* This sets up any global variables (pre-processor definitions should go
- * in ../config.h), and includes all common header files needed for kernel
- * operation - reducing clutter in the *.{c,h} files.
+ * in /config.h instead) for the kernel.
  */
 
 /* Our own headers */

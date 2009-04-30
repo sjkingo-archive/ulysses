@@ -1,5 +1,5 @@
-#ifndef _TSS_H
-#define _TSS_H
+#ifndef _ULYSSES_TSS_H
+#define _ULYSSES_TSS_H
 
 struct tss_entry_struct {
     unsigned int prev_tss; /* not used in software */

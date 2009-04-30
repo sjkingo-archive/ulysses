@@ -1,5 +1,5 @@
-#ifndef _SHELL_H
-#define _SHELL_H
+#ifndef _ULYSSES_SHELL_H
+#define _ULYSSES_SHELL_H
 
 #include <sys/types.h>
 
