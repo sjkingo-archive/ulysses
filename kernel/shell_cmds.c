@@ -81,25 +81,47 @@ static void cmd_ps(void)
     }
 }
 
+extern struct shell_command cmds[]; /* we're using it before it is declared */
+static void cmd_help(void)
+{
+    unsigned int i = 0;
+    while (cmds[i].cmd != NULL) {
+        kprintf("%s", cmds[i].cmd);
+        if (cmds[i].func_args != NULL) {
+            kprintf("*");
+        }
+        if (cmds[i].desc == NULL) {
+            kprintf("\tNo help information available.\n");
+        } else {
+            kprintf("\t%s\n", cmds[i].desc);
+        }
+        i++;
+    }
+    kprintf("\n* = this command takes arguments\n");
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
-    { "test", NULL, &cmd_test },
-    { "int", NULL, &cmd_int_80 },
+    { "test", NULL, &cmd_test, NULL },
+    { "int", NULL, &cmd_int_80, "Send an interrupt 0x80 (syscall)." },
 
-    { "ver", &print_startup, NULL },
-    { "uptime", &cmd_uptime, NULL },
-    { "halt", &shutdown, NULL },
-    { "COMEFROM", &cmd_comefrom, NULL },
-    { "exit", &cmd_exit, NULL },
-    { "dump_tasks", &dump_all_tasks, NULL },
-    { "pf", &cmd_pf, NULL },
-    { "history", &cmd_history, NULL },
-    { "ps", &cmd_ps, NULL },
+    { "ver", &print_startup, NULL, "Display kernel version." },
+    { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },
+    { "halt", &shutdown, NULL, "Shut down the operating system." },
+    { "COMEFROM", &cmd_comefrom, NULL, NULL },
+    { "exit", &cmd_exit, NULL, "Either exit from interactive mode, or shut " 
+            "down the operating system." },
+    { "dump_tasks", &dump_all_tasks, NULL, "Dump scheduling queue information." },
+    { "pf", &cmd_pf, NULL, "Trigger a page fault." },
+    { "history", &cmd_history, NULL, "Show interpreter history." },
+    { "ps", &cmd_ps, NULL, "Display a snapshot of all currently running "
+            "processes." },
+    { "help", &cmd_help, NULL, "Display this help information." },
     
-    { "startup_kernel()", &startup_kernel, NULL },
-    { "init_task()", &init_task, NULL },
-    { "fork()", &fork, NULL },
-    { "switch_to_ring3()", &switch_to_ring3, NULL },
+    { "startup_kernel()", &startup_kernel, NULL, NULL },
+    { "init_task()", &init_task, NULL, NULL },
+    { "fork()", &fork, NULL, NULL },
+    { "switch_to_ring3()", &switch_to_ring3, NULL, NULL },
 
-    { NULL, NULL, NULL }, /* sentinel entry; don't remove */
+    { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };

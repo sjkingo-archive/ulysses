@@ -5,6 +5,7 @@ struct shell_command {
     char *cmd;
     void (*func_noargs)(void);
     void (*func_args)(char **);
+    char *desc;
 };
 
 #endif
