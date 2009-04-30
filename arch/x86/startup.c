@@ -1,5 +1,5 @@
 #include <ulysses/cmos.h>
-#include <ulysses/cpu.h>
+#include <ulysses/cpuid.h>
 #include <ulysses/gdt.h>
 #include <ulysses/idt.h>
 #include <ulysses/isr.h>
@@ -115,7 +115,7 @@ void startup_x86(void *mdb, unsigned int magic)
     enter_pm(); /* see flush.s */
     init_paging();
     init_timer(TIMER_FREQ);
-    init_cpu();
+    get_cpuid();
     register_common_isrs();
 
     /* And finally, enable interrupts */

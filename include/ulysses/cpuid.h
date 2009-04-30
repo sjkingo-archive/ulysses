@@ -1,14 +1,16 @@
-#ifndef _CPU_H
-#define _CPU_H
+#ifndef _ULYSSES_CPU_H
+#define _ULYSSES_CPU_H
 
-/* Intel 8086 derivatives provide the CPUID instruction for getting the
- * CPU information.
+/* CPU identification.
+ * Intel 8086 derivatives provide the CPUID instruction for getting the
+ * CPU info.
  */
 
 #define CPUID_VENDOR_LEN 13 /* 12 + \0 */
 #define CPUID_VENDOR_AMD "AuthenticAMD"
 #define CPUID_VENDOR_INTEL "GenuineIntel"
 
+/* struct to return the results of a CPUID instruction */
 typedef struct _cpuid_t {
     unsigned int eax;
     unsigned int ebx;
@@ -16,6 +18,7 @@ typedef struct _cpuid_t {
     unsigned int edx;
 } cpuid_t;
 
+/* CPU identification struct. */
 struct cpu_ident {
     unsigned int family;
     unsigned int model;
@@ -23,6 +26,9 @@ struct cpu_ident {
     char expl[64];
 };
 
-void init_cpu(void);
+/* get_cpuid()
+ *  Perform a variety of CPUID instructions to get the system's CPU details.
+ */
+void get_cpuid(void);
 
 #endif

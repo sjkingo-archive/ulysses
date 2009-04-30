@@ -1,4 +1,4 @@
-#include <ulysses/cpu.h>
+#include <ulysses/cpuid.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/shutdown.h>
@@ -101,7 +101,7 @@ static char *model_id(void)
     return model_name;
 }
 
-void init_cpu(void)
+void get_cpuid(void)
 {
     TRACE_ONCE;
     kern.cpu_vendor = vendor_id();
