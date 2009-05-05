@@ -17,11 +17,12 @@
 
 /* SCHED_DEBUG
  * TASK_DEBUG
- *  Whether or not to be verbose in logging the kernel scheduler and task
- *  manager.
+ * INTERRUPT_DEBUG
+ *  Whether or not to be verbose in logging.
  */
 #define SCHED_DEBUG 0
 #define TASK_DEBUG 0
+#define INTERRUPT_DEBUG 0
 
 /* KERN_SHELL
  *  The kernel shell is a builtin interpreter running in kernel-space.
