@@ -8,6 +8,6 @@
 void syscall_handler(registers_t regs);
 
 /* The actual system calls */
-void do_dummy(void); /* 0 */
+void sys_dummy(void); /* 0 */
 
 #endif

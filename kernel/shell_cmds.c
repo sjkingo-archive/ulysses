@@ -66,8 +66,10 @@ static void cmd_history(void)
 static void cmd_int_80(char **args)
 {
     TRACE_ONCE;
-    int a;
-    __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (strtol(*args, NULL, 10)));
+    int a, num;
+    
+    num = strtol(*args, NULL, 10);
+    __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (num));
 }
 
 static void cmd_ps(void)

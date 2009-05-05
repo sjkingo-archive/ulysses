@@ -3,11 +3,10 @@
 #include <ulysses/syscall.h>
 #include <ulysses/trace.h>
 
-#define NUM_SYSCALLS 1
-
 void *syscalls[] = {
-    &do_dummy,
+    &sys_dummy,
 };
+unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
 
 void syscall_handler(registers_t regs)
 {
@@ -15,7 +14,7 @@ void syscall_handler(registers_t regs)
     void *syscall_loc;
     int ret;
 
-    if (regs.eax >= NUM_SYSCALLS) {
+    if (regs.eax >= num_syscalls) {
         kprintf("Invalid syscall with eax %d\n", regs.eax);
         return;
     }
@@ -42,7 +41,8 @@ void syscall_handler(registers_t regs)
     regs.eax = ret;
 }
 
-void do_dummy(void) {
+void sys_dummy(void)
+{
     TRACE_ONCE;
-    kprintf("Dummy syscall; why was this called?\n");
+    kprintf("sys_dummy(): Dummy syscall; why was this called?\n");
 }
