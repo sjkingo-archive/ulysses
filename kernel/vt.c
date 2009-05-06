@@ -1,7 +1,6 @@
 #include <ulysses/trace.h>
 #include <ulysses/vt.h>
 
-extern flag_t shell_active; /* declared in shell.h */
 
 void init_vt(void)
 {
@@ -59,43 +58,14 @@ void append_char(const char c, flag_t write, flag_t all)
     if (write) put_char(c); /* write through to the screen directly */
 }
 
-void append_stdin(const char c)
-{
-    TRACE_ONCE;
-    if (virtual_terms[active_vt].stdin->buffer_pos >=
-            virtual_terms[active_vt].stdin->buffer_len) {
-        virtual_terms[active_vt].stdin->buffer_pos = 0;
-    }
-
-    virtual_terms[active_vt].stdin->buffer[virtual_terms[
-            active_vt].stdin->buffer_pos++] = c;
-    
-    /* Either send the character to the shell or stdin buffer of the 
-     * current VT.
-     */
-    if (shell_active) {
-        buffer_key(c);
-    } else {
-        append_char(c, TRUE, FALSE);
-    }
-}
-
 void up_pressed(void)
 {
     TRACE_ONCE;
-    if (shell_active) {
-        shell_walk_history(TRUE);
-    } else {
-        /* XXX eat the keypress */
-    }
+    shell_walk_history(TRUE);
 }
 
 void down_pressed(void)
 {
     TRACE_ONCE;
-    if (shell_active) {
-        shell_walk_history(FALSE);
-    } else {
-        /* XXX eat the keypress */
-    }
+    shell_walk_history(FALSE);
 }

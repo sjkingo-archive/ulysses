@@ -75,15 +75,21 @@
 #define ASCII_ESC 0x1B
 #define ASCII_BS 0x08
 
+/* init_keyboard()
+ *  Set up the keyboard driver and register a handler for IRQ1.
+ */
+void init_keyboard(void);
+
+/* next_key()
+ *  Returns the next character in the keyboard buffer, or 0 if there are no
+ *  more characters waiting to be read.
+ */
+char next_key(void);
+
 /* keyboard_handler()
  *   Handler callback for IRQ1. Reads the scancode from the PIC and maps
  *   it to a key.
  */
 void keyboard_handler(registers_t regs);
-
-/* read_next_key()
- *   Returns the next keypress in the buffer.
- */
-char read_next_key(void);
 
 #endif

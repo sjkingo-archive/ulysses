@@ -37,16 +37,6 @@ static void cmd_comefrom(void)
             "EWD02xx/EWD215.html>\n");
 }
 
-static void cmd_exit(void)
-{
-    TRACE_ONCE;
-#if KERN_INTERACTIVE
-    startup_kernel();
-#else
-    shutdown();
-#endif
-}
-
 static void cmd_pf(void)
 {
     TRACE_ONCE;
@@ -116,8 +106,6 @@ struct shell_command cmds[] = {
     { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },
     { "halt", &shutdown, NULL, "Shut down the operating system." },
     { "COMEFROM", &cmd_comefrom, NULL, NULL },
-    { "exit", &cmd_exit, NULL, "Either exit from interactive mode, or shut " 
-            "down the operating system." },
     { "dump_tasks", &dump_all_tasks, NULL, "Dump scheduling queue information." },
     { "pf", &cmd_pf, NULL, "Trigger a page fault." },
     { "history", &cmd_history, NULL, "Show interpreter history." },
@@ -125,7 +113,6 @@ struct shell_command cmds[] = {
             "processes." },
     { "help", &cmd_help, NULL, "Display this help information." },
     
-    { "startup_kernel()", &startup_kernel, NULL, NULL },
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &fork, NULL, NULL },
     { "switch_to_ring3()", &switch_to_ring3, NULL, NULL },

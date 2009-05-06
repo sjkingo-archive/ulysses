@@ -1,3 +1,4 @@
+#include <ulysses/isr.h>
 #include <ulysses/keyboard.h>
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
@@ -5,7 +6,7 @@
 #include <ulysses/util.h>
 #include <ulysses/vt.h>
 
-unsigned short map_unshifted[] = {
+static unsigned short map_unshifted[] = {
     KB_UNKNOWN, ASCII_ESC, '1', '2',                /* 0x00 - 0x03 */
     '3', '4', '5', '6',                             /* 0x04 - 0x07 */
     '7', '8', '9', '0',                             /* 0x08 - 0x0B */
@@ -30,7 +31,7 @@ unsigned short map_unshifted[] = {
     KB_SYSREQ, KB_UNKNOWN, KB_UNKNOWN, KB_UNKNOWN,  /* 0x54 - 0x57 */
 };            
 
-unsigned short map_shifted[] = {
+static unsigned short map_shifted[] = {
     KB_UNKNOWN, ASCII_ESC, '!', '@',                /* 0x00 - 0x03 */
     '#', '$', '%', '^',                             /* 0x04 - 0x07 */
     '&', '*', '(', ')',                             /* 0x08 - 0x0B */
@@ -55,7 +56,7 @@ unsigned short map_shifted[] = {
     KB_SYSREQ, KB_UNKNOWN, KB_UNKNOWN, KB_UNKNOWN,  /* 0x54 - 0x57 */
 };
 
-unsigned short map_caps[] = {
+static unsigned short map_caps[] = {
     KB_UNKNOWN, ASCII_ESC, '1', '2',                /* 0x00 - 0x03 */
     '3', '4', '5', '6',                             /* 0x04 - 0x07 */
     '7', '8', '9', '0',                             /* 0x08 - 0x0B */
@@ -80,14 +81,48 @@ unsigned short map_caps[] = {
     KB_SYSREQ, KB_UNKNOWN, KB_UNKNOWN, KB_UNKNOWN,  /* 0x54 - 0x57 */
 };
 
-/* shift_state
- * alt_state
- * caps_state
- *   Remembers the current state of the shift and alt keys.
+/* Keyboard buffer */
+static struct {
+    char keys[KB_BUFFER_SIZE];
+    unsigned int next_read_index;
+    unsigned int next_append_index;
+    flag_t shift_state;
+    flag_t alt_state;
+    flag_t caps_state;
+} buffer;
+
+/* buffer_keypress()
+ *  Append the given character to the internal buffer.
  */
-flag_t shift_state = FALSE;
-flag_t alt_state = FALSE;
-flag_t caps_state = FALSE;
+static void buffer_keypress(char key)
+{
+    TRACE_ONCE;
+    if ((buffer.next_append_index + 1) >= KB_BUFFER_SIZE) {
+        buffer.next_append_index = 0;
+    }
+    buffer.keys[buffer.next_append_index++] = key;
+}
+
+void init_keyboard(void)
+{
+    TRACE_ONCE;
+    buffer.next_read_index = 0;
+    buffer.next_append_index = 0;
+    buffer.shift_state = FALSE;
+    buffer.alt_state = FALSE;
+    buffer.caps_state = FALSE;
+    register_interrupt_handler(IRQ1, &keyboard_handler);
+}
+
+char next_key(void)
+{
+    TRACE_ONCE;
+    /* Are there any more characters to be read? */
+    if (buffer.next_read_index >= buffer.next_append_index) {
+        return 0;
+    }
+    return buffer.keys[buffer.next_read_index++];
+}
 
 void keyboard_handler(registers_t regs)
 {
@@ -98,19 +133,19 @@ void keyboard_handler(registers_t regs)
     /* Handle modifiers */
     switch (scancode) {
         case KB_MAKE_SHIFT:
-            shift_state = TRUE;
+            buffer.shift_state = TRUE;
             return;
 
         case KB_BREAK_SHIFT:
-            shift_state = FALSE;
+            buffer.shift_state = FALSE;
             return;
 
         default:
             if ((scancode & KB_IGNORE)) return;
-            if (caps_state) {
+            if (buffer.caps_state) {
                 key = map_caps[scancode];
             } else {
-                if (shift_state) key = map_shifted[scancode];
+                if (buffer.shift_state) key = map_shifted[scancode];
                 else key = map_unshifted[scancode];
             }
     }
@@ -118,30 +153,30 @@ void keyboard_handler(registers_t regs)
     /* Handle the key press */
     switch (key) {
         case KB_CAPSLOCK:
-            if (caps_state) caps_state = FALSE;
-            else caps_state = TRUE;
+            if (buffer.caps_state) buffer.caps_state = FALSE;
+            else buffer.caps_state = TRUE;
             return;
 
         case KB_LALT:
         case KB_RALT:
-            if (alt_state) alt_state = FALSE;
-            else alt_state = TRUE;
+            if (buffer.alt_state) buffer.alt_state = FALSE;
+            else buffer.alt_state = TRUE;
             return;
             
         case KB_F1:
-            if (alt_state) switch_vt(0);
+            if (buffer.alt_state) switch_vt(0);
             return;
 
         case KB_F2:
-            if (alt_state) switch_vt(1);
+            if (buffer.alt_state) switch_vt(1);
             return;
 
         case KB_F3:
-            if (alt_state) switch_vt(2);
+            if (buffer.alt_state) switch_vt(2);
             return;
 
         case KB_F4:
-            if (alt_state) switch_vt(3);
+            if (buffer.alt_state) switch_vt(3);
             return;
 
         case KB_F9:
@@ -160,6 +195,6 @@ void keyboard_handler(registers_t regs)
             return;
 
         default:
-            append_stdin(key);
+            buffer_keypress(key);
     }
 }

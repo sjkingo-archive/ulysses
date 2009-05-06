@@ -47,7 +47,6 @@ static void register_fatal_isrs(void)
 static void register_common_isrs(void)
 {
     TRACE_ONCE;
-    register_interrupt_handler(IRQ1, &keyboard_handler);
     register_interrupt_handler(SYSCALL, &syscall_handler);
 }
 
@@ -116,6 +115,8 @@ void startup_x86(void *mdb, unsigned int magic)
     init_paging();
     init_timer(TIMER_FREQ);
     get_cpuid();
+
+    init_keyboard();
     register_common_isrs();
 
     /* And finally, enable interrupts */

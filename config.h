@@ -31,12 +31,6 @@
  */
 #define KERN_SHELL 1
 
-/* KERN_INTERACTIVE
- *  Start the kernel shell straight after the architecture-specific
- *  startup routines, bypassing all of the higher-level kernel startup.
- */
-#define KERN_INTERACTIVE 0
-
 /* VERSION_NUM
  * VERSION_CN
  *  Version number and codename of the kernel.

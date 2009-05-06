@@ -51,11 +51,6 @@ void flush_vt(void);
  */
 void append_char(const char c, flag_t write, flag_t all);
 
-/* append_stdin()
- *  Append a character to the terminal's standard input.
- */
-void append_stdin(const char c);
-
 /* up_pressed()
  * down_pressed()
  *  If the shell is active, tell it that the up key on the keyboard was

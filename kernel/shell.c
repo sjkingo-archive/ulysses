@@ -1,5 +1,7 @@
 #include <ulysses/kernel.h>
+#include <ulysses/keyboard.h>
 #include <ulysses/kheap.h>
+#include <ulysses/kthread.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shell.h>
 #include <ulysses/shell_cmds.h>
@@ -20,7 +22,6 @@ extern struct shell_command cmds[];
 static void reset_buffer(void)
 {
     TRACE_ONCE;
-    shell_active = FALSE;
     
     if (shell.data == NULL) {
         shell.data = kmalloc(SHELL_BUF_SIZE);
@@ -28,7 +29,6 @@ static void reset_buffer(void)
     memset(shell.data, 0, SHELL_BUF_SIZE);
     
     shell.next_pos = 0;
-    shell_active = TRUE;
 }
 
 /* update_history()
@@ -95,13 +95,16 @@ static void execute_cmd(void)
     kprintf("%s: command not found\n", cmd);
 }
 
-void init_shell(char *prompt)
+static void print_prompt(void)
 {
     TRACE_ONCE;
-    shell_active = FALSE;
+    kprintf("%s", SHELL_PROMPT);
+}
+
+void run_shell(void)
+{
+    TRACE_ONCE;
     shell.next_pos = 0;
-    shell.prompt = (char *)kmalloc(strlen(prompt) + 1);
-    strcpy(shell.prompt, prompt);
     shell.data = NULL;
     reset_buffer();
 
@@ -112,6 +115,16 @@ void init_shell(char *prompt)
     }
     last_cmd_index = 0;
     last_up_index = 0;
+
+    print_prompt();
+    while (1) {
+        char c = next_key();
+        if (c == 0) {
+            kthread_yield();
+        } else {
+            buffer_key(c);
+        }
+    }
 }
 
 void buffer_key(const char c)
@@ -126,24 +139,10 @@ void buffer_key(const char c)
     if (c == '\n') {
         execute_cmd();
         reset_buffer();
-        run_shell(); /* give us a new prompt */
+        print_prompt();
     } else {
         shell.data[shell.next_pos++] = c;
     }
-}
-
-void run_shell_all(void)
-{
-    TRACE_ONCE;
-    kprintf_all("%s", shell.prompt);
-    shell_active = TRUE;
-}
-
-void run_shell(void)
-{
-    TRACE_ONCE;
-    kprintf("%s", shell.prompt);
-    shell_active = TRUE;
 }
 
 void shell_walk_history(flag_t dir)
@@ -163,6 +162,6 @@ void shell_walk_history(flag_t dir)
 
     /* Clear the current line and echo the command */
     clear_last_line();
-    run_shell();
+    print_prompt();
     kprintf("%s", shell.data);
 }
