@@ -6,7 +6,7 @@
 #include <ulysses/isr.h> /* registers_t */
 
 #define CLOCK 1193180
-#define TIMER_FREQ 50
+#define TIMER_FREQ 250
 
 unsigned long ticks;
 
