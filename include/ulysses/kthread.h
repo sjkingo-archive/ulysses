@@ -50,4 +50,10 @@ typedef struct kthread {
  */
 pid_t new_kthread(void (*func)(void));
 
+/* kthread_yield()
+ *  Voluntarily yield the current kernel thread, allowing the task manager to 
+ *  run another task.
+ */
+void kthread_yield(void);
+
 #endif

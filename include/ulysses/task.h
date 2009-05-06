@@ -75,4 +75,10 @@ void check_current_task(void);
  */
 void switch_kernel_stack(void);
 
+/* change_current_task()
+ *  Trigger a forced context switch to another task, without first checking
+ *  the task's quantum.
+ */
+void change_current_task(void);
+
 #endif

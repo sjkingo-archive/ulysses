@@ -10,7 +10,7 @@
 
 #include <string.h>
 
-task_t *current_task = NULL;
+__volatile__ task_t *current_task = NULL;
 pid_t next_pid = 0;
 
 extern page_dir_t *kernel_directory;
@@ -243,7 +243,7 @@ void check_current_task(void)
 
         /* Reset the quanta and switch tasks */
         current_task->s_ticks_left = current_task->s_quantum_size;
-        switch_task();
+        change_current_task();
     }
 }
 
@@ -251,4 +251,10 @@ void switch_kernel_stack(void)
 {
     TRACE_ONCE;
     set_kernel_stack(current_task->kernel_stack + KERNEL_STACK_SIZE);
+}
+
+void change_current_task(void)
+{
+    TRACE_ONCE;
+    switch_task();
 }

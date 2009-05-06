@@ -6,6 +6,8 @@
 
 #include <sys/types.h>
 
+extern task_t *current_task; /* task.c */
+
 pid_t new_kthread(void (*func)(void))
 {
     TRACE_ONCE;
@@ -19,3 +21,9 @@ pid_t new_kthread(void (*func)(void))
     return task->pid;
 }
 
+void kthread_yield(void)
+{
+    TRACE_ONCE;
+    current_task->kthread->state = STATE_SLEEPING;
+    change_current_task();
+}
