@@ -101,7 +101,8 @@ static void setup_stack(task_t *t)
 {
     TRACE_ONCE;
     /* We offset the stack for flags register */
-    unsigned int *stack = kmalloc(2048) + 2048; /* 4 KiB stack */
+    unsigned int *ebp = kmalloc(2048); /* bottom of stack */
+    unsigned int *stack = ebp + 2048; /* we need 2KB for defaults */
 
     *--stack = 0x202;       /* EFLAGS */
     *--stack = 0x08;        /* CS */
@@ -122,7 +123,8 @@ static void setup_stack(task_t *t)
     *--stack = 0x10;        /* FS */
     *--stack = 0x10;        /* GS */
 
-    t->esp = &stack; /* the rest of the stack */
+    t->esp = (unsigned int)stack; /* the rest of the stack */
+    t->ebp = (unsigned int)ebp;
 }
 
 void init_task(void)
