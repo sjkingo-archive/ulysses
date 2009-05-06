@@ -16,6 +16,9 @@
 
 #include <sys/types.h>
 
+/* This is the stack pointer that multiboot sets up for us. Eventually
+ * we will move this to a higher address.
+ */
 unsigned int initial_esp;
 
 /* idle_cpu()
@@ -76,5 +79,5 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 
     /* we should never get here */
     panic("kernel task died");
-    return;
+    return; /* and if we ever get here, then we really don't care anymore */
 }
