@@ -52,9 +52,4 @@ void put_char(const char c);
  */
 void flush_screen(const char *data);
 
-/* clear_last_line()
- *  Clear the last line on screen.
- */
-void clear_last_line(void);
-
 #endif

@@ -51,12 +51,10 @@ void flush_vt(void);
  */
 void append_char(const char c, flag_t write, flag_t all);
 
-/* up_pressed()
- * down_pressed()
- *  If the shell is active, tell it that the up key on the keyboard was
- *  pressed, otherwise eat the keypress.
+/* remove_last_line()
+ *  Remove the last line (up to \n) from the current virtual terminal and
+ *  flush it to screen.
  */
-void up_pressed(void);
-void down_pressed(void);
+void remove_last_line(void);
 
 #endif

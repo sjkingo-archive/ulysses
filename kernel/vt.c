@@ -58,14 +58,15 @@ void append_char(const char c, flag_t write, flag_t all)
     if (write) put_char(c); /* write through to the screen directly */
 }
 
-void up_pressed(void)
+void remove_last_line(void)
 {
     TRACE_ONCE;
-    shell_walk_history(TRUE);
-}
-
-void down_pressed(void)
-{
-    TRACE_ONCE;
-    shell_walk_history(FALSE);
+    char *d = virtual_terms[active_vt].data + 
+            (virtual_terms[active_vt].next - 1); /* ignore \n */
+    while (*d != '\0' && *d != '\n') {
+        *d = '\0';
+        d--;
+        virtual_terms[active_vt].next--;
+    }
+    flush_vt();
 }

@@ -187,11 +187,11 @@ void keyboard_handler(registers_t regs)
             panic("F10 pressed");
 
         case KP_UP:
-            up_pressed();
+            shell_walk_history(TRUE);
             return;
 
         case KP_DOWN:
-            down_pressed();
+            shell_walk_history(FALSE);
             return;
 
         default:

@@ -85,7 +85,6 @@ static void execute_cmd(void)
             } else if (cmds[i].func_args != NULL) {
                 cmds[i].func_args(&args);
             }
-            update_history();
             return;
         }
         i++;
@@ -137,6 +136,7 @@ void buffer_key(const char c)
     
     kprintf("%c", c);
     if (c == '\n') {
+        update_history();
         execute_cmd();
         reset_buffer();
         print_prompt();
@@ -161,7 +161,7 @@ void shell_walk_history(flag_t dir)
     }
 
     /* Clear the current line and echo the command */
-    clear_last_line();
+    remove_last_line();
     print_prompt();
     kprintf("%s", shell.data);
 }

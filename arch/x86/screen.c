@@ -111,17 +111,3 @@ void flush_screen(const char *data)
         data++;
     }
 }
-
-void clear_last_line(void)
-{
-    TRACE_ONCE;
-    register unsigned int i;
-
-    for (i = ((screen.next_y * 2) * WIDTH); i < (WIDTH * 2); i++) {
-        screen.mem[i] = ' ';
-        screen.mem[++i] = COLOUR_WB;
-    }
-    
-    move_cursor(0, screen.next_y);
-    screen.next_x = 0;
-}
