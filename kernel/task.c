@@ -140,7 +140,7 @@ void init_task(void)
      * CPU if there is nothing else to do.
      */
     current_task = new_task("kernel");
-    add_to_queue(current_task);
+    add_to_queue((task_t *)current_task);
 }
 
 task_t *new_task(char *name)

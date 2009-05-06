@@ -48,7 +48,7 @@ typedef struct kthread {
  *  This only sets up a new thread and calls the scheduler to manage it; it
  *  does not actually run the thread.
  */
-pid_t new_kthread(void (*func)(void));
+pid_t new_kthread(void (*func)(void), char *name);
 
 /* kthread_yield()
  *  Voluntarily yield the current kernel thread, allowing the task manager to 

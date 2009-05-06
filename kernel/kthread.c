@@ -8,10 +8,10 @@
 
 extern task_t *current_task; /* task.c */
 
-pid_t new_kthread(void (*func)(void))
+pid_t new_kthread(void (*func)(void), char *name)
 {
     TRACE_ONCE;
-    task_t *task = new_task("kthread");
+    task_t *task = new_task(name);
     task->eip = (unsigned int)*func;
     task->kthread = kmalloc(sizeof(kthread_t));
     task->kthread->state = STATE_STARTING;
