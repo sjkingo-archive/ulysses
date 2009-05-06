@@ -24,13 +24,6 @@
 #define TASK_DEBUG 0
 #define INTERRUPT_DEBUG 0
 
-/* KERN_SHELL
- *  The kernel shell is a builtin interpreter running in kernel-space.
- *  If this is set to 1, it will be started once the kernel startup
- *  has been completed.
- */
-#define KERN_SHELL 1
-
 /* VERSION_NUM
  * VERSION_CN
  *  Version number and codename of the kernel.
