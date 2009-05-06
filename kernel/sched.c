@@ -9,8 +9,6 @@
 
 struct queue tasks_queue;
 
-flag_t sched_active;
-
 static void add_as_head(task_t *t)
 {
     TRACE_ONCE;
@@ -70,7 +68,6 @@ void init_sched(void)
     TRACE_ONCE;
     tasks_queue.head = NULL;
     tasks_queue.tail = NULL;
-    sched_active = 0;
 }
 
 void add_to_queue(task_t *t)

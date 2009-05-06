@@ -17,7 +17,6 @@
 #include <sys/types.h>
 
 unsigned int initial_esp;
-extern flag_t sched_active; /* sched.c */
 
 /* idle_cpu()
  *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
@@ -27,6 +26,24 @@ static void idle_cpu(void)
 {
     TRACE_ONCE;
     while(1) __asm__ __volatile__("sti ; hlt");
+}
+
+/* task_init()
+ *  This is the father (mother) of all tasks.
+ */
+static void task_init(void)
+{
+    TRACE_ONCE;
+
+    /* Finish kernel startup */
+    init_vt();
+    print_startup();
+    init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
+    new_kthread(run_shell, "shell");
+    kprintf("Kernel startup complete in %ds\n", 
+            kern.current_time_offset.tv_sec);
+
+    while(1) kthread_yield(); /* give up the CPU because we're nice */
 }
 
 void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
@@ -46,18 +63,15 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
      */
     move_stack((void *)STACK_LOC, STACK_SIZE);
     
-    /* Perform higher-level startup */
-    init_vt();
-    print_startup();
+    /* Set up the scheduler and task manager, then start the init thread
+     * (pid 1) going to finish the kernel's startup. Note that the order
+     * here is important!
+     */
     init_sched();
     init_task();
-    init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
-    new_kthread(run_shell, "shell");
-    kprintf("Kernel startup complete in %ds\n", 
-            kern.current_time_offset.tv_sec);
+    new_kthread(task_init, "init");
 
     /* This is the kernel task (pid 0), so drop to an idle */
-    sched_active = 1;
     idle_cpu();
 
     /* we should never get here */
