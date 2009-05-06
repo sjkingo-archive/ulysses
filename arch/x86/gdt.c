@@ -76,7 +76,6 @@ void set_kernel_stack(unsigned int stack)
 void switch_to_ring3(void)
 {
     TRACE_ONCE;
-    CLI;
     switch_kernel_stack();
 
     __asm__ __volatile__("  \

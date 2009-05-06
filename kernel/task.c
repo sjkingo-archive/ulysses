@@ -32,9 +32,6 @@ static void switch_task(void)
         return;
     }
 
-    /* This is really important code that can't be interrupted! */
-    CLI;
-
     /* We need these registers later */
     __asm__ __volatile__("mov %%esp, %0" : "=r" (esp));
     __asm__ __volatile__("mov %%ebp, %0" : "=r" (ebp));
@@ -72,16 +69,18 @@ static void switch_task(void)
 #endif
 
     /* Perform the actual context switch:
-     *  1. Temporarily put the new instruction pointer in a GP register,
-     *  2. Load the stack and base pointers from the "new" task,
-     *  3. Change the page directory,
-     *  4. Put a dummy val in EAX so we recognise that we just task switched,
-     *  5. Enable interrupts,
-     *  6. Do nothing so the pipelined sti actually takes effect,
-     *  7. Jumps to the instruction pointer we put in ECX, which "continues"
+     *  1. Firstly disable interrupts since this isn't reentrant,
+     *  2. Temporarily put the new instruction pointer in a GP register,
+     *  3. Load the stack and base pointers from the "new" task,
+     *  4. Change the page directory,
+     *  5. Put a dummy val in EAX so we recognise that we just task switched,
+     *  6. Enable interrupts,
+     *  7. Do nothing so the pipelined sti actually takes effect,
+     *  8. Jumps to the instruction pointer we put in ECX, which "continues"
      *     executing the "new" task.
      */
     __asm__ __volatile__("       \
+            cli;                 \
             mov %0, %%ecx;       \
             mov %1, %%esp;       \
             mov %2, %%ebp;       \
