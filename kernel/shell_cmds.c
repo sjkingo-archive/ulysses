@@ -78,7 +78,12 @@ static void cmd_ps(void)
     kprintf("PID\tPPID\tUID\tNAME\n");
     task_t *t = tasks_queue.head;
     while (t != NULL) {
-        kprintf("%d\t%d\t%d\t%s\n", t->pid, t->ppid, t->uid, t->name);
+        kprintf("%d\t%d\t%d\t", t->pid, t->ppid, t->uid);
+        if (t->kthread == NULL) {
+            kprintf("%s\n", t->name);
+        } else {
+            kprintf("[%s]\n", t->name);
+        }
         t = t->next;
     }
 }
