@@ -1,4 +1,3 @@
-
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
@@ -10,8 +9,7 @@
 
 /* _ARCH_x
  *  The architecture to build the kernel for. x must be a directory in
- *  arch/ with targets set in SConstruct, and have a corresponding include in 
- *  <ulysses/kernel.h> for this to work.
+ *  arch/ with targets set in SConstruct.
  */
 #define _ARCH_x86
 
@@ -32,4 +30,3 @@
 #define VERSION_CN "amnesiac"
 
 #endif
-
