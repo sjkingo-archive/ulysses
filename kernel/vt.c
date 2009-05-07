@@ -1,6 +1,6 @@
 #include <ulysses/trace.h>
+#include <ulysses/screen.h>
 #include <ulysses/vt.h>
-
 
 void init_vt(void)
 {
