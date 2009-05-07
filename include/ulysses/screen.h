@@ -43,9 +43,9 @@ void clear_screen(void);
 void move_cursor(const unsigned int x, const unsigned int y);
 
 /* put_char()
- *  Put a single character to screen.
+ *  Put a single character to screen with the given colour code.
  */
-void put_char(const char c);
+void put_char(const char c, const char colour);
 
 /* flush_screen()
  *  Clear the screen and write data to it.

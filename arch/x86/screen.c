@@ -60,7 +60,7 @@ static void scroll_screen(void)
     move_cursor(screen.next_x, last_line);
 }
 
-void put_char(const char c)
+void put_char(const char c, const char colour)
 {
     TRACE_ONCE;
     unsigned int index;
@@ -96,7 +96,7 @@ void put_char(const char c)
     /* Each character in video mem is 2 bytes: we call this a cell */
     index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
     screen.mem[index] = c;
-    screen.mem[++index] = COLOUR_WB;
+    screen.mem[++index] = colour;
     
     /* Incremement the x position and move the cursor to the next cell */
     move_cursor(++screen.next_x, screen.next_y);
@@ -107,7 +107,7 @@ void flush_screen(const char *data)
     TRACE_ONCE;
     clear_screen();
     while (*data) {
-        put_char(*data);
+        put_char(*data, COLOUR_WB);
         data++;
     }
 }
