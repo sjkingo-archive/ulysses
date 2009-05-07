@@ -19,7 +19,7 @@ lib_sources = [os.path.join(lib_dir, f) for f in os.listdir(lib_dir) \
 env = Environment(
     AS = 'nasm', 
     CC = 'gcc', 
-    CFLAGS = '-m32 -g -Wall -Wextra -isystem include -fno-builtin', 
+    CFLAGS = '-m32 -g -O -Wall -Wextra -isystem include -fno-builtin', 
     LINKFLAGS = '-m32 -nostdinc -nostdlib -nostartfiles -nodefaultlibs -T %s' % 
             linker_script,
     ASFLAGS = '-f elf',
