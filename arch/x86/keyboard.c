@@ -1,5 +1,6 @@
 #include <ulysses/isr.h>
 #include <ulysses/keyboard.h>
+#include <ulysses/kthread.h>
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/trace.h>

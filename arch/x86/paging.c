@@ -1,4 +1,5 @@
 #include <ulysses/kheap.h>
+#include <ulysses/kprintf.h>
 #include <ulysses/paging.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/trace.h>

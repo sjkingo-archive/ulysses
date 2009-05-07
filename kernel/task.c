@@ -2,6 +2,7 @@
 #include <ulysses/isr.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
+#include <ulysses/gdt.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>

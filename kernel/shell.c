@@ -3,9 +3,11 @@
 #include <ulysses/kheap.h>
 #include <ulysses/kthread.h>
 #include <ulysses/kprintf.h>
+#include <ulysses/screen.h>
 #include <ulysses/shell.h>
 #include <ulysses/shell_cmds.h>
 #include <ulysses/trace.h>
+#include <ulysses/vt.h>
 
 #include <string.h>
 #include <sys/types.h>
