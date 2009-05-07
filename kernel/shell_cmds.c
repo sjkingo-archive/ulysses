@@ -65,14 +65,14 @@ static void cmd_int_80(char **args)
 static void cmd_ps(void)
 {
     TRACE_ONCE;
-    kprintf("PID\tPPID\tUID\tNAME\n");
+    kprintf("PID\tPPID\tUID\tSTATE\tNAME\n");
     task_t *t = tasks_queue.head;
     while (t != NULL) {
         kprintf("%d\t%d\t%d\t", t->pid, t->ppid, t->uid);
         if (t->kthread == NULL) {
-            kprintf("%s\n", t->name);
+            kprintf("-\t%s\n", t->name);
         } else {
-            kprintf("[%s]\n", t->name);
+            kprintf("%d\t[%s]\n", t->kthread->state, t->name);
         }
         t = t->next;
     }
