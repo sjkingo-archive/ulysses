@@ -180,26 +180,24 @@ task_t *new_task(const char *name)
     return t;
 }
 
+void free_task(task_t *task)
+{
+    TRACE_ONCE;
+    kfree(task->name);
+    kfree(task->kernel_stack);
+    if (task->kthread != NULL) {
+        kfree(task->kthread);
+        task->kthread = NULL;
+    }
+    /* XXX we can't free the stack or a page fault will occur */
+    kfree(task);
+}
+
 void task_exit(void)
 {
     TRACE_ONCE;
     current_task->ready = 0; /* tell the scheduler to remove this task */
-
-    /* Free all of the tasks' data structures */
-    kfree(current_task->name);
-    kfree(current_task->kernel_stack);
-    if (current_task->kthread != NULL) {
-        kfree(current_task->kthread);
-        current_task->kthread = NULL;
-    }
-    kfree(current_task->ebp); /* free the stack */
-    kfree(current_task);
-    /* don't current_task = NULL since switch_task() will ignore it then */
-
-    /* Trigger a context switch, but don't save state (since we've just wiped 
-     * it all).
-     */
-    switch_task(FALSE);
+    switch_task(FALSE); /* don't save state */
 }
 
 pid_t fork(void)

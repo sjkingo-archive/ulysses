@@ -100,8 +100,9 @@ task_t *pick_next_task(void)
                     "queue\n", t->pid);
 #endif
             tasks_queue.head = t->next;
+            free_task(t);
+            t = tasks_queue.head;
         }
-        t = t->next;
     }
 
     return NULL;

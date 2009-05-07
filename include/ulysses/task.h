@@ -54,10 +54,19 @@ void init_task(void);
  */
 task_t *new_task(const char *name);
 
+/* free_task()
+ *  Destroy the given task's data structures. Typically called by the
+ *  scheduler to remove a task.
+ */
+void free_task(task_t *task);
+
 /* task_exit()
- *  Destroy the current task and pick another to be run. This is set as the
- *  bottom pointer on each task's stack so it can be destroyed on return or 
- *  exit.
+ *  Flag the current task to be destroyed and trigger a context switch. This 
+ *  does not actually remove the task: the scheduler will do this next time 
+ *  it goes to be picked.
+ *
+ *  This function is set as the bottom pointer on each task's stack so it can 
+ *  be destroyed on return or exit.
  */
 void task_exit(void);
 
