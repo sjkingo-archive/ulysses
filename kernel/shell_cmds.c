@@ -97,6 +97,12 @@ static void cmd_help(void)
     kprintf("\n* = this command takes arguments\n");
 }
 
+static void cmd_exit(void)
+{
+    TRACE_ONCE;
+    kthread_exit();
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -112,6 +118,7 @@ struct shell_command cmds[] = {
     { "ps", &cmd_ps, NULL, "Display a snapshot of all currently running "
             "processes." },
     { "help", &cmd_help, NULL, "Display this help information." },
+    { "exit", &cmd_exit, NULL, "Cause the shell to exit." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &fork, NULL, NULL },
