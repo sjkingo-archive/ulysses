@@ -50,3 +50,9 @@ void kthread_exit(void)
     current_task->kthread->state = STATE_DESTROYING;
     task_exit();
 }
+
+void kthread_running(void)
+{
+    TRACE_ONCE;
+    current_task->kthread->state = STATE_RUNNING;
+}

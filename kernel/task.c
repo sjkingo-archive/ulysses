@@ -74,6 +74,11 @@ static void switch_task(flag_t save)
             current_task->name);
 #endif
 
+    /* We need to do a couple of other things if this is a kernel thread */
+    if (current_task->kthread != NULL) {
+        kthread_running();
+    }
+
     /* Perform the actual context switch:
      *  1. Firstly disable interrupts since this isn't reentrant,
      *  2. Temporarily put the new instruction pointer in a GP register,

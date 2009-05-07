@@ -67,4 +67,10 @@ void kthread_yield(void);
  */
 void kthread_exit(void);
 
+/* kthread_running()
+ *  Tell kthreadd that the current kernel thread is now running. Typically
+ *  only the task manager would ever need to call this.
+ */
+void kthread_running(void);
+
 #endif
