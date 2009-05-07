@@ -9,6 +9,7 @@
 #include <ulysses/util.h>
 
 #include <string.h>
+#include <sys/types.h>
 
 __volatile__ task_t *current_task = NULL;
 pid_t next_pid = 0;
@@ -23,7 +24,7 @@ static pid_t new_pid(void)
     return next_pid++;
 }
 
-static void switch_task(void)
+static void switch_task(flag_t save)
 {
     TRACE_ONCE;
     unsigned int esp, ebp, eip;
@@ -33,8 +34,10 @@ static void switch_task(void)
     }
 
     /* We need these registers later */
-    __asm__ __volatile__("mov %%esp, %0" : "=r" (esp));
-    __asm__ __volatile__("mov %%ebp, %0" : "=r" (ebp));
+    if (save) {
+        __asm__ __volatile__("mov %%esp, %0" : "=r" (esp));
+        __asm__ __volatile__("mov %%ebp, %0" : "=r" (ebp));
+    }
 
     /* Read the current instruction pointer. Two things could have happened 
      * when read_eip is called -- either the eip is returned as requested, or
@@ -48,9 +51,11 @@ static void switch_task(void)
     }
 
     /* Save the the registers of the current task */
-    current_task->eip = eip;
-    current_task->esp = esp;
-    current_task->ebp = ebp;
+    if (save) {
+        current_task->eip = eip;
+        current_task->esp = esp;
+        current_task->ebp = ebp;
+    }
 
     current_task = pick_next_task();
 
@@ -121,6 +126,8 @@ static void setup_stack(task_t *t)
     *--stack = 0x10;        /* ES */
     *--stack = 0x10;        /* FS */
     *--stack = 0x10;        /* GS */
+    *--stack = (unsigned int)&task_exit; /* destroys task on return */
+    /* bottom of stack */
 
     t->esp = (unsigned int)stack; /* the rest of the stack */
     t->ebp = (unsigned int)ebp;
@@ -165,6 +172,28 @@ task_t *new_task(char *name)
     t->next = NULL;
     setup_stack(t);
     return t;
+}
+
+void task_exit(void)
+{
+    TRACE_ONCE;
+    current_task->ready = 0; /* tell the scheduler to remove this task */
+
+    /* Free all of the tasks' data structures */
+    kfree(current_task->name);
+    kfree(current_task->kernel_stack);
+    if (current_task->kthread != NULL) {
+        kfree(current_task->kthread);
+        current_task->kthread = NULL;
+    }
+    kfree(current_task->ebp); /* free the stack */
+    kfree(current_task);
+    /* don't current_task = NULL since switch_task() will ignore it then */
+
+    /* Trigger a context switch, but don't save state (since we've just wiped 
+     * it all).
+     */
+    switch_task(FALSE);
 }
 
 pid_t fork(void)
@@ -255,5 +284,6 @@ void switch_kernel_stack(void)
 void change_current_task(void)
 {
     TRACE_ONCE;
-    switch_task();
+    switch_task(TRUE);
 }
+

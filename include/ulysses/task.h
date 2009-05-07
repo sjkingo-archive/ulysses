@@ -54,6 +54,13 @@ void init_task(void);
  */
 task_t *new_task(char *name);
 
+/* task_exit()
+ *  Destroy the current task and pick another to be run. This is set as the
+ *  bottom pointer on each task's stack so it can be destroyed on return or 
+ *  exit.
+ */
+void task_exit(void);
+
 /* fork()
  *  Clone the current task and run it. Returns 0 to the child and the child's
  *  pid to the parent.

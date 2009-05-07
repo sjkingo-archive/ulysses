@@ -93,6 +93,13 @@ task_t *pick_next_task(void)
 #endif
             move_to_tail(t);
             return t;
+        } else {
+            /* Remove from queue */
+#if SCHED_DEBUG
+            kprintf("pick_next_task(): pid %d not ready; removing from "
+                    "queue\n", t->pid);
+#endif
+            tasks_queue.head = t->next;
         }
         t = t->next;
     }
