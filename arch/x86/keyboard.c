@@ -178,6 +178,10 @@ void keyboard_handler(registers_t regs)
         case KB_F4:
             if (buffer.alt_state) switch_vt(3);
             return;
+        
+        case KB_F8:
+            new_kthread(run_shell, "shell");
+            return;
 
         case KB_F9:
             sanity_check();
