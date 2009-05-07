@@ -8,7 +8,7 @@ unsigned int read_fs(fs_node_t *node, unsigned int offset, size_t size,
         unsigned char *buffer)
 {
     if (node->read != 0) {
-        return node->read(node, offset, size, buffer);
+        return node->read(node, offset, size, *buffer);
     } else {
         return 0;
     }

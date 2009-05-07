@@ -17,7 +17,7 @@ int nroot_nodes;
 struct dirent dirent;
 
 static unsigned int initrd_read(fs_node_t *node, unsigned int offset, 
-        unsigned int size, unsigned char *buffer)
+        unsigned int size, unsigned char buffer)
 {
     initrd_file_header_t header = file_headers[node->inode];
     if (offset > header.length) return 0;
@@ -26,7 +26,7 @@ static unsigned int initrd_read(fs_node_t *node, unsigned int offset,
         size = header.length - offset;
     }
     
-    memcpy(buffer, (unsigned char *)(header.offset + offset), size);
+    memcpy(&buffer, (unsigned char *)(header.offset + offset), size);
     return size;
 }
 
