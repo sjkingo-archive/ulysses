@@ -56,4 +56,10 @@ pid_t new_kthread(void (*func)(void), char *name);
  */
 void kthread_yield(void);
 
+/* kthread_exit()
+ *  Quit the current kernel thread. This should only be called from inside a
+ *  thread to exit itself.
+ */
+void kthread_exit(void);
+
 #endif

@@ -33,3 +33,10 @@ void kthread_yield(void)
     current_task->kthread->state = STATE_SLEEPING;
     change_current_task();
 }
+
+void kthread_exit(void)
+{
+    TRACE_ONCE;
+    current_task->kthread->state = STATE_DESTROYING;
+    task_exit();
+}
