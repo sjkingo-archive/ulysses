@@ -31,27 +31,6 @@ static void idle_cpu(void)
     while(1) __asm__ __volatile__("sti ; hlt");
 }
 
-/* task_init()
- *  This is the father (mother) of all tasks.
- */
-static void task_init(void)
-{
-    TRACE_ONCE;
-
-    /* Finish kernel startup */
-    init_vt();
-    print_startup();
-
-    /* Spawn some threads to do work for the kernel */
-    kthread_create(run_initrd, "initrd");
-    kthread_create(run_shell, "shell");
-
-    kprintf("Kernel startup complete in %ds\n", 
-            kern.current_time_offset.tv_sec);
-
-    while(1) kthread_yield(); /* give up the CPU because we're nice */
-}
-
 void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
     TRACE_ONCE;
@@ -69,13 +48,22 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
      */
     move_stack((void *)STACK_LOC, STACK_SIZE);
     
-    /* Set up the scheduler and task manager, then start the init thread
-     * (pid 1) going to finish the kernel's startup. Note that the order
-     * here is important!
+    /* Now that all the lower-level startup has been done, we can set up
+     * the higher-level kernel functions.
      */
     init_sched();
     init_task();
-    kthread_create(task_init, "init");
+    init_vt();
+    print_startup();
+
+    /* Start the kthread daemon going to set up other kernel threads */
+    kthread_create(kthreadd, "kthreadd");
+    
+    /* XXX this is where we would load init process off the initrd */
+
+    /* And we're done. */
+    kprintf("Kernel startup complete in %ds\n", 
+            kern.current_time_offset.tv_sec);
 
     /* This is the kernel task (pid 0), so drop to an idle */
     idle_cpu();

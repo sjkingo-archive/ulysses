@@ -1,10 +1,22 @@
+#include <ulysses/initrd.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kthread.h>
 #include <ulysses/sched.h>
+#include <ulysses/shell.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 
 extern __volatile__ task_t *current_task; /* task.c */
+static pid_t kthreadd_pid;
+
+void kthreadd(void)
+{
+    TRACE_ONCE;
+    kthreadd_pid = getpid();
+    kthread_create(run_initrd, "initrd");
+    kthread_create(run_shell, "shell");
+    while (1) kthread_yield(); /* waiting for work */
+}
 
 pid_t kthread_create(void (*func)(void), const char *name)
 {
@@ -13,7 +25,7 @@ pid_t kthread_create(void (*func)(void), const char *name)
     /* Set up task */
     task_t *task = new_task(name);
     task->eip = (unsigned int)*func;
-    task->ppid = current_task->pid;
+    task->ppid = kthreadd_pid;
 
     /* Set up thread */
     task->kthread = kmalloc(sizeof(kthread_t));

@@ -43,6 +43,11 @@ typedef struct kthread {
     unsigned int state; /* current state; see STATE_*, above */
 } kthread_t;
 
+/* kthreadd()
+ *  This is the mother of all kernel threads. It itself is a kernel thread.
+ */
+void kthreadd(void);
+
 /* kthread_create()
  *  Create a new kthread with the given function pointer as an entry point.
  *  This only sets up a new thread and calls the scheduler to manage it; it
