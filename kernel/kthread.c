@@ -4,8 +4,6 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 
-#include <sys/types.h>
-
 extern __volatile__ task_t *current_task; /* task.c */
 
 pid_t new_kthread(void (*func)(void), char *name)
