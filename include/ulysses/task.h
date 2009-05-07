@@ -52,7 +52,7 @@ void init_task(void);
  *  This creates a default stack for the task, but does not call the scheduler
  *  to manage the task.
  */
-task_t *new_task(char *name);
+task_t *new_task(const char *name);
 
 /* task_exit()
  *  Destroy the current task and pick another to be run. This is set as the

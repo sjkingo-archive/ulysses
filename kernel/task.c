@@ -149,7 +149,7 @@ void init_task(void)
     add_to_queue((task_t *)current_task);
 }
 
-task_t *new_task(char *name)
+task_t *new_task(const char *name)
 {
     TRACE_ONCE;
     task_t *t = (task_t *)kmalloc(sizeof(task_t));
