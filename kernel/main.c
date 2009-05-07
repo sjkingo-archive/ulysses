@@ -41,8 +41,11 @@ static void task_init(void)
     /* Finish kernel startup */
     init_vt();
     print_startup();
-    init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
+
+    /* Spawn some threads to do work for the kernel */
+    kthread_create(run_initrd, "initrd");
     kthread_create(run_shell, "shell");
+
     kprintf("Kernel startup complete in %ds\n", 
             kern.current_time_offset.tv_sec);
 

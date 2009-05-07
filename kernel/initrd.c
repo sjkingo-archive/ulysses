@@ -1,6 +1,8 @@
 #include <ulysses/initrd.h>
+#include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
+#include <ulysses/kthread.h>
 #include <ulysses/vfs.h>
 
 #include <string.h>
@@ -67,9 +69,11 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
     return 0;
 }
 
-fs_node_t *init_initrd(unsigned int loc)
+void run_initrd(void)
 {
-    unsigned int i;
+    unsigned int i, loc;
+
+    loc = *(unsigned int *)kern.mbi->mods_addr;
 
     initrd_header = (initrd_header_t *)loc;
     file_headers = (initrd_file_header_t *) (loc + sizeof(initrd_header_t));
@@ -91,7 +95,6 @@ fs_node_t *init_initrd(unsigned int loc)
     initrd_root->finddir = &initrd_finddir;
     initrd_root->ptr = 0;
     initrd_root->impl = 0;
-    kprintf("init_initrd(): / filesystem set up\n");
 
     /* /dev */
     initrd_dev = (fs_node_t *)kmalloc(sizeof(fs_node_t));
@@ -110,7 +113,6 @@ fs_node_t *init_initrd(unsigned int loc)
     initrd_dev->finddir = &initrd_finddir;
     initrd_dev->ptr = 0;
     initrd_dev->impl = 0;
-    kprintf("init_initrd(): /dev filesystem set up\n");
 
     root_nodes = (fs_node_t *)kmalloc(sizeof(fs_node_t) * 
             initrd_header->nfiles);
@@ -135,5 +137,6 @@ fs_node_t *init_initrd(unsigned int loc)
         root_nodes[i].impl = 0;
     }
 
-    return initrd_root;
+    /* Wait for work to come in */
+    while (1) kthread_yield();
 }

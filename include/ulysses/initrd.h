@@ -23,10 +23,9 @@ typedef struct {
     unsigned int length;
 } initrd_file_header_t;
 
-/* init_initrd()
- *   Given the memory address given from multiboot, initialises the ram disk 
- *   and returns a completed file system node.
+/* run_initrd()
+ *  Runs the initrd, setting up root filesystem.
  */
-fs_node_t *init_initrd(unsigned int loc);
+void run_initrd(void);
 
 #endif
