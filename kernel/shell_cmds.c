@@ -101,6 +101,7 @@ static void cmd_help(void)
 static void cmd_exit(void)
 {
     TRACE_ONCE;
+    kprintf("Shell is exiting; press F8 to start a new one.\n");
     kthread_exit();
 }
 
