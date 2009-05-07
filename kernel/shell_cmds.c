@@ -81,6 +81,7 @@ static void cmd_ps(void)
 extern struct shell_command cmds[]; /* we're using it before it is declared */
 static void cmd_help(void)
 {
+    TRACE_ONCE;
     unsigned int i = 0;
     while (cmds[i].cmd != NULL) {
         kprintf("%s", cmds[i].cmd);
