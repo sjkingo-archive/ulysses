@@ -105,6 +105,26 @@ static void cmd_exit(void)
     kthread_exit();
 }
 
+static void kt_test(void)
+{
+    TRACE_ONCE;
+    unsigned short i;
+    for (i = 0; i < 4; i++) {
+        kprintf("Hello from pid %d: i %d\n", getpid(), i);
+        kthread_yield();
+    }
+    kthread_exit();
+}
+
+static void cmd_kt_test(void)
+{
+    TRACE_ONCE;
+    unsigned short i;
+    for (i = 0; i < 3; i++) {
+        kthread_create(kt_test, "kt_test");
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -121,6 +141,7 @@ struct shell_command cmds[] = {
             "processes." },
     { "help", &cmd_help, NULL, "Display this help information." },
     { "exit", &cmd_exit, NULL, "Cause the shell to exit." },
+    { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &fork, NULL, NULL },
