@@ -43,12 +43,12 @@ typedef struct kthread {
     unsigned int state; /* current state; see STATE_*, above */
 } kthread_t;
 
-/* new_kthread()
- *  Start a new kthread with the given function pointer as an entry point.
+/* kthread_create()
+ *  Create a new kthread with the given function pointer as an entry point.
  *  This only sets up a new thread and calls the scheduler to manage it; it
  *  does not actually run the thread.
  */
-pid_t new_kthread(void (*func)(void), char *name);
+pid_t kthread_create(void (*func)(void), const char *name);
 
 /* kthread_yield()
  *  Voluntarily yield the current kernel thread, allowing the task manager to 

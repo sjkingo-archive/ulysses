@@ -180,7 +180,7 @@ void keyboard_handler(registers_t regs)
             return;
         
         case KB_F8:
-            new_kthread(run_shell, "shell");
+            kthread_create(run_shell, "shell");
             return;
 
         case KB_F9:

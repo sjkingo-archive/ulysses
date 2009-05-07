@@ -6,7 +6,7 @@
 
 extern __volatile__ task_t *current_task; /* task.c */
 
-pid_t new_kthread(void (*func)(void), char *name)
+pid_t kthread_create(void (*func)(void), const char *name)
 {
     TRACE_ONCE;
 

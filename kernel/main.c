@@ -42,7 +42,7 @@ static void task_init(void)
     init_vt();
     print_startup();
     init_initrd(*(unsigned int *)kern.mbi->mods_addr); /* set up root fs */
-    new_kthread(run_shell, "shell");
+    kthread_create(run_shell, "shell");
     kprintf("Kernel startup complete in %ds\n", 
             kern.current_time_offset.tv_sec);
 
@@ -72,7 +72,7 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
      */
     init_sched();
     init_task();
-    new_kthread(task_init, "init");
+    kthread_create(task_init, "init");
 
     /* This is the kernel task (pid 0), so drop to an idle */
     idle_cpu();
