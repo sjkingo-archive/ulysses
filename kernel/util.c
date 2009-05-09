@@ -36,7 +36,8 @@ void print_startup(void)
 #endif
 
 #ifdef __GNUC__
-    kprintf("Compiled by gcc %s\n", __VERSION__);
+    kprintf("Compiled by gcc %s on %s at %s (localtime)\n", __VERSION__, 
+            __DATE__, __TIME__);
 #else
     kprintf("Warning: not compiled by gcc; this disables a lot of nice "
             "debugging symbols\n");
