@@ -53,4 +53,23 @@ int sys_shutdown(void);
 #define write(fd, buf, count) syscall3(SYS_WRITE, fd, buf, count)
 int sys_write(int fd, const char *buf, size_t count);
 
+/* Reserved */
+#define SYS_READ 4
+#define SYS_OPEN 5
+#define SYS_CLOSE 6
+
+/* sys_getuid()
+ *  Returns the user id of the calling process.
+ */
+#define SYS_GETUID 7
+#define getuid() syscall0(SYS_GETUID)
+int sys_getuid(void);
+
+/* sys_getpid()
+ *  Returns the process id of the calling process.
+ */
+#define SYS_GETPID 8
+#define getpid() syscall0(SYS_GETPID)
+int sys_getpid(void);
+
 #endif

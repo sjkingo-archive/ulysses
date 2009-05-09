@@ -261,13 +261,13 @@ pid_t fork(void)
     }
 }
 
-pid_t getpid(void)
+pid_t do_getpid(void)
 {
     TRACE_ONCE;
     return current_task->pid;
 }
 
-uid_t getuid(void)
+uid_t do_getuid(void)
 {
     TRACE_ONCE;
     return current_task->uid;

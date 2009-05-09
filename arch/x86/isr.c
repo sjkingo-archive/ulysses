@@ -20,10 +20,10 @@ static inline void handle_exception(struct cpu_exception exc)
             break;
 
         case ACTION_KILL:
-            if (getpid() == 0) {
+            if (do_getpid() == 0) {
                 panic("Kernel task caused a CPU exception");
             }
-            kprintf("%s in pid %d: killing it.\n", exc.name, getpid());
+            kprintf("%s in pid %d: killing it.\n", exc.name, do_getpid());
             task_exit();
             break; /* would never get here anyway */
 

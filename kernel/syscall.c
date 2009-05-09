@@ -24,7 +24,7 @@ int sys_exit(void)
 int sys_shutdown(void)
 {
     TRACE_ONCE;
-    if (getuid() != 0) {
+    if (do_getuid() != 0) {
         kprintf("Only root can do that.\n");
         return -1;
     }
@@ -43,4 +43,16 @@ int sys_write(int fd, const char *buf, size_t count)
         append_char(buf[i], TRUE, FALSE);
     }
     return i;
+}
+
+int sys_getuid(void)
+{
+    TRACE_ONCE;
+    return do_getuid();
+}
+
+int sys_getpid(void)
+{
+    TRACE_ONCE;
+    return do_getpid();
 }

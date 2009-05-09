@@ -24,7 +24,7 @@ static void test_ring3(void)
 void kthreadd(void)
 {
     TRACE_ONCE;
-    kthreadd_pid = getpid();
+    kthreadd_pid = do_getpid();
     kthread_create(run_initrd, "initrd");
     kthread_create(run_shell, "shell");
     kthread_create(test_ring3, "test_ring3");
