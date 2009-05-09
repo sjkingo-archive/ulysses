@@ -147,6 +147,23 @@ static void cmd_kt_pf(void)
     }
 }
 
+static void kt_bomb(void)
+{
+    while (1) kthread_yield();
+}
+
+static void cmd_kt_bomb(void)
+{
+    TRACE_ONCE;
+    unsigned long long i = 0;
+    while (1) {
+        pid_t pid = kthread_create(kt_bomb, "bomb");
+        kprintf("Spawned kthread %d with pid %d\n", i, pid);
+        kthread_yield();
+        i++;
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -166,6 +183,8 @@ struct shell_command cmds[] = {
     { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
     { "kt_pf", &cmd_kt_pf, NULL, "Run a kthreads test where each thread will "
             "trigger a page fault." },
+    { "kt_bomb", &cmd_kt_bomb, NULL, "Spawn kernel threads until the OS "
+            "crashes." },
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     
     { "init_task()", &init_task, NULL, NULL },
