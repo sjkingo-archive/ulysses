@@ -1,3 +1,14 @@
+/* System call implementation. The dispatcher for this is in arch/X/syscall.c.
+ *
+ * To add a new system call:
+ *   1. Add a new definition, macro (optional) and function declaration to
+ *      <include/syscall.h>. Make sure you pick a new, unused number for the
+ *      syscall.
+ *   2. Create the function to do the work of the system call in this file.
+ *      The template for naming is sys_X, where X is the name of the syscall.
+ *   3. Add an entry to the syscall table.
+ */
+
 #include <ulysses/kprintf.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
