@@ -3,6 +3,7 @@
 #include <ulysses/kthread.h>
 #include <ulysses/sched.h>
 #include <ulysses/shell.h>
+#include <ulysses/syscall.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 
@@ -48,7 +49,7 @@ void kthread_exit(void)
 {
     TRACE_ONCE;
     current_task->kthread->state = STATE_DESTROYING;
-    task_exit();
+    do_exit();
 }
 
 void kthread_running(void)

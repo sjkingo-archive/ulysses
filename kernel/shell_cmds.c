@@ -5,6 +5,7 @@
 #include <ulysses/shell_cmds.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/syscall.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
@@ -142,6 +143,7 @@ struct shell_command cmds[] = {
     { "help", &cmd_help, NULL, "Display this help information." },
     { "exit", &cmd_exit, NULL, "Cause the shell to exit." },
     { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
+    { "dummy", &do_dummy, NULL, "Send a dummy system call." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &fork, NULL, NULL },

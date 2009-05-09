@@ -1,10 +1,15 @@
 #include <ulysses/isr.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/syscall.h>
+#include <ulysses/task.h>
 #include <ulysses/trace.h>
+
+DEFN_SYSCALL0(dummy, 0);
+DEFN_SYSCALL0(exit, 1);
 
 void *syscalls[] = {
     &sys_dummy,
+    &sys_exit,
 };
 unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
 
@@ -41,8 +46,14 @@ void syscall_handler(registers_t regs)
     regs.eax = ret;
 }
 
-void sys_dummy(void)
+static void sys_dummy(void)
 {
     TRACE_ONCE;
     kprintf("sys_dummy(): Dummy syscall; why was this called?\n");
+}
+
+static void sys_exit(void)
+{
+    TRACE_ONCE;
+    task_exit();
 }

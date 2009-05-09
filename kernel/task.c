@@ -5,6 +5,7 @@
 #include <ulysses/gdt.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/syscall.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
@@ -132,7 +133,7 @@ static void setup_stack(task_t *t)
     *--stack = 0x10;        /* ES */
     *--stack = 0x10;        /* FS */
     *--stack = 0x10;        /* GS */
-    *--stack = (unsigned int)&task_exit; /* destroys task on return */
+    *--stack = (unsigned int)&do_exit; /* syscall: destroys task on return */
     /* bottom of stack */
 
     t->esp = (unsigned int)stack; /* the rest of the stack */
