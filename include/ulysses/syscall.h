@@ -14,26 +14,43 @@
     { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
             "b" ((int)arg1), "c" ((int)arg2), "d" ((int)arg3)); }
 
-/* The actual system calls */
-
-#define SYS_DUMMY 0
-int sys_dummy(void);
-
-#define SYS_EXIT 1
-#define exit() syscall0(SYS_EXIT)
-int sys_exit(void);
-
-#define SYS_SHUTDOWN 2
-int sys_shutdown(void);
-
-#define SYS_WRITE 3
-#define write(fd, buf, count) syscall3(SYS_WRITE, fd, buf, count)
-int sys_write(int fd, const char *buf, size_t count);
-
 /* syscall_handler()
  *  The interrupt vector for int 80. This looks up the syscall number from
  *  the eax register and dispatches the required system call.
  */
 void syscall_handler(registers_t regs);
+
+/* The actual system calls */
+
+/* sys_dummy()
+ *  Move along, nothing to see here.
+ */
+#define SYS_DUMMY 0
+int sys_dummy(void);
+
+/* sys_exit()
+ *  Terminates the calling task "immediately". In reality this will only 
+ *  performs an immediate context switch, and the task is destroyed on the 
+ *  next time it appears as the head in the scheduling queue.
+ */
+#define SYS_EXIT 1
+#define exit() syscall0(SYS_EXIT)
+int sys_exit(void);
+
+/* sys_shutdown()
+ *  Shut down the system now. The kernel may refuse this if the owning user
+ *  is not root (uid 0), in which case it will return -1.
+ */
+#define SYS_SHUTDOWN 2
+int sys_shutdown(void);
+
+/* sys_write(fd, buf, count)
+ *  Write up to count bytes from the buffer buf to the file descriptor fd.
+ *  Return the number of bytes actually written (which may be less than count
+ *  if the buffer was smaller).
+ */
+#define SYS_WRITE 3
+#define write(fd, buf, count) syscall3(SYS_WRITE, fd, buf, count)
+int sys_write(int fd, const char *buf, size_t count);
 
 #endif
