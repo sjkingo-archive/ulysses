@@ -11,7 +11,7 @@ static void idt_set_gate(unsigned char num, unsigned int base,
     idt_entries[num].base_high = (base >> 16) & 0xFFFF;
     idt_entries[num].sel = sel;
     idt_entries[num].always0 = 0; /* so silly */
-    idt_entries[num].flags = flags; /* ring 0 */
+    idt_entries[num].flags = flags | 0x60; /* ring 0 */
 }
 
 void init_idt(void)

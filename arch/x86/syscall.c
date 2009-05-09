@@ -4,12 +4,30 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 
-DEFN_SYSCALL0(dummy, 0);
-DEFN_SYSCALL0(exit, 1);
+static void sys_dummy(void)
+{
+    TRACE_ONCE;
+    kprintf("sys_dummy(): Dummy syscall; why was this called?\n");
+}
+
+static void sys_exit(void)
+{
+    TRACE_ONCE;
+    task_exit();
+}
+
+static void sys_shutdown(void)
+{
+    TRACE_ONCE;
+    shutdown();
+}
+
+/* End of system calls */
 
 void *syscalls[] = {
     &sys_dummy,
     &sys_exit,
+    &sys_shutdown,
 };
 unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
 
@@ -44,16 +62,4 @@ void syscall_handler(registers_t regs)
             : "=a" (ret) : "r" (regs.edi), "r" (regs.esi), "r" (regs.edx),
             "r" (regs.ecx), "r" (regs.ebx), "r" (syscall_loc));
     regs.eax = ret;
-}
-
-static void sys_dummy(void)
-{
-    TRACE_ONCE;
-    kprintf("sys_dummy(): Dummy syscall; why was this called?\n");
-}
-
-static void sys_exit(void)
-{
-    TRACE_ONCE;
-    task_exit();
 }

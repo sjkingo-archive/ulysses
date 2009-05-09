@@ -35,6 +35,8 @@ typedef struct task {
 
     struct kthread *kthread; /* NULL if not a kernel thread */
 
+    int ring;
+
     struct task *next; /* next proc in queue, or NULL if tail */
 } task_t;
 

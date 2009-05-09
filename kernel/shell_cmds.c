@@ -126,6 +126,12 @@ static void cmd_kt_test(void)
     }
 }
 
+static void cmd_dummy(void)
+{
+    TRACE_ONCE;
+    syscall0(SYS_DUMMY);
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -143,7 +149,7 @@ struct shell_command cmds[] = {
     { "help", &cmd_help, NULL, "Display this help information." },
     { "exit", &cmd_exit, NULL, "Cause the shell to exit." },
     { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
-    { "dummy", &do_dummy, NULL, "Send a dummy system call." },
+    { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &fork, NULL, NULL },

@@ -1,3 +1,4 @@
+#include <ulysses/gdt.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kthread.h>
@@ -10,12 +11,20 @@
 extern __volatile__ task_t *current_task; /* task.c */
 static pid_t kthreadd_pid;
 
+static void test_ring3(void)
+{
+    TRACE_ONCE;
+    switch_to_ring3();
+    syscall0(SYS_DUMMY);
+}
+
 void kthreadd(void)
 {
     TRACE_ONCE;
     kthreadd_pid = getpid();
     kthread_create(run_initrd, "initrd");
     kthread_create(run_shell, "shell");
+    kthread_create(test_ring3, "test_ring3");
     while (1) kthread_yield(); /* waiting for work */
 }
 
@@ -49,7 +58,7 @@ void kthread_exit(void)
 {
     TRACE_ONCE;
     current_task->kthread->state = STATE_DESTROYING;
-    do_exit();
+    syscall0(SYS_EXIT);
 }
 
 void kthread_running(void)

@@ -5,7 +5,6 @@
 #include <ulysses/gdt.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
-#include <ulysses/syscall.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
@@ -19,6 +18,9 @@ pid_t next_pid = 0;
 extern page_dir_t *kernel_directory;
 extern page_dir_t *current_directory;
 extern unsigned int read_eip(void);
+
+/* syscall_trap.s: This is used as an exit path from ring 3. */
+extern void ring3_exit(void);
 
 static pid_t new_pid(void)
 {
@@ -133,7 +135,7 @@ static void setup_stack(task_t *t)
     *--stack = 0x10;        /* ES */
     *--stack = 0x10;        /* FS */
     *--stack = 0x10;        /* GS */
-    *--stack = (unsigned int)&do_exit; /* syscall: destroys task on return */
+    *--stack = (unsigned int)&ring3_exit; /* syscall: destroys task on return */
     /* bottom of stack */
 
     t->esp = (unsigned int)stack; /* the rest of the stack */
@@ -176,6 +178,7 @@ task_t *new_task(const char *name)
     t->s_ticks_left = SCHED_QUANTUM;
     t->s_quantum_size = SCHED_QUANTUM;
     t->kthread = NULL;
+    t->ring = 0;
     t->next = NULL;
     setup_stack(t);
     return t;
