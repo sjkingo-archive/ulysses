@@ -132,6 +132,21 @@ static void cmd_dummy(void)
     syscall0(SYS_DUMMY);
 }
 
+static void kt_pf(void)
+{
+    TRACE_ONCE;
+    __asm__ __volatile__("jmp 0x0");
+}
+
+static void cmd_kt_pf(void)
+{
+    TRACE_ONCE;
+    unsigned short i;
+    for (i = 0; i < 3; i++) {
+        kthread_create(kt_pf, "kt_pf");
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -149,6 +164,8 @@ struct shell_command cmds[] = {
     { "help", &cmd_help, NULL, "Display this help information." },
     { "exit", &cmd_exit, NULL, "Cause the shell to exit." },
     { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
+    { "kt_pf", &cmd_kt_pf, NULL, "Run a kthreads test where each thread will "
+            "trigger a page fault." },
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     
     { "init_task()", &init_task, NULL, NULL },
