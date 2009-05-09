@@ -4,6 +4,7 @@
 #include <ulysses/shutdown.h>
 
 #include <string.h>
+#include <sys/types.h>
 
 int sys_dummy(void)
 {
@@ -26,7 +27,7 @@ int sys_shutdown(void)
     return -1;
 }
 
-int sys_write(const char *buf)
+int sys_write(int fd, const char *buf, size_t count)
 {
     TRACE_ONCE;
     kprintf("%s", buf);

@@ -8,6 +8,8 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 
+#include <unistd.h>
+
 extern __volatile__ task_t *current_task; /* task.c */
 static pid_t kthreadd_pid;
 
@@ -16,7 +18,7 @@ static void test_ring3(void)
     TRACE_ONCE;
     switch_to_ring3();
     syscall0(SYS_DUMMY);
-    syscall1(SYS_WRITE, "Hello via SYS_WRITE in usermode");
+    write(STDOUT_FILENO, "Hello via SYS_WRITE in usermode", 32);
 }
 
 void kthreadd(void)
@@ -59,7 +61,7 @@ void kthread_exit(void)
 {
     TRACE_ONCE;
     current_task->kthread->state = STATE_DESTROYING;
-    syscall0(SYS_EXIT);
+    exit();
 }
 
 void kthread_running(void)

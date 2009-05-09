@@ -13,5 +13,9 @@
 #define W_OK 2 /* writeable */
 #define X_OK 3 /* executable */
 
+/* Default file descriptors */
+#define STDOUT_FILENO 1
+#define STDERR_FILENO 2
+
 #endif
 
