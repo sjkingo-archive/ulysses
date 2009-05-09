@@ -35,7 +35,13 @@ int sys_shutdown(void)
 int sys_write(int fd, const char *buf, size_t count)
 {
     TRACE_ONCE;
-    unsigned int i, len = strlen(buf);
+    unsigned int i, len;
+
+    if (fd > 2) {
+        return -1;
+    }
+    
+    len = strlen(buf);
     for (i = 0; i < count; i++) {
         if (i >= len) {
             break;
