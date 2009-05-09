@@ -5,11 +5,14 @@
 #define syscall0(num) \
     { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num)); }
 #define syscall1(num, arg1) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), "b" ((int)arg1)); }
+    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
+            "b" ((int)arg1)); }
 #define syscall2(num, arg1, arg2) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), "b" ((int)arg1), "c" ((int)arg2)); }
+    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
+            "b" ((int)arg1), "c" ((int)arg2)); }
 #define syscall3(num, arg1, arg2, arg3) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), "b" ((int)arg1), "c" ((int)arg2), "d" ((int)arg3)); }
+    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
+            "b" ((int)arg1), "c" ((int)arg2), "d" ((int)arg3)); }
 
 /* The actual system calls */
 
