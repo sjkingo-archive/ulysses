@@ -4,6 +4,7 @@
 #include <ulysses/shutdown.h>
 #include <ulysses/vt.h>
 
+#include <errno.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -18,6 +19,7 @@ int sys_exit(void)
 {
     TRACE_ONCE;
     task_exit();
+    errno = ESRCH;
     return -1;
 }
 
@@ -29,6 +31,7 @@ int sys_shutdown(void)
         return -1;
     }
     shutdown();
+    errno = ESRCH;
     return -1;
 }
 
@@ -38,6 +41,7 @@ int sys_write(int fd, const char *buf, size_t count)
     unsigned int i, len;
 
     if (fd > 2) {
+        errno = EBADF;
         return -1;
     }
     
@@ -48,6 +52,7 @@ int sys_write(int fd, const char *buf, size_t count)
         }
         append_char(buf[i], TRUE, FALSE);
     }
+
     return i;
 }
 
