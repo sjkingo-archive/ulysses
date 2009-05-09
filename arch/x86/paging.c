@@ -172,11 +172,8 @@ void init_paging(void)
         alloc_frame(get_page(k, 1, kernel_directory), 0, 0);
     }
 
-    /* Register a page fault handler and enable paging */
-    register_interrupt_handler(14, &page_fault);
-    switch_page_dir(kernel_directory);
-
     /* Create the kernel heap */
+    switch_page_dir(kernel_directory);
     kheap = create_heap(KHEAP_START, KHEAP_START + KHEAP_INITIAL_SIZE, 
             0xCFFFF000, 0, 0);
 
@@ -198,9 +195,6 @@ void page_fault(registers_t regs)
     if (regs.err_code & 0x4) kprintf("\t!ring 0\n");
     if (regs.err_code & 0x8) kprintf("\tcorrupted page entry\n");
     if (regs.err_code & 0x10) kprintf("\tcaused by instruction fetch\n");
-
-    /* Panic :-( */
-    panic("Page fault");
 }
 
 page_dir_t *clone_dir(page_dir_t *src)

@@ -19,37 +19,6 @@
 
 extern void init_a20(void); /* see a20.s */
 
-/* panic_handler()
- *  Generic handler for interrupts that must trigger a panic() only.
- */
-static void panic_handler(registers_t regs)
-{
-    TRACE_ONCE;
-    switch (regs.int_no) {
-        case 0: panic("Divide by zero error");
-        case 13: panic("General protection fault");
-    }
-}
-
-/* register_fatal_isrs()
- *  Register interrupt handlers for fatal interrupts.
- */
-static void register_fatal_isrs(void)
-{
-    TRACE_ONCE;
-    register_interrupt_handler(0, &panic_handler);
-    register_interrupt_handler(13, &panic_handler);
-}
-
-/* register_common_isrs()
- *  Register interrupt handlers for non-fatal common interrupts.
- */
-static void register_common_isrs(void)
-{
-    TRACE_ONCE;
-    register_interrupt_handler(SYSCALL, &syscall_handler);
-}
-
 static void set_time(void)
 {
     TRACE_ONCE;
@@ -96,28 +65,24 @@ void startup_x86(void *mdb, unsigned int magic)
      *  3. Save things given to us by multiboot
      *  4. Load GDT
      *  5. Load IDT
-     *  6. Register handlers for fatal interrupts
-     *  7. Enable the A20 address line
-     *  8. Enter protected mode
-     *  9. Activate memory paging
-     *  10. Set up clock timer
-     *  11. Register handlers for common interrupts
-     *  12. Identify the CPU(s) attached to the system
+     *  6. Enable the A20 address line
+     *  7. Enter protected mode
+     *  8. Activate memory paging
+     *  9. Set up clock timer
+     *  10. Identify the CPU(s) attached to the system
+     *  11. Set up the keyboard driver
      */
     init_screen(); /* must be before any kprintf() or panic() */
     set_time();
     init_multiboot(mdb, magic);
     init_gdt();
     init_idt();
-    register_fatal_isrs();
     init_a20(); /* see flush.s */
     enter_pm(); /* see flush.s */
     init_paging();
     init_timer(TIMER_FREQ);
     get_cpuid();
-
     init_keyboard();
-    register_common_isrs();
 
     /* And finally, enable interrupts */
     STI;

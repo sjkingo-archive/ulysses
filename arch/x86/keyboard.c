@@ -112,7 +112,6 @@ void init_keyboard(void)
     buffer.shift_state = FALSE;
     buffer.alt_state = FALSE;
     buffer.caps_state = FALSE;
-    register_interrupt_handler(IRQ1, &keyboard_handler);
 }
 
 char next_key(void)

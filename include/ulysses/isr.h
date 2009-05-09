@@ -34,11 +34,6 @@ isr_t interrupt_handlers[256];
  */
 void isr_handler(registers_t regs);
 
-/* register_interrupt_handler()
- *  Register the given function as a vector for IRQ n.
- */
-void register_interrupt_handler(unsigned char n, isr_t handler);
-
 /* irq_handler()
  *  IRQ interrupt handler, called from the assembler stubs in interrupt.s
  */

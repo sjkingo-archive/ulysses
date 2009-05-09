@@ -1,9 +1,57 @@
 #include "../../config.h"
+#include <ulysses/exceptions.h>
 #include <ulysses/isr.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
+
+#include <sys/types.h>
+
+static inline void handle_exception(struct cpu_exception exc)
+{
+    TRACE_ONCE;
+
+    /* Execute the action */
+    switch (exc.action) {
+        case ACTION_PANIC:
+            panic(exc.name);
+            break;
+
+        case ACTION_KILL:
+            kprintf("%s in pid %d: killing it.\n", exc.name, getpid());
+            task_exit();
+            break; /* would never get here anyway */
+
+        case ACTION_WARN:
+            kprintf("CPU exception: %d\n", exc.name);
+        case ACTION_IGNORE:
+            break;
+    }
+}
+
+static inline flag_t lookup_exception(registers_t regs)
+{
+    TRACE_ONCE;
+
+    struct cpu_exception exc;
+    int i = 0;
+
+    while (exceptions[i].name != NULL) {
+        if (exceptions[i].num == (short)regs.int_no) {
+            exc = exceptions[i];
+            if (exc.handler != NULL) {
+                exc.handler(regs);
+            }
+            handle_exception(exc);
+            return TRUE;
+        }
+        i++;
+    }
+
+    return FALSE;
+}
 
 void isr_handler(registers_t regs)
 {
@@ -26,16 +74,10 @@ void isr_handler(registers_t regs)
             regs.ebp, regs.esp, regs.ebx, regs.edx, regs.ecx, regs.eax);
 #endif
 
-    /* If a handler exists, call it */
-    isr_t handler = interrupt_handlers[regs.int_no];
-    if (handler == NULL) panic("Unhandled interrupt");
-    handler(regs);
-}
-
-void register_interrupt_handler(unsigned char n, isr_t handler)
-{
-    TRACE_ONCE;
-    interrupt_handlers[n] = handler;
+    /* Lookup and handle the exception */
+    if (!lookup_exception(regs)) {
+        panic("Unknown exception");
+    }
 }
 
 void irq_handler(registers_t regs)
@@ -44,8 +86,7 @@ void irq_handler(registers_t regs)
     /* Since we don't care about a lot of IRQs, we can just ignore any
      * that don't have a handler.
      */
-    isr_t handler = interrupt_handlers[regs.int_no];
-    if (handler != NULL) handler(regs);
+    lookup_exception(regs);
 
     /* Write an end of interrupt signal to the PICs */
     if (regs.int_no >= IRQ0) {

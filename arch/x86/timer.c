@@ -24,7 +24,6 @@ void init_timer(unsigned int freq)
 {
     TRACE_ONCE;
     ticks = 0;
-    register_interrupt_handler(IRQ0, &timer_tick);
 
     /* Initialise the timer */
     unsigned int div = CLOCK / freq;

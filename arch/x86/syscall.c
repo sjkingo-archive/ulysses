@@ -3,6 +3,7 @@
 #include <ulysses/syscall.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
+#include <ulysses/shutdown.h>
 
 static void sys_dummy(void)
 {
