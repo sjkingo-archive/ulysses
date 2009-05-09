@@ -23,12 +23,19 @@ static void sys_shutdown(void)
     shutdown();
 }
 
+static void sys_write(const char *buf)
+{
+    TRACE_ONCE;
+    kprintf("%s", buf);
+}
+
 /* End of system calls */
 
 void *syscalls[] = {
     &sys_dummy,
     &sys_exit,
     &sys_shutdown,
+    &sys_write,
 };
 unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
 
