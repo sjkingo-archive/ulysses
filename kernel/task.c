@@ -267,6 +267,12 @@ pid_t getpid(void)
     return current_task->pid;
 }
 
+uid_t getuid(void)
+{
+    TRACE_ONCE;
+    return current_task->uid;
+}
+
 void check_current_task(void)
 {
     TRACE_ONCE;

@@ -83,6 +83,11 @@ pid_t fork(void);
  */
 pid_t getpid(void);
 
+/* getuid()
+ *  Return the user id of the currently executing task.
+ */
+uid_t getuid(void);
+
 /* check_current_task()
  *  Check the current task's quantum and preempt it if needed.
  */
