@@ -9,18 +9,20 @@
 #include <string.h>
 #include <sys/types.h>
 
-/* Array of syscall pointers. */
-void *syscalls[] = {
-    &sys_dummy,
-    &sys_exit,
-    &sys_shutdown,
-    &sys_write,
-    NULL,
-    NULL,
-    NULL,
+/* System call table */
+struct syscall_entry syscalls[] = {
+    { SYS_DUMMY, &sys_dummy, },
+    { SYS_EXIT, &sys_exit, },
+    { SYS_SHUTDOWN, &sys_shutdown, },
+    { SYS_WRITE, &sys_write, },
+    { 0, NULL }, /* sentinel entry; do not remove */
 };
 
-unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
+/* Number of system calls. We -1 to ignore the sentinel entry. */
+unsigned int num_syscalls = (sizeof(syscalls) / 
+        sizeof(struct syscall_entry)) - 1;
+
+/* The actual system calls go here */
 
 int sys_dummy(void)
 {

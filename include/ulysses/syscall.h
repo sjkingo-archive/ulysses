@@ -14,13 +14,19 @@
     { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
             "b" ((int)arg1), "c" ((int)arg2), "d" ((int)arg3)); }
 
+/* An entry in the system call table */
+struct syscall_entry {
+    unsigned int num;
+    void *func_addr;
+};
+
 /* syscall_handler()
  *  The interrupt vector for int 80. This looks up the syscall number from
  *  the eax register and dispatches the required system call.
  */
 void syscall_handler(registers_t regs);
 
-/* The actual system calls */
+/* Declarations for the actual system calls */
 
 /* sys_dummy()
  *  Move along, nothing to see here.
@@ -53,7 +59,7 @@ int sys_shutdown(void);
 #define write(fd, buf, count) syscall3(SYS_WRITE, fd, buf, count)
 int sys_write(int fd, const char *buf, size_t count);
 
-/* Reserved */
+/* Reserved for future use */
 #define SYS_READ 4
 #define SYS_OPEN 5
 #define SYS_CLOSE 6
