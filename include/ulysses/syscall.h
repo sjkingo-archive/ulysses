@@ -10,16 +10,16 @@
 /* The actual system calls */
 
 #define SYS_DUMMY 0
-void sys_dummy(void);
+int sys_dummy(void);
 
 #define SYS_EXIT 1
-void sys_exit(void);
+int sys_exit(void);
 
 #define SYS_SHUTDOWN 2
-void sys_shutdown(void);
+int sys_shutdown(void);
 
 #define SYS_WRITE 3
-void sys_write(const char *buf);
+int sys_write(const char *buf);
 
 /* syscall_handler()
  *  The interrupt vector for int 80. This looks up the syscall number from
