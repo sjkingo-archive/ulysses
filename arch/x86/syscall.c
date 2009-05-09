@@ -5,32 +5,6 @@
 #include <ulysses/trace.h>
 #include <ulysses/shutdown.h>
 
-static void sys_dummy(void)
-{
-    TRACE_ONCE;
-    kprintf("sys_dummy(): Dummy syscall; why was this called?\n");
-}
-
-static void sys_exit(void)
-{
-    TRACE_ONCE;
-    task_exit();
-}
-
-static void sys_shutdown(void)
-{
-    TRACE_ONCE;
-    shutdown();
-}
-
-static void sys_write(const char *buf)
-{
-    TRACE_ONCE;
-    kprintf("%s", buf);
-}
-
-/* End of system calls */
-
 void *syscalls[] = {
     &sys_dummy,
     &sys_exit,
