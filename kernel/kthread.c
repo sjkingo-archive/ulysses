@@ -18,7 +18,7 @@ static void test_ring3(void)
     TRACE_ONCE;
     switch_to_ring3();
     syscall0(SYS_DUMMY);
-    write(STDOUT_FILENO, "Hello via SYS_WRITE in usermode", 32);
+    write(STDOUT_FILENO, "Hello via SYS_WRITE in usermode", 31);
 }
 
 void kthreadd(void)

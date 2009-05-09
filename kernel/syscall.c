@@ -2,6 +2,7 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/vt.h>
 
 #include <string.h>
 #include <sys/types.h>
@@ -30,6 +31,12 @@ int sys_shutdown(void)
 int sys_write(int fd, const char *buf, size_t count)
 {
     TRACE_ONCE;
-    kprintf("%s", buf);
-    return strlen(buf);
+    unsigned int i, len = strlen(buf);
+    for (i = 0; i < count; i++) {
+        if (i >= len) {
+            break;
+        }
+        append_char(buf[i], TRUE, FALSE);
+    }
+    return i;
 }
