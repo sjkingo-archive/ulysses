@@ -19,4 +19,9 @@ void do_panic(const char *msg, const char *file, int line);
  */
 void shutdown(void);
 
+/* halt()
+ *  Halts the CPU.
+ */
+void halt(void);
+
 #endif

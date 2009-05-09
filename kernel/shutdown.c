@@ -3,8 +3,6 @@
 #include <ulysses/shutdown.h>
 #include <ulysses/trace.h>
 
-#include "../arch/halt.h"
-
 void do_panic(const char *msg, const char *file, int line)
 {
     TRACE_ONCE;
