@@ -26,6 +26,7 @@ struct syscall_entry syscalls[] = {
     { SYS_EXIT, &sys_exit, },
     { SYS_SHUTDOWN, &sys_shutdown, },
     { SYS_WRITE, &sys_write, },
+    { SYS_READ, &sys_read, },
     { 0, NULL }, /* sentinel entry; do not remove */
 };
 
@@ -81,6 +82,13 @@ int sys_write(int fd, const char *buf, size_t count)
     }
 
     return i;
+}
+
+int sys_read(int fd, char *buf, size_t count)
+{
+    TRACE_ONCE;
+    errno = EBADF;
+    return -1;
 }
 
 int sys_getuid(void)

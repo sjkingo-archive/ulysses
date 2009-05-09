@@ -59,8 +59,16 @@ int sys_shutdown(void);
 #define write(fd, buf, count) syscall3(SYS_WRITE, fd, buf, count)
 int sys_write(int fd, const char *buf, size_t count);
 
-/* Reserved for future use */
+/* sys_read(fd, buf, count)
+ *  Read up to count bytes from file descriptor fd into the buffer pointed to
+ *  by buf. Return the number of bytes actually read (which may be less than
+ *  count).
+ */
 #define SYS_READ 4
+#define read(fd, buf, count) syscall3(SYS_READ, fd, buf, count)
+int sys_read(int fd, char *buf, size_t count);
+
+/* Reserved for future use */
 #define SYS_OPEN 5
 #define SYS_CLOSE 6
 
