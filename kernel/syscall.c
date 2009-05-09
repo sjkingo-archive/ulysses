@@ -24,6 +24,10 @@ int sys_exit(void)
 int sys_shutdown(void)
 {
     TRACE_ONCE;
+    if (getuid() != 0) {
+        kprintf("Only root can do that.\n");
+        return -1;
+    }
     shutdown();
     return -1;
 }
