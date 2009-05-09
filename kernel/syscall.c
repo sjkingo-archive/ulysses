@@ -2,11 +2,25 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/syscall.h>
 #include <ulysses/vt.h>
 
 #include <errno.h>
 #include <string.h>
 #include <sys/types.h>
+
+/* Array of syscall pointers. */
+void *syscalls[] = {
+    &sys_dummy,
+    &sys_exit,
+    &sys_shutdown,
+    &sys_write,
+    NULL,
+    NULL,
+    NULL,
+};
+
+unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
 
 int sys_dummy(void)
 {

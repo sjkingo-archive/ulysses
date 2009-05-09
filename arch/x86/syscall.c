@@ -5,13 +5,8 @@
 #include <ulysses/trace.h>
 #include <ulysses/shutdown.h>
 
-void *syscalls[] = {
-    &sys_dummy,
-    &sys_exit,
-    &sys_shutdown,
-    &sys_write,
-};
-unsigned int num_syscalls = (sizeof(syscalls) / sizeof(void *));
+extern void *syscalls[];
+extern unsigned int num_syscalls;
 
 void syscall_handler(registers_t regs)
 {
