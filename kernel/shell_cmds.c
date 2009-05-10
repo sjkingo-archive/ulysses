@@ -10,6 +10,7 @@
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
+#include <errno.h>
 #include <stdlib.h>
 
 /* shell.c; needed for cmd_history */
@@ -164,6 +165,12 @@ static void cmd_kt_bomb(void)
     }
 }
 
+static void cmd_errno(void)
+{
+    TRACE_ONCE;
+    kprintf("%d\n", errno);
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -186,6 +193,7 @@ struct shell_command cmds[] = {
     { "kt_bomb", &cmd_kt_bomb, NULL, "Spawn kernel threads until the OS "
             "crashes." },
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
+    { "errno", &cmd_errno, NULL, "Output the value of errno." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &do_fork, NULL, NULL },
