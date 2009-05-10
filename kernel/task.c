@@ -9,6 +9,7 @@
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
+#include <errno.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -216,6 +217,7 @@ pid_t do_fork(void)
 
     /* Sometimes it doesn't make sense to fork */
     if (current_task->pid == 0 || current_task->kthread != NULL) {
+        errno = ECANCELED;
         return -1;
     }
 
