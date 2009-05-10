@@ -207,7 +207,7 @@ void task_exit(void)
     switch_task(FALSE); /* don't save state */
 }
 
-pid_t fork(void)
+pid_t do_fork(void)
 {
     TRACE_ONCE;
     unsigned int eip;
@@ -232,7 +232,7 @@ pid_t fork(void)
     child->page_dir = page_dir;
 
 #if TASK_DEBUG
-    kprintf("fork() parent: new child \"%s\", pid %d, uid %d, egid %d, "
+    kprintf("do_fork() parent: new child \"%s\", pid %d, uid %d, egid %d, "
             "rgid %d\n", child->name, child->pid, child->uid, child->egid,
             child->rgid);
 #endif

@@ -72,11 +72,11 @@ void free_task(task_t *task);
  */
 void task_exit(void);
 
-/* fork()
+/* do_fork()
  *  Clone the current task and run it. Returns 0 to the child and the child's
  *  pid to the parent.
  */
-pid_t fork(void);
+pid_t do_fork(void);
 
 /* do_getpid()
  *  Return the pid of the currently executing task.

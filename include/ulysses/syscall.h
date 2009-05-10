@@ -86,4 +86,11 @@ int sys_getuid(void);
 #define getpid() syscall0(SYS_GETPID)
 int sys_getpid(void);
 
+/* sys_fork()
+ *  Fork the calling process.
+ */
+#define SYS_FORK 9
+#define fork() syscall0(SYS_FORK)
+int sys_fork(void);
+
 #endif

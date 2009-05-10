@@ -27,6 +27,7 @@ struct syscall_entry syscalls[] = {
     { SYS_SHUTDOWN, &sys_shutdown, },
     { SYS_WRITE, &sys_write, },
     { SYS_READ, &sys_read, },
+    { SYS_FORK, &sys_fork, },
     { 0, NULL }, /* sentinel entry; do not remove */
 };
 
@@ -101,4 +102,10 @@ int sys_getpid(void)
 {
     TRACE_ONCE;
     return do_getpid();
+}
+
+pid_t sys_fork(void)
+{
+    TRACE_ONCE;
+    return do_fork();
 }

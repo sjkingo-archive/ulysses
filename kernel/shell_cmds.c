@@ -188,7 +188,7 @@ struct shell_command cmds[] = {
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     
     { "init_task()", &init_task, NULL, NULL },
-    { "fork()", &fork, NULL, NULL },
+    { "fork()", &do_fork, NULL, NULL },
     { "switch_to_ring3()", &switch_to_ring3, NULL, NULL },
 
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
