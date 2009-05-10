@@ -172,7 +172,7 @@ task_t *new_task(const char *name)
     strcpy(t->name, name);
     t->esp = 0;
     t->ebp = 0;
-    t->eip = 0;
+    t->eip = (unsigned int)&ring3_exit; /* default to just exiting */
     t->page_dir = current_directory;
     t->kernel_stack = kmalloc_a(KERNEL_STACK_SIZE);
     t->ready = 1;
