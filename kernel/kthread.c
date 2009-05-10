@@ -50,6 +50,43 @@ pid_t kthread_create(void (*func)(void), const char *name)
     return task->pid;
 }
 
+pid_t kthread_clone(void)
+{
+    TRACE_ONCE;
+    unsigned int eip;
+    task_t *task, *parent;
+
+    parent = current_task;
+
+    /* Set up the new task */
+    task = new_task(parent->name);
+    task->uid = parent->uid;
+    task->egid = parent->egid;
+    task->rgid = parent->rgid;
+    task->kthread = kmalloc(sizeof(kthread_t));
+    task->kthread->state = STATE_RUNNABLE;
+    add_to_queue(task);
+
+    /* Entry point for the new task */
+    eip = read_eip();
+    if (current_task == parent) {
+        /* Parent, set up the pointers for the child */
+        unsigned int esp, ebp;
+
+        __asm__ __volatile("mov %%ebp, %0" : "=r" (ebp));
+        __asm__ __volatile("mov %%esp, %0" : "=r" (esp));
+
+        task->esp = esp;
+        task->ebp = ebp;
+        task->eip = eip;
+
+        return task->pid;
+    } else {
+        /* Child */
+        return 0;
+    }
+}
+
 void kthread_yield(void)
 {
     TRACE_ONCE;
