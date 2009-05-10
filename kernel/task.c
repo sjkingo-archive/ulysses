@@ -214,6 +214,11 @@ pid_t do_fork(void)
     task_t *child, *parent;
     page_dir_t *page_dir;
 
+    /* Sometimes it doesn't make sense to fork */
+    if (current_task->pid == 0 || current_task->kthread != NULL) {
+        return -1;
+    }
+
     /* This is really important code that can't be interrupted! */
     CLI;
 

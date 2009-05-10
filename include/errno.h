@@ -8,5 +8,6 @@ extern int errno;
 #define EINVAL 2 /* Invalid argument */
 #define EPERM 3 /* Operation not permitted */
 #define ESRCH 4 /* Not such process */
+#define ECANCELED 5 /* Operation cancelled */
 
 #endif

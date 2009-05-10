@@ -104,8 +104,12 @@ int sys_getpid(void)
     return do_getpid();
 }
 
-pid_t sys_fork(void)
+int sys_fork(void)
 {
     TRACE_ONCE;
-    return do_fork();
+    pid_t pid = do_fork();
+    if (pid == -1) {
+        errno = ECANCELED;
+    }
+    return pid;
 }
