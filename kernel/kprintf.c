@@ -20,8 +20,11 @@ static void kputc(const char c, flag_t all)
 static void kputs(const char *str, flag_t all)
 {
     const char *ptr; /* since we may want to change what str is pointing to */
-    if (str == NULL) ptr = "(null)";
-    else ptr = str;
+    if (str == NULL) {
+        ptr = "(null)";
+    } else {
+        ptr = str;
+    }
 
     while (*ptr != '\0') {
         kputc(*ptr, all);

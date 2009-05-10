@@ -20,7 +20,9 @@ static unsigned int initrd_read(fs_node_t *node, unsigned int offset,
         unsigned int size, unsigned char buffer)
 {
     initrd_file_header_t header = file_headers[node->inode];
-    if (offset > header.length) return 0;
+    if (offset > header.length) {
+        return 0;
+    }
     
     if (offset + size > header.length) {
         size = header.length - offset;

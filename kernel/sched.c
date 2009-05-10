@@ -37,7 +37,7 @@ static void add_as_tail(task_t *t)
     t->next = NULL;
 
 #if SCHED_DEBUG
-        kprintf("add_as_tail(): pid %d\n", t->pid);
+    kprintf("add_as_tail(): pid %d\n", t->pid);
 #endif
 }
 
@@ -97,7 +97,7 @@ task_t *pick_next_task(void)
             /* Remove from queue */
 #if SCHED_DEBUG
             kprintf("pick_next_task(): pid %d not ready; removing from "
-                    "queue\n", t->pid);
+                    "queue and destroying\n", t->pid);
 #endif
             tasks_queue.head = t->next;
             free_task(t);
