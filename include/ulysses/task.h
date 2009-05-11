@@ -72,6 +72,11 @@ void free_task(task_t *task);
  */
 void task_exit(void);
 
+/* kill_task()
+ *  Flag the task with the given pid to be destroyed.
+ */
+void kill_task(pid_t pid);
+
 /* do_fork()
  *  Clone the current task and run it. Returns 0 to the child and the child's
  *  pid to the parent.

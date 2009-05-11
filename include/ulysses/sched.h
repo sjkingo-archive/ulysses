@@ -33,4 +33,10 @@ task_t *pick_next_task(void);
  */
 void dump_all_tasks(void);
 
+/* get_task()
+ *  Return a pointer to the task structure belonging to pid, or NULL if pid
+ *  does not exist.
+ */
+task_t *get_task(pid_t pid);
+
 #endif

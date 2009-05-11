@@ -171,10 +171,18 @@ static void cmd_errno(void)
     kprintf("%d\n", errno);
 }
 
+static void cmd_kill(char **args)
+{
+    TRACE_ONCE;
+    pid_t pid = (pid_t)strtol(*args, NULL, 10);
+    kill_task(pid);
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
     { "int", NULL, &cmd_int_80, "Send an interrupt 0x80 (syscall)." },
+    { "kill", NULL, &cmd_kill, "Kill a task matching the given process id." },
 
     { "ver", &print_startup, NULL, "Display kernel version." },
     { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },

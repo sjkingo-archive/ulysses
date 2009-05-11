@@ -208,6 +208,33 @@ void task_exit(void)
     switch_task(FALSE); /* don't save state */
 }
 
+void kill_task(pid_t pid)
+{
+    TRACE_ONCE;
+    task_t *t;
+
+    /* Don't allow the kernel to be killed */
+    if (pid == 0) {
+        kprintf("kill: You can't kill the kernel.\n");
+        return;
+    }
+
+    /* Try and find the task */
+    t = get_task(pid);
+    if (t == NULL) {
+        kprintf("kill: No such task (pid %d)\n", pid);
+        return;
+    }
+
+    /* Only allow users to kill their own tasks; except for root */
+    if (t->uid != 0 && (t->uid != do_getuid())) {
+        kprintf("kill: Permission denied.\n");
+        return;
+    }
+    
+    t->ready = 0;
+}
+
 pid_t do_fork(void)
 {
     TRACE_ONCE;

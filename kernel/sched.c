@@ -118,3 +118,16 @@ void dump_all_tasks(void)
     }
     kprintf("\n");
 }
+
+task_t *get_task(pid_t pid)
+{
+    TRACE_ONCE;
+    task_t *t = tasks_queue.head;
+    while (t != NULL) {
+        if (t->pid == pid) {
+            return t;
+        }
+        t = t->next;
+    }
+    return NULL;
+}
