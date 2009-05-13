@@ -1,6 +1,7 @@
 #include "../config.h"
 #include <ulysses/kprintf.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/task.h>
 #include <ulysses/trace.h>
 
 void do_panic(const char *msg, const char *file, int line)
@@ -37,5 +38,7 @@ void shutdown(void)
 {
     TRACE_ONCE;
     kprintf_all("Shutting down Ulysses\n");
+    kprintf_all("Killing all tasks...\n");
+    kill_all_tasks();
     halt(); /* XXX but for now, just halt */
 }

@@ -235,6 +235,18 @@ void kill_task(pid_t pid)
     t->ready = 0;
 }
 
+void kill_all_tasks(void)
+{
+    TRACE_ONCE;
+    unsigned int i;
+    for (i = next_pid - 1; i > 0; i--) {
+        task_t *t = get_task(i);
+        if (t != NULL) {
+            t->ready = 0;
+        }
+    }
+}
+
 pid_t do_fork(void)
 {
     TRACE_ONCE;

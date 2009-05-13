@@ -77,6 +77,12 @@ void task_exit(void);
  */
 void kill_task(pid_t pid);
 
+/* kill_all_tasks()
+ *  Flags all tasks on the system to be destroyed, except for the kernel.
+ *  This would typically only be done by the kernel at shutdown.
+ */
+void kill_all_tasks(void);
+
 /* do_fork()
  *  Clone the current task and run it. Returns 0 to the child and the child's
  *  pid to the parent.
