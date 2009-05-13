@@ -111,11 +111,9 @@ static void kt_test(void)
 {
     TRACE_ONCE;
     unsigned short i;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 5; i++) {
         kprintf("Hello from pid %d: i %d\n", do_getpid(), i);
-        kthread_yield();
     }
-    kthread_exit();
 }
 
 static void cmd_kt_test(void)
