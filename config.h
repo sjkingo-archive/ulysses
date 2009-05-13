@@ -13,6 +13,12 @@
  */
 #define _ARCH_x86
 
+/* PREEMPT_KERNEL
+ *  If this is set to 1, the scheduler will preempt kernel tasks. If not,
+ *  they must yield the CPU before another task switch to occur.
+ */
+#define PREEMPT_KERNEL 1
+
 /* SCHED_DEBUG
  * TASK_DEBUG
  * INTERRUPT_DEBUG

@@ -54,6 +54,10 @@ void print_startup(void)
             "debugging capacity\n");
 #endif
 
+#if PREEMPT_KERNEL
+    kprintf("Compiled with PREEMPT_KERNEL; preempting kernel tasks.\n");
+#endif
+
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
             kern.mbi->mem_lower, kern.mbi->mem_upper);
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
