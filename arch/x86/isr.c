@@ -86,14 +86,19 @@ void isr_handler(registers_t regs)
 void irq_handler(registers_t regs)
 {
     TRACE_ONCE;
-    /* Since we don't care about a lot of IRQs, we can just ignore any
-     * that don't have a handler.
-     */
-    lookup_exception(regs);
 
-    /* Write an end of interrupt signal to the PICs */
+    /* Write an end of interrupt signal to the PICs. This needs to be done
+     * *before* executing any exception handler, since the IRQ line will not
+     * get reactivated until the EOI is sent.
+     */
     if (regs.int_no >= IRQ0) {
         if (regs.int_no >= IRQ8) outb(0xA0, 0x20); /* slave */
         outb(0x20, 0x20); /* master */
     }
+
+    /* Lookup and execute the handler for this IRQ. Normally we would check
+     * the return value of this in case a handler could not be found, but
+     * since we don't care about most IRQs: ignore it.
+     */
+    lookup_exception(regs);
 }
