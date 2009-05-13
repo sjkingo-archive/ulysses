@@ -314,6 +314,12 @@ void check_current_task(void)
         return;
     }
 
+#if !PREEMPT_KERNEL
+    if (current_task->ring == 0) {
+        return;
+    }
+#endif
+
     if (--current_task->s_ticks_left <= 0) {
 #if TASK_DEBUG
         kprintf("check_current_task(): pid %d (%s) exceeded scheduling "
@@ -338,3 +344,8 @@ void change_current_task(void)
     switch_task(TRUE);
 }
 
+void set_current_ring3(void)
+{
+    TRACE_ONCE;
+    current_task->ring = 3;
+}

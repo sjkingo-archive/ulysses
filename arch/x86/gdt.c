@@ -77,6 +77,7 @@ void switch_to_ring3(void)
 {
     TRACE_ONCE;
     switch_kernel_stack();
+    set_current_ring3();
 
     __asm__ __volatile__("  \
             mov $0x23, %ax; \

@@ -109,4 +109,10 @@ void switch_kernel_stack(void);
  */
 void change_current_task(void);
 
+/* set_current_ring3()
+ *  Sets the current task to ring 3. This simply updates the value in the
+ *  task struct for use by scheduler et al.
+ */
+void set_current_ring3(void);
+
 #endif
