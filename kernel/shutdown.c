@@ -40,5 +40,6 @@ void shutdown(void)
     kprintf_all("Shutting down Ulysses\n");
     kprintf_all("Killing all tasks...\n");
     kill_all_tasks();
+    /* XXX allow the scheduler to actually remove the tasks? */
     halt(); /* XXX but for now, just halt */
 }
