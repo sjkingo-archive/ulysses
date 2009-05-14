@@ -55,7 +55,9 @@ void print_startup(void)
 #endif
 
 #if PREEMPT_KERNEL
-    kprintf("Compiled with PREEMPT_KERNEL; preempting kernel tasks.\n");
+    kprintf("Compiled with PREEMPT_KERNEL; preempting kernel tasks\n");
+#else
+    kprintf("Warning: PREEMPT_KERNEL not enabled; kernel tasks must yield\n");
 #endif
 
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 

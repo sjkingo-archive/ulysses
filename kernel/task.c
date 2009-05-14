@@ -327,7 +327,12 @@ void check_current_task(void)
     }
 
 #if !PREEMPT_KERNEL
-    if (current_task->ring == 0) {
+    /* If we're not doing kernel preemption, just return to allow the
+     * interrupted task to continue.
+     * Note that there is no real way to *not* let the kernel task itself be
+     * preempted, since it idles the CPU.
+     */
+    if (current_task->pid != 0 && current_task->ring == 0) {
         return;
     }
 #endif
