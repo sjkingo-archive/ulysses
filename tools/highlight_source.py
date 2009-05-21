@@ -22,9 +22,6 @@ def output_file(src, dest, title, lexer):
 def make_source(root, dirs):
     src_prefix = root
     dest_prefix = os.path.join('.', 'html')
-    if os.path.isdir(dest_prefix):
-        print './html already exists.'
-        exit(1)
     os.mkdir(dest_prefix)
 
     for d in dirs:
@@ -49,4 +46,4 @@ def make_source(root, dirs):
             output_file(in_file, dest_file, os.path.join(d, f) + ', Ulysses', lexer)
 
 if __name__ == '__main__':
-    make_source('..', ['arch/x86', 'lib', 'kernel'])
+    make_source('..', ['arch/x86', 'lib', 'kernel', 'include', 'include/ulysses'])
