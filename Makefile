@@ -1,5 +1,3 @@
-
 .PHONY: nouse
 nouse:
 	scons
-

@@ -1,4 +1,3 @@
-
 import os
 
 cc_exts = ['.c', '.s']
@@ -24,8 +23,6 @@ env = Environment(
             linker_script,
     ASFLAGS = '-f elf',
 )
-
 env.Decider('timestamp-match')
 env.Program(output_binary, [os.path.join(arch_dir, loader_asm)] + 
         arch_sources + kern_sources + lib_sources)
-

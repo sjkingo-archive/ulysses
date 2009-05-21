@@ -10,4 +10,3 @@ if [ "$debug" != "" ]; then
     sleep 1 # to let qemu listen
     gdb -x gdb-startup
 fi
-
