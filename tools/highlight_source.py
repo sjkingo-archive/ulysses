@@ -8,7 +8,7 @@ from pygments.formatters import HtmlFormatter
 
 root = '..'
 dirs = ['arch/x86', 'lib', 'kernel', 'include', 'include/ulysses']
-exts = ['.c', '.s', '.h']
+exts = ['.c', '.asm', '.h']
 
 def output_file(src, dest, title, lexer):
     fp = open(src, 'r')
@@ -45,8 +45,6 @@ def make_source(root, dirs, dest_prefix):
             in_file = os.path.join(src_dir, f)
 
             lexer = get_lexer_for_filename(f)
-            if f.endswith('.s'):
-                lexer = NasmLexer() # override since it picks GasmLexer for .s
 
             print 'using %s for source %s to %s' % (str(lexer), in_file, 
                     dest_file)
