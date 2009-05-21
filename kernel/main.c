@@ -1,4 +1,4 @@
-/* main.c - the kernel's entry point
+/* kernel/main.c - the kernel's entry point
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

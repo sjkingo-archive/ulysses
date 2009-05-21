@@ -1,4 +1,4 @@
-/* shell.c - in-kernel "shell" (interpreter)
+/* kernel/shell.c - in-kernel "shell" (interpreter)
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

@@ -1,4 +1,4 @@
-/* task.c - task management
+/* kernel/task.c - task management
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

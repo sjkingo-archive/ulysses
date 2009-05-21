@@ -1,4 +1,4 @@
-/* shutdown.c - kernel exit point
+/* kernel/shutdown.c - kernel exit point
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

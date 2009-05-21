@@ -1,4 +1,4 @@
-/* vt.c - virtual terminals
+/* kernel/vt.c - virtual terminals
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

@@ -1,4 +1,4 @@
-/* shell_cmds.c - commands for the in-kernel shell (see shell.c)
+/* kernel/shell_cmds.c - commands for the in-kernel shell (see shell.c)
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

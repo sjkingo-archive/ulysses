@@ -1,4 +1,4 @@
-/* trace.c - stacktrace for last called functions
+/* kernel/trace.c - stacktrace for last called functions
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

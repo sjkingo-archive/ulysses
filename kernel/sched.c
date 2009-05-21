@@ -1,4 +1,4 @@
-/* sched.c - task scheduler
+/* kernel/sched.c - task scheduler
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

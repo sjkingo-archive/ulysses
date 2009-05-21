@@ -1,4 +1,4 @@
-/* kprintf.c - printf() compatible implementation for the kernel
+/* kernel/kprintf.c - printf() compatible implementation for the kernel
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

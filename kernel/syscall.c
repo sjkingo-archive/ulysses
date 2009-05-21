@@ -1,4 +1,4 @@
-/* syscall.c - system call layer
+/* kernel/syscall.c - system call layer
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>

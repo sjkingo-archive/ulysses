@@ -1,4 +1,4 @@
-/* vfs.c - virtual file system
+/* kernel/vfs.c - virtual file system
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>
