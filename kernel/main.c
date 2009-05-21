@@ -31,9 +31,12 @@
 #include <ulysses/vt.h>
 
 #include "../config.h"
-#include "../arch/x86/x86.h" 
 
 #include <sys/types.h>
+
+#ifdef _ARCH_x86
+extern void startup_x86(void *, int);
+#endif
 
 /* This is the stack pointer that multiboot sets up for us. Eventually
  * we will move this to a higher address.
