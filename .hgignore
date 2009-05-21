@@ -1,6 +1,5 @@
 syntax: glob
 *.o
 .*.*.swp
-hatta*
 arch/x86/boot/kernel
 .sconsign.dblite
