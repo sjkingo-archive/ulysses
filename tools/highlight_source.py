@@ -15,7 +15,14 @@ def output_file(src, dest, title, lexer):
     out = open(dest, 'w')
     code = fp.read()
 
-    formatter = HtmlFormatter(full=True, linenos='table', title=title)
+    formatter = HtmlFormatter(
+            full=True, # inline CSS and html
+            anchorlinenos=True, # add anchors to line numbers
+            lineanchors='line', # prefix to <a name="..">
+            linenos='table', # use a 2-col table
+            encoding='utf-8',
+            title=title,
+    )
     result = highlight(code, lexer, formatter, out)
 
     out.close()
