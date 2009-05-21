@@ -2,7 +2,7 @@
 
 let total=0
 
-for ext in c h s sh ; do
+for ext in c h asm sh ; do
     let count=0
     for i in `find . -name \*.$ext -exec wc -l {} \; | awk '{ print $1 }'` ; do 
         count=$(($count+$i))

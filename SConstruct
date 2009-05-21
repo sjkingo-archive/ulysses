@@ -1,11 +1,11 @@
 import os
 
-cc_exts = ['.c', '.s']
+cc_exts = ['.c', '.asm']
 linker_script = 'arch/x86/linker.ld'
 arch_dir = 'arch/x86'
 kern_dir = 'kernel'
 lib_dir = 'lib'
-loader_asm = 'loader.s'
+loader_asm = 'loader.asm'
 output_binary = os.path.join(arch_dir, 'boot', 'kernel')
 
 arch_sources = [os.path.join(arch_dir, f) for f in os.listdir(arch_dir) \
