@@ -1,4 +1,6 @@
-/*
+/* lib/ctype.c - character type methods
+ * part of Ulysses, a tiny operating system
+ *
  *  linux/lib/ctype.c
  *
  *  Copyright (C) 1991, 1992  Linus Torvalds
@@ -49,7 +51,6 @@ unsigned char toupper(unsigned char c)
     }
     return c;
 }
-
 /* erg this is so sloooooow */
 unsigned int numdigits(unsigned int d, unsigned int base)
 {

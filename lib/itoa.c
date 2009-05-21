@@ -1,5 +1,8 @@
-
-/* Shamefully ripped from Minix 3 - thanks AST */
+/* lib/itoa.c - integer to string
+ * part of Ulysses, a tiny operating system
+ *
+ * Shamefully ripped from Minix 3 - thanks AST
+ */
 
 int next;
 char qbuf[8];

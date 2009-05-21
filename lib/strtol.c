@@ -1,4 +1,6 @@
-/*
+/* lib/strtol.c - string to integer
+ * part of Ulysses, a tiny operating system
+ *
  *  linux/lib/vsprintf.c
  *
  *  Copyright (C) 1991, 1992  Linus Torvalds
