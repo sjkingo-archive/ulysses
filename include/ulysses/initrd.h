@@ -8,8 +8,6 @@
  * it.
  */
 
-#include <ulysses/vfs.h>
-
 /* The header for the initrd */
 typedef struct {
     unsigned int nfiles; /* number of files in the ram disk */
