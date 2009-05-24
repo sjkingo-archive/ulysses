@@ -48,6 +48,7 @@ void print_startup(void)
 {
     TRACE_ONCE;
     kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
+    kprintf("Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>\n");
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
 
 #ifdef _ARCH_x86
