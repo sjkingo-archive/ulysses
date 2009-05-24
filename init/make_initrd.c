@@ -26,27 +26,21 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define OUTPUT_FILE "./initrd.img"
-#define FILENAME_LEN 64
+#include "../include/ulysses/initrd.h"
 
-struct initrd_header {
-    unsigned char magic;
-    char name[FILENAME_LEN];
-    unsigned int offset;
-    unsigned int length;
-};
+#define OUTPUT_FILE "./initrd.img"
 
 int main(int argc, char **argv)
 {
     unsigned int i, offset, valid_files;
-    struct initrd_header headers[FILENAME_LEN];
+    initrd_file_header_t headers[INITRD_FILENAME_LEN];
     FILE *wstream;
 
     argc--;
     argv++;
 
-    offset = sizeof(struct initrd_header) * FILENAME_LEN + sizeof(int);
-    printf("header size = %d bytes\n", (int)sizeof(struct initrd_header));
+    offset = sizeof(initrd_file_header_t) * INITRD_FILENAME_LEN + sizeof(int);
+    printf("header size = %d bytes\n", (int)sizeof(initrd_file_header_t));
     printf("offset = +%d bytes\n", offset);
 
     /* Add each file to the header */
@@ -63,7 +57,8 @@ int main(int argc, char **argv)
         }
 
         stat(argv[i], &s);
-        printf("Adding file %s (%d bytes) at 0x%x\n", argv[i], (int)s.st_size, offset);
+        printf("Adding file %s (%d bytes) at 0x%x\n", argv[i], 
+                (int)s.st_size, offset);
         valid_files++;
         strcpy(headers[i].name, argv[i]);
         headers[i].offset = offset;
@@ -87,7 +82,8 @@ int main(int argc, char **argv)
         return 1;
     }
     fwrite(&argc, sizeof(int), 1, wstream);
-    fwrite(headers, sizeof(struct initrd_header), FILENAME_LEN, wstream);
+    fwrite(headers, sizeof(initrd_file_header_t), INITRD_FILENAME_LEN, 
+            wstream);
 
     /* Write the contents of each file */
     for (i = 0; i < (unsigned int)argc; i++) {

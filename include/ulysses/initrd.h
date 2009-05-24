@@ -8,6 +8,8 @@
  * it.
  */
 
+#define INITRD_FILENAME_LEN 64
+
 /* The header for the initrd */
 typedef struct {
     unsigned int nfiles; /* number of files in the ram disk */
@@ -16,7 +18,7 @@ typedef struct {
 /* A file in the initrd */
 typedef struct {
     unsigned char magic; /* for error checking */
-    char name[64];
+    char name[INITRD_FILENAME_LEN];
     unsigned int offset;
     unsigned int length;
 } initrd_file_header_t;
