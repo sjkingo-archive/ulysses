@@ -1,4 +1,5 @@
 output_binary = 'arch/x86/boot/kernel'
+subdirs = ['arch/x86', 'kernel', 'lib']
 
 env = Environment(
     AS = 'nasm', 
@@ -12,7 +13,7 @@ env.Decider('timestamp-match')
 Export('env')
 
 # Compile the kernel from subdirs and link
-objs = SConscript(dirs=['kernel', 'lib', 'arch/x86'])
+objs = SConscript(dirs=subdirs)
 env.Program(output_binary, objs)
 
 # Other programs that need to be build
