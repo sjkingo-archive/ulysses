@@ -18,4 +18,9 @@ void test_f00f(void);
  */
 flag_t test_fdiv(void);
 
+/* test_cpu_bugs()
+ *  Tests for some known (albiet old) Intel CPU bugs.
+ */
+void test_cpu_bugs(void);
+
 #endif
