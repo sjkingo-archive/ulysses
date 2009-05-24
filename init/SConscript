@@ -1,0 +1,6 @@
+env = Environment(
+    CC = 'gcc',
+    CFLAGS = '-g -O -Wall -Wextra',
+)
+env.Decider('timestamp-match')
+env.Program('make_initrd.c')

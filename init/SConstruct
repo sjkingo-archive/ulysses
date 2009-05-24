@@ -1,1 +1,0 @@
-Program('make_initrd.c')
