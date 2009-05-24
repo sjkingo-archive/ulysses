@@ -2,14 +2,15 @@
 
 let total=0
 
-for ext in c h asm sh ; do
+for ext in c h sh asm txt ; do
     let count=0
     for i in `find . -name \*.$ext -exec wc -l {} \; | awk '{ print $1 }'` ; do 
         count=$(($count+$i))
     done
     total=$(($total+$count))
-    echo "*.$ext: $count"
+    echo -e "*.$ext:\t$count"
 done
 
-echo "total: $total"
+echo "--"
+echo -e "total:\t$total"
 
