@@ -36,6 +36,12 @@
 
 #include <string.h>
 
+/* These addresses are for paging and heap code to start at. This is updated
+ * from the end address of kernel and multiboot modules.
+ */
+extern unsigned int placement_address; /* kheap.c */
+extern unsigned int end; /* linker.ld */
+
 extern void init_a20(void); /* see a20.s */
 
 static void set_time(void)
@@ -65,6 +71,17 @@ static void init_multiboot(void *mdb, unsigned int magic)
     /* Copy the kernel command line from multiboot */
     kern.cmdline = (char *)kmalloc(strlen((char *)kern.mbi->cmdline) + 1);
     strcpy(kern.cmdline, (char *)kern.mbi->cmdline);
+
+    /* If any module(s) have been given, we need to move the placement address
+     * to after the module(s) addresses, as not to trample over important 
+     * stuff when paging is enabled.
+     */
+    if (kern.mbi->mods_count > 0) {
+        placement_address = *(unsigned int *)(kern.mbi->mods_addr + 
+                (4 * kern.mbi->mods_count));
+    } else {
+        placement_address = (unsigned int)&end;
+    }
 }
 
 void startup_x86(void *mdb, unsigned int magic)

@@ -28,7 +28,7 @@ extern page_dir_t *kernel_directory; /* declared in paging.c */
  *  Physical address to place the kernel heap at. This is usually the end
  *  of all segments, however this can be anywhere in physical memory.
  */
-unsigned int placement_address = (unsigned int)&end;
+unsigned int placement_address;
 
 /* kheap
  *  Pointer to the kernel heap.
