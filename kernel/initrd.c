@@ -92,16 +92,15 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
 
 void run_initrd(void)
 {
-    unsigned int i, loc, end;
+    unsigned int i, loc;
 
+    /* If no initrd module was given, then there is no work for us to do */
     if (kern.mbi->mods_count == 0) {
-        kprintf("initrd: module not found, exiting\n");
+        kprintf("initrd: boot module not found, exiting\n");
         kthread_exit();
     }
 
     loc = *(unsigned int *)kern.mbi->mods_addr;
-    end = *(unsigned int *)(kern.mbi->mods_addr + 4);
-
     initrd_header = (initrd_header_t *)loc;
     file_headers = (initrd_file_header_t *) (loc + sizeof(initrd_header_t));
 
