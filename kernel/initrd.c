@@ -90,13 +90,18 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
     return 0;
 }
 
+static void run_init(fs_node_t *init_node)
+{
+    init_node = NULL;
+}
+
 void run_initrd(void)
 {
     unsigned int i, loc;
 
     /* If no initrd module was given, then there is no work for us to do */
     if (kern.mbi->mods_count == 0) {
-        kprintf("initrd: boot module not found, exiting\n");
+        kprintf("initrd: boot module not found, aborting\n");
         kthread_exit();
     }
 
@@ -161,6 +166,16 @@ void run_initrd(void)
         root_nodes[i].open = 0;
         root_nodes[i].close = 0;
         root_nodes[i].impl = 0;
+    }
+
+    /* Look for init process */
+    fs_node_t *init_node = finddir_fs(initrd_root, "init");
+    if (init_node == NULL) {
+        kprintf("initrd: /init not found in rootfs, aborting\n");
+        kthread_exit();
+    } else {
+        kprintf("initrd: found /init (%d bytes) in rootfs\n", init_node->size);
+        run_init(init_node);
     }
 
     /* Wait for work to come in */
