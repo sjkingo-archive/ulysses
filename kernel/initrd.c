@@ -35,6 +35,12 @@ int nroot_nodes;
 
 struct dirent dirent;
 
+struct file {
+    char *name;
+    unsigned int size;
+    void *data;
+};
+
 static unsigned int initrd_read(fs_node_t *node, unsigned int offset, 
         unsigned int size, unsigned char *buffer)
 {
@@ -90,23 +96,30 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
     return 0;
 }
 
-static void run_init(fs_node_t *init_node)
+static struct file *load_file(char *name)
 {
-    unsigned int i, size;
-    unsigned char *buffer;
+    struct file *f;
+    fs_node_t *node;
     
-    if ((init_node->flags & 0x7) == FS_DIR) {
-        kprintf("initrd: init is not a file, aborting\n");
-        kthread_exit();
-    }
-    
-    buffer = kmalloc(init_node->size + 1);
-    size = read_fs(init_node, 0, init_node->size, buffer);
-    for (i = 0; i < size; i++) {
-        kprintf("%c", buffer[i]);
+    /* Find the node in the fs */
+    node = finddir_fs(fs_root, name);
+    if (node == NULL) {
+        return NULL;
     }
 
-    kprintf("'\n");
+    f = kmalloc(sizeof(struct file));
+    f->name = name;
+
+    /* Read the node and check to make sure we read the full file */
+    f->data = kmalloc(node->size);
+    f->size = read_fs(node, 0, node->size, f->data);
+    if (f->size != node->size) {
+        kprintf("load_file(): Warning: read %d bytes of %s when node " 
+                "reported length of %d bytes\n", f->size, f->name, node->size);
+        return NULL;
+    }
+    
+    return f;
 }
 
 void run_initrd(void)
@@ -182,15 +195,17 @@ void run_initrd(void)
         root_nodes[i].close = 0;
         root_nodes[i].impl = 0;
     }
-
-    /* Look for init process */
-    fs_node_t *init_node = finddir_fs(fs_root, "init");
-    if (init_node == NULL) {
+    
+    /* Load the init program */
+    struct file *init = load_file("init");
+    if (init == NULL) {
         kprintf("initrd: /init not found in rootfs, aborting\n");
         kthread_exit();
     } else {
-        kprintf("initrd: found /init (%d bytes) in rootfs\n", init_node->size);
-        run_init(init_node);
+        ((char *)init->data)[init->size++] = '\0';
+        kprintf("initrd: loaded init (%d bytes) from rootfs\n", init->size);
+        kprintf("initrd: init contents '%s'\n", (char *)init->data);
+        kfree(init);
     }
 
     /* Wait for work to come in */
