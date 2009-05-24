@@ -7,8 +7,8 @@ from pygments.lexers import get_lexer_for_filename, NasmLexer
 from pygments.formatters import HtmlFormatter
 
 root = '..'
-dirs = ['arch/x86', 'lib', 'kernel', 'include', 'include/ulysses']
-exts = ['.c', '.asm', '.h']
+dirs = ['arch/x86', 'lib', 'kernel', 'include', 'include/ulysses', 'init']
+exts = ['.c', '.asm', '.h', '.sh']
 
 def output_file(src, dest, title, lexer):
     fp = open(src, 'r')
