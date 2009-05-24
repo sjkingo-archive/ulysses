@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/cputest.h>
 #include <ulysses/gdt.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
@@ -195,6 +196,13 @@ static void cmd_kill(char **args)
     kill_task(pid);
 }
 
+static void cmd_f00f(void)
+{
+    TRACE_ONCE;
+    test_f00f();
+    kprintf("This CPU doesn't appear to have the f00f bug. Yay!\n");
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -219,6 +227,7 @@ struct shell_command cmds[] = {
             "crashes." },
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     { "errno", &cmd_errno, NULL, "Output the value of errno." },
+    { "f00f", &cmd_f00f, NULL, "The Four Bytes Of The Apocalypse." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &do_fork, NULL, NULL },

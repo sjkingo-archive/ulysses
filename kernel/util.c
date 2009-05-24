@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/cputest.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
@@ -83,6 +84,11 @@ void print_startup(void)
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
             kern.mbi->mem_lower, kern.mbi->mem_upper);
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);
+
+    /* Test for some CPU bugs */
+    test_f00f();
+    kprintf("CPU does not appear to have the f00f bug\n");
+
     kprintf("CMOS-provided time 2%03d-%02d-%02d %02d:%02d:%02d (no timezone; "
             "probably UTC)\n", 
             kern.startup_datetime.year, kern.startup_datetime.month,
