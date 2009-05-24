@@ -23,17 +23,17 @@
 
 fs_node_t *fs_root = 0;
 
-unsigned int read_fs(fs_node_t *node, unsigned int offset, size_t size, 
+unsigned int read_fs(fs_node_t *node, unsigned int offset, unsigned int size, 
         unsigned char *buffer)
 {
     if (node->read != 0) {
-        return node->read(node, offset, size, *buffer);
+        return node->read(node, offset, size, buffer);
     } else {
         return 0;
     }
 }
 
-unsigned int write_fs(fs_node_t *node, unsigned int offset, size_t size, 
+unsigned int write_fs(fs_node_t *node, unsigned int offset, unsigned int size, 
         unsigned char *buffer)
 {
     if (node->write != 0) {

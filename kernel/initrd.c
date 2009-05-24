@@ -36,7 +36,7 @@ int nroot_nodes;
 struct dirent dirent;
 
 static unsigned int initrd_read(fs_node_t *node, unsigned int offset, 
-        unsigned int size, unsigned char buffer)
+        unsigned int size, unsigned char *buffer)
 {
     initrd_file_header_t header = file_headers[node->inode];
     if (offset > header.length) {
@@ -47,7 +47,7 @@ static unsigned int initrd_read(fs_node_t *node, unsigned int offset,
         size = header.length - offset;
     }
     
-    memcpy(&buffer, (unsigned char *)(header.offset + offset), size);
+    memcpy(buffer, (unsigned char *)(header.offset + offset), size);
     return size;
 }
 
@@ -92,7 +92,20 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
 
 static void run_init(fs_node_t *init_node)
 {
-    init_node = NULL;
+    unsigned int i, size;
+    unsigned char buffer[256];
+    
+    if ((init_node->flags & 0x7) == FS_DIR) {
+        kprintf("initrd: init is not a file, aborting\n");
+        kthread_exit();
+    }
+
+    size = read_fs(init_node, 0, 256, buffer);
+    for (i = 0; i < size; i++) {
+        kprintf("%c", buffer[i]);
+    }
+
+    kprintf("'\n");
 }
 
 void run_initrd(void)
@@ -126,6 +139,7 @@ void run_initrd(void)
     initrd_root->finddir = &initrd_finddir;
     initrd_root->ptr = 0;
     initrd_root->impl = 0;
+    fs_root = initrd_root;
 
     /* /dev */
     initrd_dev = (fs_node_t *)kmalloc(sizeof(fs_node_t));
@@ -169,7 +183,7 @@ void run_initrd(void)
     }
 
     /* Look for init process */
-    fs_node_t *init_node = finddir_fs(initrd_root, "init");
+    fs_node_t *init_node = finddir_fs(fs_root, "init");
     if (init_node == NULL) {
         kprintf("initrd: /init not found in rootfs, aborting\n");
         kthread_exit();

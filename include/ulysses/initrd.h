@@ -18,7 +18,7 @@ typedef struct {
 /* A file in the initrd */
 typedef struct {
     unsigned char magic; /* for error checking */
-    char name[NR_FILENAME];
+    char name[64];
     unsigned int offset;
     unsigned int length;
 } initrd_file_header_t;

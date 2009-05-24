@@ -21,9 +21,9 @@ struct fs_node;
 
 /* Callbacks for read/write etc */
 typedef unsigned int (*read_type_t)(struct fs_node *, unsigned int, 
-        unsigned int, unsigned char);
+        unsigned int, unsigned char *);
 typedef unsigned int (*write_type_t)(struct fs_node *, unsigned int, 
-        unsigned int, unsigned char);
+        unsigned int, unsigned char *);
 typedef void (*open_type_t)(struct fs_node *);
 typedef void (*close_type_t)(struct fs_node *);
 typedef struct dirent * (*readdir_type_t)(struct fs_node *, unsigned int);
@@ -31,13 +31,13 @@ typedef struct fs_node * (*finddir_type_t)(struct fs_node *, char *name);
 
 /* A filesystem node */
 typedef struct fs_node {
-    char name[NR_FILENAME];
+    char name[128];
+    unsigned int mask; /* permissions mask */
     uid_t uid;
     gid_t gid;
-    size_t size;
-    unsigned int mask; /* permissions mask */
     unsigned int flags;
     unsigned int inode;
+    unsigned int size;
     unsigned int impl; /* XXX ?? */
 
     read_type_t read;
@@ -51,7 +51,7 @@ typedef struct fs_node {
 } fs_node_t;
 
 struct dirent {
-    char name[NR_FILENAME];
+    char name[128];
     unsigned int ino; /* required by POSIX, XXX find ref */
 };
 
@@ -60,9 +60,9 @@ extern fs_node_t *fs_root; /* root of the VFS */
 /* These functions deal with file system nodes, so are named differently
  * from their file descriptor counterparts (read/write/close/etc).
  */
-unsigned int read_fs(fs_node_t *node, unsigned int offset, size_t size, 
+unsigned int read_fs(fs_node_t *node, unsigned int offset, unsigned int size, 
         unsigned char *buffer);
-unsigned int write_fs(fs_node_t *node, unsigned int offset, size_t size, 
+unsigned int write_fs(fs_node_t *node, unsigned int offset, unsigned int size, 
         unsigned char *buffer);
 void open_fs(fs_node_t *node, unsigned char read, unsigned char write);
 void close_fs(fs_node_t *node);
