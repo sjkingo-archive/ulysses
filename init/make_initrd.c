@@ -46,12 +46,12 @@ int main(int argc, char **argv)
     argv++;
 
     offset = sizeof(struct initrd_header) * FILENAME_LEN + sizeof(int);
-    printf("header size = %d bytes\n", sizeof(struct initrd_header));
+    printf("header size = %d bytes\n", (int)sizeof(struct initrd_header));
     printf("offset = +%d bytes\n", offset);
 
     /* Add each file to the header */
     valid_files = 0;
-    for (i = 0; i < argc; i++) {
+    for (i = 0; i < (unsigned int)argc; i++) {
         FILE *stream;
         struct stat s;
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
         }
 
         stat(argv[i], &s);
-        printf("Adding file %s (%d bytes) at 0x%x\n", argv[i], s.st_size, offset);
+        printf("Adding file %s (%d bytes) at 0x%x\n", argv[i], (int)s.st_size, offset);
         valid_files++;
         strcpy(headers[i].name, argv[i]);
         headers[i].offset = offset;
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     fwrite(headers, sizeof(struct initrd_header), FILENAME_LEN, wstream);
 
     /* Write the contents of each file */
-    for (i = 0; i < argc; i++) {
+    for (i = 0; i < (unsigned int)argc; i++) {
         FILE *stream;
         unsigned char *buf;
 
