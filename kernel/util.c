@@ -88,6 +88,9 @@ void print_startup(void)
     /* Test for some CPU bugs */
     test_f00f();
     kprintf("CPU does not appear to have the f00f bug\n");
+    if (test_fdiv()) {
+        kprintf("The FPU attached to this CPU has the Pentium FDIV bug\n");
+    }
 
     kprintf("CMOS-provided time 2%03d-%02d-%02d %02d:%02d:%02d (no timezone; "
             "probably UTC)\n", 

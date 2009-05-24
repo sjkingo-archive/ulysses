@@ -17,7 +17,17 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sys/types.h>
+
 void test_f00f(void)
 {
     __asm__ __volatile__("mov %0, %%eax; lock cmpxchg8b (%%eax)" : : "r" (0));
+}
+
+flag_t test_fdiv(void)
+{
+    if ((float)4195835*3145727/3145727 != 4195835) {
+        return TRUE;
+    }
+    return FALSE;
 }
