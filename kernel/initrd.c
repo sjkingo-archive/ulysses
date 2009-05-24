@@ -93,14 +93,15 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
 static void run_init(fs_node_t *init_node)
 {
     unsigned int i, size;
-    unsigned char buffer[256];
+    unsigned char *buffer;
     
     if ((init_node->flags & 0x7) == FS_DIR) {
         kprintf("initrd: init is not a file, aborting\n");
         kthread_exit();
     }
-
-    size = read_fs(init_node, 0, 256, buffer);
+    
+    buffer = kmalloc(init_node->size + 1);
+    size = read_fs(init_node, 0, init_node->size, buffer);
     for (i = 0; i < size; i++) {
         kprintf("%c", buffer[i]);
     }
