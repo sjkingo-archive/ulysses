@@ -57,6 +57,8 @@ static void switch_task(flag_t save)
         return;
     }
 
+    lock_kernel();
+
     /* We need these registers later */
     if (save) {
         __asm__ __volatile__("mov %%esp, %0" : "=r" (esp));
@@ -101,6 +103,8 @@ static void switch_task(flag_t save)
     if (current_task->kthread != NULL) {
         kthread_running();
     }
+
+    unlock_kernel();
 
     /* Perform the actual context switch:
      *  1. Firstly disable interrupts since this isn't reentrant,
@@ -280,8 +284,7 @@ pid_t do_fork(void)
         return -1;
     }
 
-    /* This is really important code that can't be interrupted! */
-    CLI;
+    lock_kernel();
 
     /* We need this later */
     parent = current_task;
@@ -319,10 +322,11 @@ pid_t do_fork(void)
         child->ebp = ebp;
         child->eip = eip;
         
-        STI;
+        unlock_kernel();
         return child->pid;
     } else {
         /* Child, exit */
+        unlock_kernel();
         return 0;
     }
 }

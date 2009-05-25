@@ -16,4 +16,12 @@ void sanity_check(void);
  */
 void print_startup(void);
 
+/* lock_kernel()
+ * unlock_kernel()
+ *  Lock the kernel so that code in between these two calls is executed 
+ *  atomically with no interruptions.
+ */
+inline void lock_kernel(void);
+inline void unlock_kernel(void);
+
 #endif

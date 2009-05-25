@@ -94,3 +94,15 @@ void print_startup(void)
     kprintf("Kernel stack located at %p with size %d bytes\n", STACK_LOC, 
             STACK_SIZE);
 }
+
+inline void lock_kernel(void)
+{
+    TRACE_ONCE;
+    CLI;
+}
+
+inline void unlock_kernel(void)
+{
+    TRACE_ONCE;
+    STI;
+}
