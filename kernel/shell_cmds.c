@@ -87,10 +87,11 @@ static void cmd_int_80(char **args)
 static void cmd_ps(void)
 {
     TRACE_ONCE;
-    kprintf("PID\tPPID\tUID\tRING\tSTATE\tNAME\n");
+    kprintf("PID\tPPID\tUID\tRING\tCPU\tSTATE\tNAME\n");
     task_t *t = tasks_queue.head;
     while (t != NULL) {
-        kprintf("%d\t%d\t%d\t%d\t", t->pid, t->ppid, t->uid, t->ring);
+        kprintf("%d\t%d\t%d\t%d\t%d\t", t->pid, t->ppid, t->uid, t->ring,
+                t->cpu_time);
         if (t->kthread == NULL) {
             kprintf("-\t%s\n", t->name);
         } else {

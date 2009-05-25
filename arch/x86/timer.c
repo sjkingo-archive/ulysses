@@ -33,6 +33,7 @@ void timer_tick(registers_t regs)
     /* Increment every second */
     if ((ticks % TIMER_FREQ) == 0) {
         kern.current_time_offset.tv_sec++;
+        update_cpu_time();
     }
 
     sanity_check();

@@ -197,6 +197,7 @@ task_t *new_task(const char *name)
     t->ready = 1;
     t->s_ticks_left = SCHED_QUANTUM;
     t->s_quantum_size = SCHED_QUANTUM;
+    t->cpu_time = 0;
     t->kthread = NULL;
     t->ring = 0;
     t->next = NULL;
@@ -384,4 +385,10 @@ void set_current_ring3(void)
 {
     TRACE_ONCE;
     current_task->ring = 3;
+}
+
+void update_cpu_time(void)
+{
+    TRACE_ONCE;
+    current_task->cpu_time++;
 }

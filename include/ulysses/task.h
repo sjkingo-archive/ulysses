@@ -11,6 +11,8 @@
 #include <ulysses/kthread.h>
 #include <ulysses/paging.h>
 
+#include <sys/types.h>
+
 #define KERNEL_STACK_SIZE 8192
 
 /* An entry in the task table. */
@@ -32,6 +34,7 @@ typedef struct task {
     flag_t ready; /* whether this process is ready to be run */
     unsigned short s_ticks_left; /* number of scheduling ticks left */
     unsigned short s_quantum_size; /* quantum size in ticks */
+    time_t cpu_time; /* time spent on the CPU */
 
     struct kthread *kthread; /* NULL if not a kernel thread */
 
@@ -120,5 +123,10 @@ void change_current_task(void);
  *  task struct for use by scheduler et al.
  */
 void set_current_ring3(void);
+
+/* update_cpu_time()
+ *  Updates the time the current task has spent on the CPU.
+ */
+void update_cpu_time(void);
 
 #endif
