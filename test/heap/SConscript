@@ -1,0 +1,7 @@
+Import('env')
+heap_env = Environment(
+    CC='gcc',
+    CFLAGS='-g -Wall -Wextra -isystem ../include', # relative to test/
+)
+heap_obj = heap_env.Object(source='../../kernel/heap.c', target='heap.o')
+env.Program('heap_test', [env.Object('heap_test.c'), heap_obj])

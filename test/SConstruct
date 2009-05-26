@@ -1,0 +1,8 @@
+env = Environment(
+    CC = 'gcc', 
+    CFLAGS = '-g -Wall -Wextra', 
+)
+env.Decider('timestamp-match')
+Export('env')
+
+SConscript(dirs='heap')
