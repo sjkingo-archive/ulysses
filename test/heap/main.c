@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -28,7 +29,7 @@
 
 void *heap_start = NULL;
 
-void test_allocate(size_t bytes)
+void *test_allocate(size_t bytes)
 {
     void *ptr = alloc(bytes);
     if (ptr == NULL) {
@@ -37,6 +38,7 @@ void test_allocate(size_t bytes)
         printf("alloc() gave us block at %p for %d bytes\n", ptr, (int)bytes);
     }
     dump_heap(heap_start);
+    return ptr;
 }
 
 int main(void)
@@ -45,12 +47,13 @@ int main(void)
     heap_start = new_heap(malloc(HEAP_SIZE), HEAP_SIZE);
     printf("heap_start = %p\n", heap_start);
     
-    test_allocate(34);
-    test_allocate(256);
-    test_allocate(10);
-    test_allocate(1);
-    test_allocate(6);
-    test_allocate(23);
+    assert(test_allocate(34) != NULL);
+    assert(test_allocate(256) != NULL);
+    assert(test_allocate(10) != NULL);
+    assert(test_allocate(1) != NULL);
+    assert(test_allocate(6) != NULL);
+    assert(test_allocate(23) != NULL);
+    assert(test_allocate(444) == NULL); /* should fail */
 
     return 0;
 }
