@@ -36,3 +36,14 @@ void do_panic(const char *msg, const char *file, int line)
     line = 0;
     abort();
 }
+
+void add_trace_symbol(const char func_name[], void *addr)
+{
+    return;
+}
+
+/* tasks */
+void free_task(void *task)
+{
+    return;
+}

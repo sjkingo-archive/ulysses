@@ -1,4 +1,4 @@
-subdirs = ['heap', 'test_run']
+subdirs = ['heap', 'sched', 'test_run']
 
 env = Environment(
     CC = 'gcc', 
