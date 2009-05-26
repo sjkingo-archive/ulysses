@@ -9,7 +9,7 @@ from pygments.formatters import HtmlFormatter
 root = '..'
 dirs = ['arch/x86', 'lib', 'kernel', 'include', 'include/ulysses', 'init', 
         'tools', 'test', 'test/heap']
-exts = ['.c', '.asm', '.h', '.sh']
+exts = ['.c', '.asm', '.h', '.sh', '.py']
 
 def output_file(src, dest, title, lexer):
     fp = open(src, 'r')
