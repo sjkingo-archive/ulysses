@@ -1,4 +1,4 @@
-subdirs = ['heap']
+subdirs = ['heap', 'test_run']
 
 env = Environment(
     CC = 'gcc', 
@@ -6,5 +6,8 @@ env = Environment(
 )
 env.Decider('timestamp-match')
 Export('env')
+
+# Get a tuple of the objs and build each test
 objs = SConscript(dirs=subdirs)
-env.Program(objs + [Object('stubs.c')])
+for o in objs:
+    env.Program(o + Object('stubs.c'))

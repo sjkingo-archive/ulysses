@@ -1,0 +1,3 @@
+Import('env')
+objs = list(env.Object('main.c'))
+Return('objs')
