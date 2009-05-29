@@ -81,6 +81,10 @@ void print_startup(void)
     kprintf("Warning: PREEMPT_KERNEL not enabled; kernel tasks must yield\n");
 #endif
 
+#if LOG_COM1
+    kprintf("Sending all log messages to serial device COM1\n");
+#endif
+
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
             kern.mbi->mem_lower, kern.mbi->mem_upper);
     kprintf("Detected 1 CPU(s): %s %s\n", kern.cpu_vendor, kern.cpu_model);

@@ -27,6 +27,7 @@
 #include <ulysses/kheap.h>
 #include <ulysses/multiboot.h>
 #include <ulysses/paging.h>
+#include <ulysses/serial.h>
 #include <ulysses/screen.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/syscall.h>
@@ -97,18 +98,20 @@ void startup_x86(void *mdb, unsigned int magic)
      *
      * The order here is important:
      *  1. Set up the video memory ready for printing
-     *  2. Set kernel load time from CMOS
-     *  3. Save things given to us by multiboot
-     *  4. Load GDT
-     *  5. Load IDT
-     *  6. Enable the A20 address line
-     *  7. Enter protected mode
-     *  8. Activate memory paging
-     *  9. Set up clock timer
-     *  10. Identify the CPU(s) attached to the system
-     *  11. Set up the keyboard driver
+     *  2. Set up COM1 for writing log messages
+     *  3. Set kernel load time from CMOS
+     *  4. Save things given to us by multiboot
+     *  5. Load GDT
+     *  6. Load IDT
+     *  7. Enable the A20 address line
+     *  8. Enter protected mode
+     *  9. Activate memory paging
+     *  10. Set up clock timer
+     *  11. Identify the CPU(s) attached to the system
+     *  12. Set up the keyboard driver
      */
     init_screen(); /* must be before any kprintf() or panic() */
+    init_serial(COM1);
     set_time();
     init_multiboot(mdb, magic);
     init_gdt();
