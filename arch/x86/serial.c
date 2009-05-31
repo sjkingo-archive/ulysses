@@ -21,9 +21,14 @@
 
 #include <sys/types.h>
 
-static int is_transmit_empty(unsigned int port)
+static inline int is_transmit_empty(unsigned int port)
 {
     return inb(port + 5) & 0x20;
+}
+
+static inline int is_receive_empty(unsigned int port)
+{
+    return inb(port + 5) & 1;
 }
 
 void init_serial(unsigned int port)
@@ -42,4 +47,11 @@ void write_serial(unsigned int port, const char c)
     /* Wait until the line is free to write to */
     while (is_transmit_empty(port) == FALSE);
     outb(port, c);
+}
+
+char read_serial(unsigned int port)
+{
+    /* Wait until there is data to read */
+    while (is_receive_empty(port) == FALSE);
+    return inb(port);
 }

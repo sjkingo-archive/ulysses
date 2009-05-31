@@ -111,18 +111,6 @@ static struct {
     flag_t caps_state;
 } buffer;
 
-/* buffer_keypress()
- *  Append the given character to the internal buffer.
- */
-static void buffer_keypress(char key)
-{
-    TRACE_ONCE;
-    if ((buffer.next_append_index + 1) >= KB_BUFFER_SIZE) {
-        buffer.next_append_index = 0;
-    }
-    buffer.keys[buffer.next_append_index++] = key;
-}
-
 void init_keyboard(void)
 {
     TRACE_ONCE;
@@ -220,4 +208,13 @@ void keyboard_handler(registers_t regs)
         default:
             buffer_keypress(key);
     }
+}
+
+void buffer_keypress(char key)
+{
+    TRACE_ONCE;
+    if ((buffer.next_append_index + 1) >= KB_BUFFER_SIZE) {
+        buffer.next_append_index = 0;
+    }
+    buffer.keys[buffer.next_append_index++] = key;
 }

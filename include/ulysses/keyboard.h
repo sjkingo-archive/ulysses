@@ -92,4 +92,9 @@ char next_key(void);
  */
 void keyboard_handler(registers_t regs);
 
+/* buffer_keypress()
+ *  Append the given character to the internal buffer.
+ */
+void buffer_keypress(char key);
+
 #endif
