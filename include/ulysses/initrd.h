@@ -23,9 +23,17 @@ typedef struct {
     unsigned int length;
 } initrd_file_header_t;
 
+struct file {
+    char *name;
+    unsigned int size;
+    void *data;
+};
+
 /* run_initrd()
  *  Runs the initrd, setting up root filesystem.
  */
 void run_initrd(void);
+
+struct file *load_file(char *name);
 
 #endif

@@ -19,6 +19,7 @@
 
 #include <ulysses/cputest.h>
 #include <ulysses/gdt.h>
+#include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shell.h>
@@ -204,11 +205,25 @@ static void cmd_f00f(void)
     kprintf("This CPU doesn't appear to have the f00f bug. Yay!\n");
 }
 
+static void cmd_cat(char **args)
+{
+    TRACE_ONCE;
+    
+    struct file *f = load_file(args[0]);
+    if (f == NULL) {
+        kprintf("cat: %s: No such file\n", args[0]);
+    } else {
+        ((char *)f->data)[f->size++] = '\0';
+        kprintf("%s", (char *)f->data);
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
     { "int", NULL, &cmd_int_80, "Send an interrupt 0x80 (syscall)." },
     { "kill", NULL, &cmd_kill, "Kill a task matching the given process id." },
+    { "cat", NULL, &cmd_cat, "Concatenate the given file to screen." },
 
     { "ver", &print_startup, NULL, "Display kernel version." },
     { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },

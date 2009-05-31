@@ -35,12 +35,6 @@ int nroot_nodes;
 
 struct dirent dirent;
 
-struct file {
-    char *name;
-    unsigned int size;
-    void *data;
-};
-
 static unsigned int initrd_read(fs_node_t *node, unsigned int offset, 
         unsigned int size, unsigned char *buffer)
 {
@@ -96,7 +90,7 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
     return 0;
 }
 
-static struct file *load_file(char *name)
+struct file *load_file(char *name)
 {
     struct file *f;
     fs_node_t *node;
