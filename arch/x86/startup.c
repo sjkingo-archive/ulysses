@@ -106,8 +106,8 @@ void startup_x86(void *mdb, unsigned int magic)
      *  7. Enable the A20 address line
      *  8. Enter protected mode
      *  9. Activate memory paging
-     *  10. Set up clock timer
-     *  11. Identify the CPU(s) attached to the system
+     *  10. Identify the CPU(s) attached to the system
+     *  11. Set up clock timer
      *  12. Set up the keyboard driver
      */
     init_screen(); /* must be before any kprintf() or panic() */
@@ -119,8 +119,8 @@ void startup_x86(void *mdb, unsigned int magic)
     init_a20(); /* see flush.s */
     enter_pm(); /* see flush.s */
     init_paging();
-    init_timer(TIMER_FREQ);
     get_cpuid();
+    init_timer(TIMER_FREQ);
     init_keyboard();
 
     /* And finally, enable interrupts */

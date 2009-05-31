@@ -8,8 +8,6 @@
 #define CLOCK 1193180
 #define TIMER_FREQ 1000
 
-unsigned long ticks;
-
 /* init_timer()
  *  Activate the timer on IRQ0.
  */

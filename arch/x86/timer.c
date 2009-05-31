@@ -24,6 +24,8 @@
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
+static unsigned long ticks;
+
 void timer_tick(registers_t regs)
 {
     TRACE_ONCE;
@@ -50,4 +52,9 @@ void init_timer(unsigned int freq)
     outb(0x43, 0x36); /* command byte */
     outb(0x40, (unsigned char)(div & 0xFF));
     outb(0x40, (unsigned char)((div >> 8) & 0xFF));
+}
+
+unsigned long get_ticks(void)
+{
+    return ticks;
 }

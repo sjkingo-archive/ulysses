@@ -125,4 +125,5 @@ void get_cpuid(void)
     TRACE_ONCE;
     kern.cpu_vendor = vendor_id();
     kern.cpu_model = model_id();
+    kern.cpu_freq = 0;
 }

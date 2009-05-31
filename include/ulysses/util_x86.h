@@ -22,4 +22,14 @@ static inline unsigned char inb(unsigned int port)
     return b;
 }
 
+/* Read the current value of the read time-stamp counter on the CPU
+ * and return it as a 64-bit wide int for high-resolution time
+ */
+static inline unsigned long long rdtsc(void)
+{
+    unsigned int a, d;
+    __asm__ __volatile__("rdtsc" : "=a" (a), "=d" (d));
+    return ((unsigned long long)a) | (((unsigned long long)d) << 32);
+}
+
 #endif

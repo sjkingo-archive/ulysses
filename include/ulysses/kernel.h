@@ -29,6 +29,7 @@ struct kernel {
 
     char *cpu_vendor; /* VendorID of CPU */
     char *cpu_model; /* Model name of CPU */
+    unsigned int cpu_freq; /* Frequency in MHz of CPU */
 
     struct datetime startup_datetime;
     struct timeval loaded_time; /* time when kernel was first loaded */
