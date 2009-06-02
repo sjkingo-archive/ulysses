@@ -1,6 +1,7 @@
 #ifndef _ULYSSES_SYSCALL_H
 #define _ULYSSES_SYSCALL_H
 
+#include <ulysses/isr.h>
 #include <sys/types.h>
 
 /* Macros to make the actual system calls with different number of args */
