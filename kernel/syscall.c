@@ -27,6 +27,7 @@
  *   3. Add an entry to the syscall table.
  */
 
+#include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
@@ -50,6 +51,7 @@ struct syscall_entry syscalls[] = {
     { SYS_GETUID, &sys_getuid, },
     { SYS_GETPID, &sys_getpid, },
     { SYS_FORK, &sys_fork, },
+    { SYS_MSUPTIME, &sys_msuptime, },
     { 0, NULL }, /* sentinel entry; do not remove */
 };
 
@@ -143,4 +145,10 @@ int sys_fork(void)
 {
     TRACE_ONCE;
     return do_fork();
+}
+
+unsigned long sys_msuptime(void)
+{
+    TRACE_ONCE;
+    return kern.current_time_offset.tv_msec;
 }

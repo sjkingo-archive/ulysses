@@ -131,4 +131,16 @@ static inline pid_t fork(void)
     return (pid_t)__r;
 }
 
+/* sys_msuptime()
+ *  Returns the current kernel uptime in microseconds.
+ */
+#define SYS_MSUPTIME 10
+unsigned long sys_msuptime(void);
+static inline unsigned long msuptime(void)
+{
+    unsigned long __r;
+    syscall0(SYS_MSUPTIME);
+    return __r;
+}
+
 #endif
