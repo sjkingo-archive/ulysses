@@ -42,12 +42,6 @@ extern char *last_cmds[];
 /* sched.c; needed for cmd_ps */
 extern struct queue tasks_queue;
 
-static void cmd_test(char **args)
-{
-    TRACE_ONCE;
-    kprintf("test with args %s\n", *args);
-}
-
 static void cmd_uptime(void)
 {
     TRACE_ONCE;
@@ -176,21 +170,6 @@ static void cmd_dummy(void)
     dummy();
 }
 
-static void kt_pf(void)
-{
-    TRACE_ONCE;
-    __asm__ __volatile__("jmp 0x0");
-}
-
-static void cmd_kt_pf(void)
-{
-    TRACE_ONCE;
-    unsigned short i;
-    for (i = 0; i < 3; i++) {
-        kthread_create(kt_pf, "kt_pf");
-    }
-}
-
 static void kt_bomb(void)
 {
     while (1) kthread_yield();
@@ -262,11 +241,13 @@ static void cmd_ring3(void)
 
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
-    { "test", NULL, &cmd_test, NULL },
+    /* Commands that take arguments */
     { "int", NULL, &cmd_int_80, "Send an interrupt 0x80 (syscall)." },
     { "kill", NULL, &cmd_kill, "Kill a task matching the given process id." },
-    { "cat", NULL, &cmd_cat, "Concatenate the given file to screen." },
+    { "cat", NULL, &cmd_cat, "Concatenate the contents of the given filename "
+            "to screen." },
 
+    /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },
     { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },
     { "uptime_loop", &cmd_uptime_loop, NULL, "Output current kernel uptime forever." },
@@ -280,8 +261,6 @@ struct shell_command cmds[] = {
     { "help", &cmd_help, NULL, "Display this help information." },
     { "exit", &cmd_exit, NULL, "Cause the shell to exit." },
     { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
-    { "kt_pf", &cmd_kt_pf, NULL, "Run a kthreads test where each thread will "
-            "trigger a page fault." },
     { "kt_bomb", &cmd_kt_bomb, NULL, "Spawn kernel threads until the OS "
             "crashes." },
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
@@ -290,9 +269,5 @@ struct shell_command cmds[] = {
     { "sched", &cmd_sched, NULL, "Display scheduling information." },
     { "ring3", &cmd_ring3, NULL, "Run a test in user mode." },
     
-    { "init_task()", &init_task, NULL, NULL },
-    { "fork()", &do_fork, NULL, NULL },
-    { "switch_to_ring3()", &switch_to_ring3, NULL, NULL },
-
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };
