@@ -21,6 +21,7 @@
 #include <ulysses/initrd.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kthread.h>
+#include <ulysses/kprintf.h>
 #include <ulysses/sched.h>
 #include <ulysses/shell.h>
 #include <ulysses/syscall.h>
@@ -28,31 +29,17 @@
 #include <ulysses/trace.h>
 
 #include <string.h>
-#include <unistd.h>
 
 extern __volatile__ task_t *current_task; /* task.c */
 static pid_t kthreadd_pid;
-
-static void test_ring3(void)
-{
-    TRACE_ONCE;
-    char *msg = "Hello via SYS_WRITE in usermode; now going into a busy "
-            "loop to test preemption.";
-    unsigned int len = strlen(msg);
-
-    switch_to_ring3();
-    dummy();
-    write(STDOUT_FILENO, msg, len);
-    while (1); /* spin a bit */
-}
 
 void kthreadd(void)
 {
     TRACE_ONCE;
     kthreadd_pid = do_getpid();
+    kprintf("kthreadd: running with pid %d\n", kthreadd_pid);
     kthread_create(run_initrd, "initrd");
     kthread_create(run_shell, "shell");
-    kthread_create(test_ring3, "test_ring3");
     while (1) kthread_yield(); /* waiting for work */
 }
 

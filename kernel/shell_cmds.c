@@ -33,6 +33,8 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 /* shell.c; needed for cmd_history */
 extern char *last_cmds[];
@@ -239,6 +241,25 @@ static void cmd_cat(char **args)
     }
 }
 
+static void kt_ring3(void)
+{
+    TRACE_ONCE;
+    char *msg = "Hello via SYS_WRITE in usermode; now going into a busy "
+            "loop to test preemption.";
+    unsigned int len = strlen(msg);
+
+    switch_to_ring3();
+    dummy();
+    write(STDOUT_FILENO, msg, len);
+    while (1); /* spin a bit */
+}
+
+static void cmd_ring3(void)
+{
+    TRACE_ONCE;
+    kthread_create(kt_ring3, "ring3");
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     { "test", NULL, &cmd_test, NULL },
@@ -267,6 +288,7 @@ struct shell_command cmds[] = {
     { "errno", &cmd_errno, NULL, "Output the value of errno." },
     { "f00f", &cmd_f00f, NULL, "The Four Bytes Of The Apocalypse." },
     { "sched", &cmd_sched, NULL, "Display scheduling information." },
+    { "ring3", &cmd_ring3, NULL, "Run a test in user mode." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &do_fork, NULL, NULL },
