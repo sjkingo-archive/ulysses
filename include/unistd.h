@@ -17,5 +17,12 @@
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
+/* sleep()
+ *  Sleep for (at least) the given number of microseconds, but no less than.
+ *  This is not always accurate, as it relies on the timer being of high
+ *  enough precision to measure small units of microseconds.
+ */
+inline void sleep(unsigned long msecs);
+
 #endif
 
