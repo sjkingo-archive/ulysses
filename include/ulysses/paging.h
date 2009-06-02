@@ -45,7 +45,7 @@ void init_paging(void);
 /* page_fault()
  *  Handler for CPU interrupt 14.
  */
-void page_fault(registers_t regs);
+void page_fault(registers_t *regs);
 
 /* get_page()
  *  Return the page entry matching the given *virtual* address from page

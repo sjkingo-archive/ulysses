@@ -90,7 +90,7 @@ char next_key(void);
  *   Handler callback for IRQ1. Reads the scancode from the PIC and maps
  *   it to a key.
  */
-void keyboard_handler(registers_t regs);
+void keyboard_handler(registers_t *regs);
 
 /* buffer_keypress()
  *  Append the given character to the internal buffer.

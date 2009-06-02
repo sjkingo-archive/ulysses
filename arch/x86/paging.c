@@ -201,19 +201,19 @@ void init_paging(void)
     switch_page_dir(current_directory);
 }
 
-void page_fault(registers_t regs)
+void page_fault(registers_t *regs)
 {
     /* Get the faulting address from the CR2 register */
     unsigned int faulting_addr;
     __asm__ __volatile("mov %%cr2, %0" : "=r" (faulting_addr));
 
     /* Print some info */
-    kprintf("Page fault at %p with error %d:\n", faulting_addr, regs.err_code);
-    if (!(regs.err_code & 0x1)) kprintf("\tpage not present \n");
-    if (regs.err_code & 0x2) kprintf("\twrite operation\n");
-    if (regs.err_code & 0x4) kprintf("\t!ring 0\n");
-    if (regs.err_code & 0x8) kprintf("\tcorrupted page entry\n");
-    if (regs.err_code & 0x10) kprintf("\tcaused by instruction fetch\n");
+    kprintf("Page fault at %p with error %d:\n", faulting_addr, regs->err_code);
+    if (!(regs->err_code & 0x1)) kprintf("\tpage not present \n");
+    if (regs->err_code & 0x2) kprintf("\twrite operation\n");
+    if (regs->err_code & 0x4) kprintf("\t!ring 0\n");
+    if (regs->err_code & 0x8) kprintf("\tcorrupted page entry\n");
+    if (regs->err_code & 0x10) kprintf("\tcaused by instruction fetch\n");
 }
 
 page_dir_t *clone_dir(page_dir_t *src)

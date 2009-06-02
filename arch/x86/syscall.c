@@ -27,7 +27,7 @@
 extern struct syscall_entry syscalls[];
 extern unsigned int num_syscalls;
 
-void syscall_handler(registers_t regs)
+void syscall_handler(registers_t *regs)
 {
     TRACE_ONCE;
     struct syscall_entry sc;
@@ -36,7 +36,7 @@ void syscall_handler(registers_t regs)
     /* Find a matching system call in the table */
     unsigned int i = 0;
     while (syscalls[i].func_addr != NULL) {
-        if (syscalls[i].num == regs.eax) {
+        if (syscalls[i].num == regs->eax) {
             sc = syscalls[i];
             break;
         }
@@ -45,7 +45,7 @@ void syscall_handler(registers_t regs)
 
     /* Make sure we've found a valid system call */
     if (i >= num_syscalls) {
-        kprintf("Invalid system call %d\n", regs.eax);
+        kprintf("Invalid system call %d\n", regs->eax);
         return;
     }
 
@@ -64,10 +64,10 @@ void syscall_handler(registers_t regs)
             pop %%ebx;      \
             pop %%ebx;      \
             pop %%ebx;"
-            : "=a" (ret) : "r" (regs.edi), "r" (regs.esi), "r" (regs.edx),
-            "r" (regs.ecx), "r" (regs.ebx), "r" (sc.func_addr));
+            : "=a" (ret) : "r" (regs->edi), "r" (regs->esi), "r" (regs->edx),
+            "r" (regs->ecx), "r" (regs->ebx), "r" (sc.func_addr));
 
     /* Place the return value in eax so we can pass it back to usermode */
-    regs.eax = ret;
+    regs->eax = ret;
 }
 

@@ -29,10 +29,10 @@
 static unsigned long ticks;
 static unsigned int tick_interval;
 
-void timer_tick(registers_t regs)
+void timer_tick(registers_t *regs)
 {
     TRACE_ONCE;
-    if (regs.int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
+    if (regs->int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
     
     /* A timer tick occurs every x milliseconds, so add that interval to the
      * kernel's msec counter.

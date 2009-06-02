@@ -15,6 +15,6 @@ void init_timer(unsigned int freq);
 /* timer_tick()
  *  Interrupt vector for a timer tick.
  */
-void timer_tick(registers_t regs);
+void timer_tick(registers_t *regs);
 
 #endif

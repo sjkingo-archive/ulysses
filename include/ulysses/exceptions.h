@@ -22,7 +22,7 @@ struct cpu_exception {
     short num;
     char *name;
     unsigned short action;
-    void (*handler)(registers_t);
+    void (*handler)(registers_t *);
 };
 
 #include <ulysses/keyboard.h>

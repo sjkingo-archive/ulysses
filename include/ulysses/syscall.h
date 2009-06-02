@@ -24,7 +24,7 @@ struct syscall_entry {
  *  The interrupt vector for int 80. This looks up the syscall number from
  *  the eax register and dispatches the required system call.
  */
-void syscall_handler(registers_t regs);
+void syscall_handler(registers_t *regs);
 
 /* Declarations for the actual system calls */
 

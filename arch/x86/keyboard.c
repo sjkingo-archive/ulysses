@@ -131,7 +131,7 @@ char next_key(void)
     return buffer.keys[buffer.next_read_index++];
 }
 
-void keyboard_handler(registers_t regs)
+void keyboard_handler(registers_t *regs)
 {
     TRACE_ONCE;
     unsigned int scancode = inb(0x60); /* read the scancode */

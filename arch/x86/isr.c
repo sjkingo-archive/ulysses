@@ -53,7 +53,7 @@ static inline void handle_exception(struct cpu_exception exc)
     }
 }
 
-static inline flag_t lookup_exception(registers_t regs)
+static inline flag_t lookup_exception(registers_t *regs)
 {
     TRACE_ONCE;
 
@@ -61,7 +61,7 @@ static inline flag_t lookup_exception(registers_t regs)
     int i = 0;
 
     while (exceptions[i].name != NULL) {
-        if (exceptions[i].num == (short)regs.int_no) {
+        if (exceptions[i].num == (short)regs->int_no) {
             exc = exceptions[i];
             if (exc.handler != NULL) {
                 exc.handler(regs);
@@ -97,7 +97,7 @@ void isr_handler(registers_t regs)
 #endif
 
     /* Lookup and handle the exception */
-    if (!lookup_exception(regs)) {
+    if (!lookup_exception(&regs)) {
         panic("Unknown exception");
     }
 }
@@ -119,5 +119,5 @@ void irq_handler(registers_t regs)
      * the return value of this in case a handler could not be found, but
      * since we don't care about most IRQs: ignore it.
      */
-    lookup_exception(regs);
+    lookup_exception(&regs);
 }
