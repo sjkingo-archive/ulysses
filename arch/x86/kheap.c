@@ -35,7 +35,7 @@ unsigned int placement_address;
  */
 heap_t *kheap = 0;
 
-static unsigned char header_t_less_than(void*a, void *b)
+static char header_t_less_than(void *a, void *b)
 {
     return (((header_t *)a)->size < ((header_t *)b)->size) ? 1 : 0;
 }
