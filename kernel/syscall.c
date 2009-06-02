@@ -147,7 +147,7 @@ int sys_fork(void)
     return do_fork();
 }
 
-unsigned long sys_msuptime(void)
+mseconds_t sys_msuptime(void)
 {
     TRACE_ONCE;
     return kern.current_time_offset.tv_msec;

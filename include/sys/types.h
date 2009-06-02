@@ -1,7 +1,9 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
-#include <unistd.h> /* for NULL */
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
 
 #define TRUE 1
 #define FALSE 0
@@ -15,8 +17,9 @@ typedef int pid_t; /* process id */
 typedef unsigned char flag_t; /* 0/1 logical flag */
 
 typedef long time_t; /* time in sec since epoch */
-typedef long useconds_t; /* time in microseconds since epoch */
-typedef long suseconds_t; /* time in microseconds since epoch */
+typedef unsigned long mseconds_t; /* time in milliseconds */
+typedef unsigned long useconds_t; /* time in microseconds (unsigned) */
+typedef long suseconds_t; /* time in microseconds (signed) */
 
 #endif
 

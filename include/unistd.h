@@ -1,6 +1,7 @@
-
 #ifndef _UNISTD_H
 #define _UNISTD_H
+
+#include <sys/types.h>
 
 #define _POSIX_VERSION 200112L /* conforms to IEEE 1003.1-2001 */
 
@@ -18,11 +19,10 @@
 #define STDERR_FILENO 2
 
 /* sleep()
- *  Sleep for (at least) the given number of microseconds, but no less than.
+ *  Sleep for (at least) the given number of milliseconds, but no less than.
  *  This is not always accurate, as it relies on the timer being of high
- *  enough precision to measure small units of microseconds.
+ *  enough precision to measure small units of milliseconds.
  */
-inline void sleep(unsigned long msecs);
+inline void sleep(mseconds_t msecs);
 
 #endif
-
