@@ -70,3 +70,4 @@ void syscall_handler(registers_t regs)
     /* Place the return value in eax so we can pass it back to usermode */
     regs.eax = ret;
 }
+

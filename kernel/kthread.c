@@ -41,7 +41,7 @@ static void test_ring3(void)
     unsigned int len = strlen(msg);
 
     switch_to_ring3();
-    syscall0(SYS_DUMMY);
+    dummy();
     write(STDOUT_FILENO, msg, len);
     while (1); /* spin a bit */
 }

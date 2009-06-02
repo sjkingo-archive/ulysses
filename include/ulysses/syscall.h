@@ -3,16 +3,16 @@
 
 /* Macros to make the actual system calls with different number of args */
 #define syscall0(num) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num)); }
+    __asm__ __volatile__("int $0x80" : "=a" (__r) : "0" (num));
 #define syscall1(num, arg1) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
-            "b" ((int)arg1)); }
+    __asm__ __volatile__("int $0x80" : "=a" (__r) : "0" (num), \
+            "b" ((int)arg1));
 #define syscall2(num, arg1, arg2) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
-            "b" ((int)arg1), "c" ((int)arg2)); }
+    __asm__ __volatile__("int $0x80" : "=a" (__r) : "0" (num), \
+            "b" ((int)arg1), "c" ((int)arg2));
 #define syscall3(num, arg1, arg2, arg3) \
-    { int __a; __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (num), \
-            "b" ((int)arg1), "c" ((int)arg2), "d" ((int)arg3)); }
+    __asm__ __volatile__("int $0x80" : "=a" (__r) : "0" (num), \
+            "b" (arg1), "c" (arg2), "d" (arg3));
 
 /* An entry in the system call table */
 struct syscall_entry {
@@ -33,6 +33,11 @@ void syscall_handler(registers_t regs);
  */
 #define SYS_DUMMY 0
 int sys_dummy(void);
+static inline void dummy(void)
+{
+    int __r;
+    syscall0(SYS_DUMMY);
+}
 
 /* sys_exit()
  *  Terminates the calling task "immediately". In reality this will only 
@@ -40,8 +45,12 @@ int sys_dummy(void);
  *  next time it appears as the head in the scheduling queue.
  */
 #define SYS_EXIT 1
-#define exit() syscall0(SYS_EXIT)
 int sys_exit(void);
+static inline void exit(void)
+{
+    int __r;
+    syscall0(SYS_EXIT);
+}
 
 /* sys_shutdown()
  *  Shut down the system now. The kernel may refuse this if the owning user
@@ -56,8 +65,13 @@ int sys_shutdown(void);
  *  if the buffer was smaller).
  */
 #define SYS_WRITE 3
-#define write(fd, buf, count) syscall3(SYS_WRITE, fd, buf, count)
 int sys_write(int fd, const char *buf, size_t count);
+static inline int write(int fd, char *buf, int bytes)
+{
+    int __r;
+    syscall3(SYS_WRITE, fd, (int)buf, bytes);
+    return __r;
+}
 
 /* sys_read(fd, buf, count)
  *  Read up to count bytes from file descriptor fd into the buffer pointed to
@@ -65,32 +79,54 @@ int sys_write(int fd, const char *buf, size_t count);
  *  count).
  */
 #define SYS_READ 4
-#define read(fd, buf, count) syscall3(SYS_READ, fd, buf, count)
 int sys_read(int fd, char *buf, size_t count);
+static inline int read(int fd, char *buf, size_t count)
+{
+    int __r;
+    syscall3(SYS_READ, fd, (int)buf, count);
+    return __r;
+}
 
 /* Reserved for future use */
 #define SYS_OPEN 5
+int sys_open(void);
 #define SYS_CLOSE 6
+int sys_close(void);
 
 /* sys_getuid()
  *  Returns the user id of the calling process.
  */
 #define SYS_GETUID 7
-#define getuid() syscall0(SYS_GETUID)
 int sys_getuid(void);
+static inline int getuid(void)
+{
+    int __r;
+    syscall0(SYS_GETUID);
+    return __r;
+}
 
 /* sys_getpid()
  *  Returns the process id of the calling process.
  */
 #define SYS_GETPID 8
-#define getpid() syscall0(SYS_GETPID)
 int sys_getpid(void);
+static inline int getpid(void)
+{
+    int __r;
+    syscall0(SYS_GETPID);
+    return __r;
+}
 
 /* sys_fork()
  *  Fork the calling process.
  */
 #define SYS_FORK 9
-#define fork() syscall0(SYS_FORK)
 int sys_fork(void);
+static inline int fork(void)
+{
+    int __r;
+    syscall0(SYS_FORK);
+    return __r;
+}
 
 #endif

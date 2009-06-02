@@ -163,7 +163,7 @@ static void cmd_kt_test(void)
 static void cmd_dummy(void)
 {
     TRACE_ONCE;
-    syscall0(SYS_DUMMY);
+    dummy();
 }
 
 static void kt_pf(void)

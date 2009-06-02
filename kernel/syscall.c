@@ -45,6 +45,10 @@ struct syscall_entry syscalls[] = {
     { SYS_SHUTDOWN, &sys_shutdown, },
     { SYS_WRITE, &sys_write, },
     { SYS_READ, &sys_read, },
+    { SYS_OPEN, &sys_open, },
+    { SYS_CLOSE, &sys_close, },
+    { SYS_GETUID, &sys_getuid, },
+    { SYS_GETPID, &sys_getpid, },
     { SYS_FORK, &sys_fork, },
     { 0, NULL }, /* sentinel entry; do not remove */
 };
@@ -91,12 +95,13 @@ int sys_write(int fd, const char *buf, size_t count)
         errno = EBADF;
         return -1;
     }
-    
+
     len = strlen(buf);
+    if (len < count) {
+        count = len;
+    }
+
     for (i = 0; i < count; i++) {
-        if (i >= len) {
-            break;
-        }
         append_char(buf[i], TRUE, FALSE);
     }
 
@@ -107,6 +112,18 @@ int sys_read(int fd, char *buf, size_t count)
 {
     TRACE_ONCE;
     errno = EBADF;
+    return -1;
+}
+
+int sys_open(void)
+{
+    TRACE_ONCE;
+    return -1;
+}
+
+int sys_close(void)
+{
+    TRACE_ONCE;
     return -1;
 }
 
