@@ -35,6 +35,6 @@ struct kernel {
     struct timeval loaded_time; /* time when kernel was first loaded */
     struct timeval current_time_offset; /* current time since loaded_time */
 };
-struct kernel kern;
+extern struct kernel kern;
 
 #endif

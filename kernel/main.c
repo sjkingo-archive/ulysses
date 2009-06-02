@@ -34,6 +34,8 @@
 
 #include <sys/types.h>
 
+struct kernel kern;
+
 #ifdef _ARCH_x86
 extern void startup_x86(void *, int);
 #endif
