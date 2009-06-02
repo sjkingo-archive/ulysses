@@ -19,14 +19,29 @@
  */
 #define PREEMPT_KERNEL 1
 
+/* TIMER_FREQ
+ *  Frequency to run the system timer at, in hertz. The higher the frequency,
+ *  the more often the timer will tick, and the operating system will be more
+ *  responsive. The frequency range of the PIT is fixed at [18..1000] Hz.
+ *
+ *  1000 Hz = every 1 ms (highest possible)
+ *  250 Hz  = every 4 ms
+ *  100 Hz  = every 10 ms
+ *  50 Hz   = every 50 ms
+ *  18 Hz   = every 55 ms (lowest possible)
+ */
+#define TIMER_FREQ 1000
+
 /* SCHED_DEBUG
  * TASK_DEBUG
  * INTERRUPT_DEBUG
+ * TIMER_DEBUG
  *  Whether or not to be verbose in logging.
  */
 #define SCHED_DEBUG 0
 #define TASK_DEBUG 0
 #define INTERRUPT_DEBUG 0
+#define TIMER_DEBUG 0
 
 /* LOG_COM1
  *  If this is set to 1, the kernel will duplicate any output to the log VT

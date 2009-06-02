@@ -49,7 +49,9 @@ static void cmd_test(char **args)
 static void cmd_uptime(void)
 {
     TRACE_ONCE;
-    kprintf("up %d seconds\n", kern.current_time_offset.tv_sec);
+    kprintf("up %d seconds (%d milliseconds)\n", 
+            kern.current_time_offset.tv_sec, 
+            kern.current_time_offset.tv_msec);
 }
 
 static void cmd_comefrom(void)
@@ -98,6 +100,17 @@ static void cmd_ps(void)
             kprintf("%d\t[%s]", t->kthread->state, t->name);
         }
         kprintf(" (%d)\n", t->ring);
+        t = t->next;
+    }
+}
+
+static void cmd_sched(void)
+{
+    TRACE_ONCE;
+    kprintf("CPU (s)\tNAME\n");
+    task_t *t = tasks_queue.head;
+    while (t != NULL) {
+        kprintf("%d\t%s\n", t->cpu_time, t->name);
         t = t->next;
     }
 }
@@ -244,6 +257,7 @@ struct shell_command cmds[] = {
     { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     { "errno", &cmd_errno, NULL, "Output the value of errno." },
     { "f00f", &cmd_f00f, NULL, "The Four Bytes Of The Apocalypse." },
+    { "sched", &cmd_sched, NULL, "Display scheduling information." },
     
     { "init_task()", &init_task, NULL, NULL },
     { "fork()", &do_fork, NULL, NULL },

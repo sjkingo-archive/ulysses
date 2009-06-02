@@ -17,7 +17,9 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "../../config.h"
 #include <ulysses/kernel.h>
+#include <ulysses/kprintf.h>
 #include <ulysses/timer.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
@@ -25,20 +27,31 @@
 #include <ulysses/util.h>
 
 static unsigned long ticks;
+static unsigned int tick_interval;
 
 void timer_tick(registers_t regs)
 {
     TRACE_ONCE;
     if (regs.int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
+    
+    /* A timer tick occurs every x milliseconds, so add that interval to the
+     * kernel's msec counter.
+     */
     ticks++;
+    kern.current_time_offset.tv_msec += tick_interval;
 
-    /* Increment every second */
-    if ((ticks % TIMER_FREQ) == 0) {
+    /* Update the kernel's second counter every second (1000 ms) */
+    if ((kern.current_time_offset.tv_msec % 1000) == 0) {
         kern.current_time_offset.tv_sec++;
         update_cpu_time();
+        sanity_check();
+#if TIMER_DEBUG
+        kprintf("timer_tick(): %ds (%dms) has passed since PIT init\n", 
+                kern.current_time_offset.tv_sec,
+                kern.current_time_offset.tv_msec);
+#endif
     }
 
-    sanity_check();
     check_current_task();
 }
 
@@ -46,6 +59,7 @@ void init_timer(unsigned int freq)
 {
     TRACE_ONCE;
     ticks = 0;
+    tick_interval = 1000 / TIMER_FREQ; /* timer ticks every x msecs */
 
     /* Initialise the timer */
     unsigned int div = CLOCK / freq;
