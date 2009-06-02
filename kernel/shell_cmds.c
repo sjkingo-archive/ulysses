@@ -54,6 +54,14 @@ static void cmd_uptime(void)
             kern.current_time_offset.tv_msec);
 }
 
+static void cmd_uptime_loop(void)
+{
+    TRACE_ONCE;
+    while (1) {
+        cmd_uptime();
+    }
+}
+
 static void cmd_comefrom(void)
 {
     TRACE_ONCE;
@@ -240,6 +248,7 @@ struct shell_command cmds[] = {
 
     { "ver", &print_startup, NULL, "Display kernel version." },
     { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },
+    { "uptime_loop", &cmd_uptime_loop, NULL, "Output current kernel uptime forever." },
     { "halt", &shutdown, NULL, "Shut down the operating system." },
     { "COMEFROM", &cmd_comefrom, NULL, NULL },
     { "dump_tasks", &dump_all_tasks, NULL, "Dump scheduling queue information." },
