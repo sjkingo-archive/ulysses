@@ -1,6 +1,8 @@
 #ifndef _ULYSSES_SYSCALL_H
 #define _ULYSSES_SYSCALL_H
 
+#include <sys/types.h>
+
 /* Macros to make the actual system calls with different number of args */
 #define syscall0(num) \
     __asm__ __volatile__("int $0x80" : "=a" (__r) : "0" (num));
@@ -66,11 +68,11 @@ int sys_shutdown(void);
  */
 #define SYS_WRITE 3
 int sys_write(int fd, const char *buf, size_t count);
-static inline int write(int fd, char *buf, int bytes)
+static inline ssize_t write(int fd, const char *buf, size_t bytes)
 {
     int __r;
     syscall3(SYS_WRITE, fd, (int)buf, bytes);
-    return __r;
+    return (ssize_t)__r;
 }
 
 /* sys_read(fd, buf, count)
@@ -80,11 +82,11 @@ static inline int write(int fd, char *buf, int bytes)
  */
 #define SYS_READ 4
 int sys_read(int fd, char *buf, size_t count);
-static inline int read(int fd, char *buf, size_t count)
+static inline ssize_t read(int fd, char *buf, size_t count)
 {
     int __r;
     syscall3(SYS_READ, fd, (int)buf, count);
-    return __r;
+    return (ssize_t)__r;
 }
 
 /* Reserved for future use */
@@ -98,11 +100,11 @@ int sys_close(void);
  */
 #define SYS_GETUID 7
 int sys_getuid(void);
-static inline int getuid(void)
+static inline uid_t getuid(void)
 {
     int __r;
     syscall0(SYS_GETUID);
-    return __r;
+    return (uid_t)__r;
 }
 
 /* sys_getpid()
@@ -110,11 +112,11 @@ static inline int getuid(void)
  */
 #define SYS_GETPID 8
 int sys_getpid(void);
-static inline int getpid(void)
+static inline pid_t getpid(void)
 {
     int __r;
     syscall0(SYS_GETPID);
-    return __r;
+    return (pid_t)__r;
 }
 
 /* sys_fork()
@@ -122,11 +124,11 @@ static inline int getpid(void)
  */
 #define SYS_FORK 9
 int sys_fork(void);
-static inline int fork(void)
+static inline pid_t fork(void)
 {
     int __r;
     syscall0(SYS_FORK);
-    return __r;
+    return (pid_t)__r;
 }
 
 #endif
