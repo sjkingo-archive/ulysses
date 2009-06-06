@@ -129,4 +129,9 @@ void set_current_ring3(void);
  */
 void update_cpu_time(void);
 
+/* change_name()
+ *  Change the name of the callee task to that given by new_name.
+ */
+void change_name(const char *new_name);
+
 #endif

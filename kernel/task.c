@@ -370,3 +370,11 @@ void update_cpu_time(void)
     TRACE_ONCE;
     current_task->cpu_time++;
 }
+
+void change_name(const char *new_name)
+{
+    TRACE_ONCE;
+    kfree(current_task->name);
+    current_task->name = (char *)kmalloc(strlen(new_name) + 1);
+    strcpy(current_task->name, new_name);
+}

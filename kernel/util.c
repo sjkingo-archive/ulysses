@@ -17,22 +17,71 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "../config.h"
 #include <ulysses/cputest.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/multiboot.h>
+#include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
-#include "../config.h"
+#include <string.h>
+
+/* check_init(void)
+ *  Check to make sure init is running, and restart it if not.
+ */
+static void check_init(void)
+{
+    static unsigned short i = 0;
+    task_t *init;
+
+    /* Don't just keep spinning and restarting init if it keeps dieing */
+    if (i == 4) {
+        panic("Giving up trying to restart init");
+    }
+
+    /* Get init's task and make sure it is valid */
+    init = get_task(kern.init_pid);
+    if (init == NULL || strcmp(init->name, "init") != 0) {
+        kprintf("sanity_check(): init not running, trying to (re)start it\n");
+        start_init();
+        i++;
+    }
+}
+
+/* run_init()
+ *  init "task". Currently does nothing.
+ */
+static void run_init(void)
+{
+    TRACE_ONCE;
+    kern.init_pid = do_getpid();
+    change_name("init");
+    kprintf("init(): running with pid %d\n", kern.init_pid);
+    while (1);
+}
+
+void start_init(void)
+{
+    TRACE_ONCE;
+    pid_t pid = do_fork();
+    if (pid == 0) {
+        run_init();
+        task_exit();
+    }
+}
 
 /* just kidding Dijkstra */
 #define COMEFROM goto
 void sanity_check(void)
 {
     TRACE_ONCE;
+
+    check_init();
 
     /* ... maybe not */
 #ifdef COMEFROM

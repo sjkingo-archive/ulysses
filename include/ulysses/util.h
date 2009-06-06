@@ -5,6 +5,12 @@
 
 #include <ulysses/util_x86.h>
 
+/* start_init()
+ *  Forks the callee and starts the init task. The kernel should be the only
+ *  task that calls this.
+ */
+void start_init(void);
+
 /* sanity_check()
  *  Perform a sanity check of the kernel's data structures and physical memory
  *  locations. If anything fails the check, a panic() will be issued.

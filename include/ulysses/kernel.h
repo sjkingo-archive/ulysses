@@ -12,6 +12,7 @@
 #include <ulysses/multiboot.h>
 
 #include <sys/time.h>
+#include <sys/types.h>
 
 /* Ensure a valid architecture was declared */
 #ifndef _ARCH_x86
@@ -34,6 +35,8 @@ struct kernel {
     struct datetime startup_datetime;
     struct timeval loaded_time; /* time when kernel was first loaded */
     struct timeval current_time_offset; /* current time since loaded_time */
+
+    pid_t init_pid;
 };
 extern struct kernel kern;
 
