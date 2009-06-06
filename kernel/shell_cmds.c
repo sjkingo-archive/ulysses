@@ -87,7 +87,7 @@ static void cmd_int_80(char **args)
     TRACE_ONCE;
     int a, num;
     
-    num = strtol(*args, NULL, 10);
+    num = strtol(args[0], NULL, 10);
     __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (num));
 }
 
@@ -196,7 +196,7 @@ static void cmd_errno(void)
 static void cmd_kill(char **args)
 {
     TRACE_ONCE;
-    pid_t pid = (pid_t)strtol(*args, NULL, 10);
+    pid_t pid = (pid_t)strtol(args[0], NULL, 10);
     kill_task(pid);
 }
 
