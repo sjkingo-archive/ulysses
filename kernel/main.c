@@ -96,7 +96,6 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     kthread_create(kthreadd, "kthreadd");
     
     /* XXX this is where we would load init process off the initrd */
-    start_init();
 
     /* And we're done. */
     kprintf("Kernel startup complete in %ds (%dms)\n", 
