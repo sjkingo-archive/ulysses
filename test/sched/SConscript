@@ -2,7 +2,6 @@ Import('env')
 sched_env = Environment(
     CC='gcc',
     CFLAGS='-g -Wall -Wextra -isystem ../include', # relative to test/
-    CPPDEFINES=[('SCHED_DEBUG', 1)],
 )
 objs = [env.Object('main.c'), 
         sched_env.Object(source='../../kernel/sched.c', target='sched.o')]

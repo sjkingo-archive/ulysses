@@ -27,6 +27,18 @@ typedef void page_dir_t;
 typedef int flag_t;
 struct kthread { };
 
+struct kernel_flags {
+    flag_t preempt_kernel;
+    flag_t debug_sched;
+    flag_t debug_task;
+    flag_t debug_interrupt;
+    flag_t debug_ticks;
+};
+struct kernel {
+    struct kernel_flags flags; /* parsed flags from kernel command line */
+};
+struct kernel kern;
+
 typedef struct task {
     pid_t pid;
     pid_t ppid;
