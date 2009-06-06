@@ -86,8 +86,14 @@ static void execute_cmd(void)
 {
     TRACE_ONCE;
 
-    char *cmd, *args;
+    char *cmd, *arg;
+    char *args[10];
     unsigned int i;
+
+    /* Clear the arguments */
+    for (i = 0; i < 10; i++) {
+        args[i] = NULL;
+    }
     
     /* Extract the command */
     cmd = strsep(&shell.data, " ");
@@ -97,7 +103,11 @@ static void execute_cmd(void)
     }
     
     /* Extract the arguments */
-    args = strsep(&shell.data, " ");
+    i = 0;
+    while (i < 10 && ((arg = strsep(&shell.data, " ")) != NULL)) {
+        args[i] = arg;
+        i++;
+    }
 
     /* Find and execute the function */
     i = 0;
@@ -106,7 +116,7 @@ static void execute_cmd(void)
             if (cmds[i].func_noargs != NULL) {
                 cmds[i].func_noargs();
             } else if (cmds[i].func_args != NULL) {
-                cmds[i].func_args(&args);
+                cmds[i].func_args(args);
             }
             return;
         }
