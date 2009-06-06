@@ -60,17 +60,29 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     TRACE_ONCE;
 
     initial_esp = initial_stack; /* as given to us by multiboot */
+    
+    /* Set up the default kernel flags. Change these by adding their 
+     * corresponding option when booting the kernel.
+     */
+    kern.flags.preempt_kernel = TRUE;
+    kern.flags.debug_sched = FALSE;
+    kern.flags.debug_task = FALSE;
+    kern.flags.debug_interrupt = FALSE;
+    kern.flags.debug_ticks = FALSE;
  
     /* Perform architecture-specific startup stuff */
 #ifdef _ARCH_x86
     startup_x86(mdb, magic);
 #endif
-    
+
     /* Before we do anything with the higher-level kernel, move the kernel 
      * stack to a known location. This has to copy and remap all absolute
      * memory addresses.
      */
     move_stack((void *)STACK_LOC, STACK_SIZE);
+
+    /* Extract and set any options given to the kernel */
+    parse_cmdline(kern.cmdline);
     
     /* Now that all the lower-level startup has been done, we can set up
      * the higher-level kernel functions.

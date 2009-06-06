@@ -18,6 +18,7 @@
  */
 
 #include "../config.h"
+#include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
@@ -35,9 +36,9 @@ static void add_as_head(task_t *t)
     tasks_queue.tail = NULL;
     t->next = NULL;
 
-#if SCHED_DEBUG
-    kprintf("add_as_head(): pid %d\n", t->pid);
-#endif
+    if (kern.flags.debug_sched) {
+        kprintf("add_as_head(): pid %d\n", t->pid);
+    }
 }
 
 static void add_as_tail(task_t *t)
@@ -55,9 +56,9 @@ static void add_as_tail(task_t *t)
 
     t->next = NULL;
 
-#if SCHED_DEBUG
-    kprintf("add_as_tail(): pid %d\n", t->pid);
-#endif
+    if (kern.flags.debug_sched) {
+        kprintf("add_as_tail(): pid %d\n", t->pid);
+    }
 }
 
 static void move_to_tail(task_t *t)
@@ -75,10 +76,10 @@ static void move_to_tail(task_t *t)
     }
 
     tasks_queue.head = t->next;
-#if SCHED_DEBUG
-    kprintf("move_to_tail(): pid %d removed from head\n", t->pid);
-    kprintf("move_to_tail(): new head pid %d\n", tasks_queue.head->pid);
-#endif
+    if (kern.flags.debug_sched) {
+        kprintf("move_to_tail(): pid %d removed from head\n", t->pid);
+        kprintf("move_to_tail(): new head pid %d\n", tasks_queue.head->pid);
+    }
     add_as_tail(t);
 }
 
@@ -106,18 +107,18 @@ task_t *pick_next_task(void)
 
     while (t != NULL) {
         if (t->ready) {
-#if SCHED_DEBUG
-            kprintf("pick_next_task(): pid %d ready\n", t->pid);
-            dump_all_tasks();
-#endif
+            if (kern.flags.debug_sched) {
+                kprintf("pick_next_task(): pid %d ready\n", t->pid);
+                dump_all_tasks();
+            }
             move_to_tail(t);
             return t;
         } else {
             /* Remove from queue */
-#if SCHED_DEBUG
-            kprintf("pick_next_task(): pid %d not ready; removing from "
-                    "queue and destroying\n", t->pid);
-#endif
+            if (kern.flags.debug_sched) {
+                kprintf("pick_next_task(): pid %d not ready; removing from "
+                        "queue and destroying\n", t->pid);
+            }
             tasks_queue.head = t->next;
             free_task(t);
             t = tasks_queue.head;

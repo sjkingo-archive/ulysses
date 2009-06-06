@@ -124,12 +124,6 @@ void print_startup(void)
             "debugging capacity\n");
 #endif
 
-#if PREEMPT_KERNEL
-    kprintf("Compiled with PREEMPT_KERNEL; preempting kernel tasks\n");
-#else
-    kprintf("Warning: PREEMPT_KERNEL not enabled; kernel tasks must yield\n");
-#endif
-
 #if LOG_COM1
     kprintf("Sending all log messages to serial device COM1\n");
 #endif
@@ -159,4 +153,22 @@ inline void unlock_kernel(void)
 {
     TRACE_ONCE;
     STI;
+}
+
+void parse_cmdline(const char *cmdline)
+{
+    char *s;
+    while ((s = strsep(&cmdline, " ")) != NULL) {
+        if (strcmp(s, "--no-preempt-kernel") == 0) {
+            kern.flags.preempt_kernel = FALSE;
+        } else if (strcmp(s, "--debug-sched") == 0) {
+            kern.flags.debug_sched = TRUE;
+        } else if (strcmp(s, "--debug-task") == 0) {
+            kern.flags.debug_task = TRUE;
+        } else if (strcmp(s, "--debug-interrupt") == 0) {
+            kern.flags.debug_interrupt = TRUE;
+        } else if (strcmp(s, "--debug-ticks") == 0) {
+            kern.flags.debug_ticks = TRUE;
+        }
+    }
 }

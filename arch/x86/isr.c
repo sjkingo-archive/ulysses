@@ -20,6 +20,7 @@
 #include "../../config.h"
 #include <ulysses/exceptions.h>
 #include <ulysses/isr.h>
+#include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
@@ -79,22 +80,23 @@ void isr_handler(registers_t regs)
 {
     TRACE_ONCE;
 
-#if INTERRUPT_DEBUG
-    symbol_t *sym;
-    void *addr = __builtin_return_address(1);
+    if (kern.flags.debug_interrupt) {
+        symbol_t *sym;
+        void *addr = __builtin_return_address(1);
 
-    kprintf("\nInterrupt %d at %p, inside %p ", regs.int_no, regs.eip, addr);
+        kprintf("\nInterrupt %d at %p, inside %p ", regs.int_no, regs.eip, 
+                addr);
 
-    /* Try to translate the last func's eip into a symbol */
-    sym = lookup_symbol(addr);
-    if (sym == NULL) kprintf("in ??? ()\n");
-    else kprintf("in %s ()\n", sym->name);
+        /* Try to translate the last func's eip into a symbol */
+        sym = lookup_symbol(addr);
+        if (sym == NULL) kprintf("in ??? ()\n");
+        else kprintf("in %s ()\n", sym->name);
 
-    kprintf("err_code %d; dumping registers:\n", regs.err_code);
-    kprintf("edi %p\tesi %p\tebp %p\tesp %p\n"
-            "ebx %p\tedx %p\tecx %p\teax %p\n", regs.edi, regs.esi, 
-            regs.ebp, regs.esp, regs.ebx, regs.edx, regs.ecx, regs.eax);
-#endif
+        kprintf("err_code %d; dumping registers:\n", regs.err_code);
+        kprintf("edi %p\tesi %p\tebp %p\tesp %p\n"
+                "ebx %p\tedx %p\tecx %p\teax %p\n", regs.edi, regs.esi, 
+                regs.ebp, regs.esp, regs.ebx, regs.edx, regs.ecx, regs.eax);
+    }
 
     /* Lookup and handle the exception */
     if (!lookup_exception(&regs)) {

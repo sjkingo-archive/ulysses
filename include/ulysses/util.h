@@ -30,4 +30,10 @@ void print_startup(void);
 inline void lock_kernel(void);
 inline void unlock_kernel(void);
 
+/* parse_cmdline()
+ *  Expand the given kernel command line into the struct of kernel
+ *  flags (old config.h preprocessor).
+ */
+void parse_cmdline(const char *cmdline);
+
 #endif

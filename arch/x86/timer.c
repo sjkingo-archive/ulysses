@@ -45,11 +45,12 @@ void timer_tick(registers_t *regs)
         kern.current_time_offset.tv_sec++;
         update_cpu_time();
         sanity_check();
-#if TIMER_DEBUG
-        kprintf("timer_tick(): %ds (%dms) has passed since PIT init\n", 
-                kern.current_time_offset.tv_sec,
-                kern.current_time_offset.tv_msec);
-#endif
+
+        if (kern.flags.debug_ticks) {
+            kprintf("timer_tick(): %ds (%dms) has passed since PIT init\n", 
+                    kern.current_time_offset.tv_sec,
+                    kern.current_time_offset.tv_msec);
+        }
     }
 
     check_current_task();

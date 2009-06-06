@@ -23,10 +23,19 @@
 #define STACK_LOC 0xE0000000
 #define STACK_SIZE 0x2000
 
+struct kernel_flags {
+    flag_t preempt_kernel;
+    flag_t debug_sched;
+    flag_t debug_task;
+    flag_t debug_interrupt;
+    flag_t debug_ticks;
+};
+
 /* The main kernel data structure */
 struct kernel {
     multiboot_info_t *mbi; /* multiboot info struct as passed by loader */
     char *cmdline; /* kernel command line as passed by loader */
+    struct kernel_flags flags; /* parsed flags from kernel command line */
 
     char *cpu_vendor; /* VendorID of CPU */
     char *cpu_model; /* Model name of CPU */

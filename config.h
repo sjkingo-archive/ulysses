@@ -13,12 +13,6 @@
  */
 #define _ARCH_x86
 
-/* PREEMPT_KERNEL
- *  If this is set to 1, the scheduler will preempt kernel tasks. If not,
- *  they must yield the CPU before another task switch to occur.
- */
-#define PREEMPT_KERNEL 1
-
 /* TIMER_FREQ
  *  Frequency to run the system timer at, in hertz. The higher the frequency,
  *  the more often the timer will tick, and the operating system will be more
@@ -31,17 +25,6 @@
  *  18 Hz   = every 55 ms (lowest possible)
  */
 #define TIMER_FREQ 1000
-
-/* SCHED_DEBUG
- * TASK_DEBUG
- * INTERRUPT_DEBUG
- * TIMER_DEBUG
- *  Whether or not to be verbose in logging.
- */
-#define SCHED_DEBUG 0
-#define TASK_DEBUG 0
-#define INTERRUPT_DEBUG 0
-#define TIMER_DEBUG 0
 
 /* LOG_COM1
  *  If this is set to 1, the kernel will duplicate any output to the log VT

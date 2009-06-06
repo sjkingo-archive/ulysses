@@ -19,6 +19,7 @@
 
 #include "../config.h"
 #include <ulysses/isr.h>
+#include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/gdt.h>
@@ -94,10 +95,10 @@ static void switch_task(flag_t save)
     current_directory = current_task->page_dir;
     switch_kernel_stack();
     
-#if TASK_DEBUG
-    kprintf("switch_task(): switching to pid %d (%s)\n", current_task->pid,
-            current_task->name);
-#endif
+    if (kern.flags.debug_task) {
+        kprintf("switch_task(): switching to pid %d (%s)\n", 
+                current_task->pid, current_task->name);
+    }
 
     /* We need to do a couple of other things if this is a kernel thread */
     if (current_task->kthread != NULL) {
@@ -324,22 +325,21 @@ void check_current_task(void)
         return;
     }
 
-#if !PREEMPT_KERNEL
     /* If we're not doing kernel preemption, just return to allow the
      * interrupted task to continue.
      * Note that there is no real way to *not* let the kernel task itself be
      * preempted, since it idles the CPU.
      */
-    if (current_task->pid != 0 && current_task->ring == 0) {
+    if (!kern.flags.preempt_kernel && current_task->pid != 0 && 
+            current_task->ring == 0) {
         return;
     }
-#endif
 
     if (--current_task->s_ticks_left <= 0) {
-#if TASK_DEBUG
-        kprintf("check_current_task(): pid %d (%s) exceeded scheduling "
-                "quanta\n", current_task->pid, current_task->name);
-#endif
+        if (kern.flags.debug_task) {
+            kprintf("check_current_task(): pid %d (%s) exceeded scheduling "
+                    "quanta\n", current_task->pid, current_task->name);
+        }
 
         /* Reset the quanta and switch tasks */
         current_task->s_ticks_left = current_task->s_quantum_size;
