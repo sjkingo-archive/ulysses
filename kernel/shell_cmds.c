@@ -239,6 +239,38 @@ static void cmd_ring3(void)
     kthread_create(kt_ring3, "ring3");
 }
 
+static void cmd_flag(char **args)
+{
+    flag_t a;
+
+    if (args[0] == NULL || args[1] == NULL) {
+        kprintf("Usage: flag enable|disable sched|ticks|task|interrupt\n");
+        return;
+    }
+
+    if (strcmp(args[0], "enable") == 0) {
+        a = TRUE;
+    } else if (strcmp(args[0], "disable") == 0) {
+        a = FALSE;
+    } else {
+        kprintf("Unknown action %s\n", args[0]);
+        return;
+    }
+
+    if (strcmp(args[1], "sched") == 0) {
+        kern.flags.debug_sched = a;
+    } else if (strcmp(args[1], "ticks") == 0) {
+        kern.flags.debug_ticks = a;
+    } else if (strcmp(args[1], "task") == 0) {
+        kern.flags.debug_task = a;
+    } else if (strcmp(args[1], "interrupt") == 0) {
+        kern.flags.debug_interrupt = a;
+    } else {
+        kprintf("Unknown flag %s\n", args[1]);
+        return;
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -246,6 +278,7 @@ struct shell_command cmds[] = {
     { "kill", NULL, &cmd_kill, "Kill a task matching the given process id." },
     { "cat", NULL, &cmd_cat, "Concatenate the contents of the given filename "
             "to screen." },
+    { "flag", NULL, &cmd_flag, "Change kernel flag given by second argument." },
 
     /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },
