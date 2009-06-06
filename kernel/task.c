@@ -166,6 +166,20 @@ static void setup_stack(task_t *t)
     t->ebp = (unsigned int)ebp;
 }
 
+static task_t *clone_task(task_t *parent)
+{
+    task_t *c = new_task(parent->name);
+    c->ppid = parent->pid;
+    c->uid = parent->uid;
+    c->egid = parent->egid;
+    c->rgid = parent->rgid;
+    c->page_dir = clone_dir(parent->page_dir);
+    kfree((unsigned int *)c->ebp);
+    c->ebp = 0;
+    c->esp = 0;
+    return c;
+}
+
 void init_task(void)
 {
     TRACE_ONCE;
@@ -274,59 +288,19 @@ void kill_all_tasks(void)
 pid_t do_fork(void)
 {
     TRACE_ONCE;
-    unsigned int eip;
-    task_t *child, *parent;
-    page_dir_t *page_dir;
+    task_t *parent, *child;
 
-    /* Sometimes it doesn't make sense to fork */
-    if (current_task->pid == 0 || current_task->kthread != NULL) {
-        errno = ECANCELED;
-        return -1;
-    }
-
-    lock_kernel();
-
-    /* We need this later */
     parent = current_task;
+    child = clone_task(parent);
 
-    /* Clone the parent's page directory */
-    page_dir = clone_dir(current_directory);
-
-    /* Set up the child task */
-    child = new_task(parent->name);
-    child->ppid = parent->pid;
-    child->uid = parent->uid;
-    child->egid = parent->egid;
-    child->rgid = parent->rgid;
-    child->page_dir = page_dir;
-
-#if TASK_DEBUG
-    kprintf("do_fork() parent: new child \"%s\", pid %d, uid %d, egid %d, "
-            "rgid %d\n", child->name, child->pid, child->uid, child->egid,
-            child->rgid);
-#endif
-
-    /* Tell the scheduler about this task */
-    add_to_queue(child);
-
-    /* Entry point for the new task */
-    eip = read_eip();
+    child->eip = read_eip();
     if (current_task == parent) {
-        /* Parent, set up the pointers for the child */
-        unsigned int esp, ebp;
-        
-        __asm__ __volatile("mov %%ebp, %0" : "=r" (ebp));
-        __asm__ __volatile("mov %%esp, %0" : "=r" (esp));
-
-        child->esp = esp;
-        child->ebp = ebp;
-        child->eip = eip;
-        
-        unlock_kernel();
+        /* Update the child's stack pointers */
+        __asm__ __volatile("mov %%ebp, %0" : "=r" (child->ebp));
+        __asm__ __volatile("mov %%esp, %0" : "=r" (child->esp));
+        add_to_queue(child);
         return child->pid;
     } else {
-        /* Child, exit */
-        unlock_kernel();
         return 0;
     }
 }
