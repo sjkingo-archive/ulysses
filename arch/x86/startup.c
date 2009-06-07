@@ -19,6 +19,7 @@
 
 #include <ulysses/cmos.h>
 #include <ulysses/cpuid.h>
+#include <ulysses/cputest.h>
 #include <ulysses/gdt.h>
 #include <ulysses/idt.h>
 #include <ulysses/isr.h>
@@ -109,6 +110,7 @@ void startup_x86(void *mdb, unsigned int magic)
      *  10. Identify the CPU(s) attached to the system
      *  11. Set up clock timer
      *  12. Set up the keyboard driver
+     *  13. Test for some known CPU bugs
      */
     init_screen(); /* must be before any kprintf() or panic() */
     init_serial(COM1);
@@ -122,6 +124,7 @@ void startup_x86(void *mdb, unsigned int magic)
     get_cpuid();
     init_timer(TIMER_FREQ);
     init_keyboard();
+    test_cpu_bugs();
 
     /* And finally, enable interrupts */
     STI;

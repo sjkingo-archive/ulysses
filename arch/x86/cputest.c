@@ -37,10 +37,7 @@ flag_t test_fdiv(void)
 void test_cpu_bugs(void)
 {
     test_f00f();
-    kprintf("CPU does not appear to have the f00f bug\n");
     if (test_fdiv()) {
         kprintf("The FPU attached to this CPU has the Pentium FDIV bug\n");
-    } else {
-        kprintf("FDIV bug not detected in the CPU's FPU\n");
     }
 }
