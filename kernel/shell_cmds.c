@@ -241,6 +241,7 @@ static void cmd_ring3(void)
 
 static void cmd_flag(char **args)
 {
+    TRACE_ONCE;
     flag_t a;
 
     if (args[0] == NULL || args[1] == NULL) {
