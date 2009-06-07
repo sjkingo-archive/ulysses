@@ -298,6 +298,14 @@ pid_t do_fork(void)
     unsigned int eip;
     task_t *child, *parent;
 
+    /* Kernel threads cannot fork as they share an address space with their 
+     * parent and we have no means of cloning this.
+     */
+    if (current_task->kthread != NULL) {
+        errno = ECANCELED;
+        return -1;
+    }
+
     lock_kernel();
 
     /* Clone the parent */

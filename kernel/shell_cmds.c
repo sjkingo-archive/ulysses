@@ -271,6 +271,20 @@ static void cmd_flag(char **args)
     }
 }
 
+void cmd_fork(void)
+{
+    TRACE_ONCE;
+    pid_t pid = do_fork();
+    if (pid == -1) {
+        kprintf("do_fork() failed and returned -1: check errno\n");
+    } else if (pid == 0) {
+        kprintf("Hello from child, exiting...\n");
+        task_exit();
+    } else {
+        kprintf("Hello from parent, the child's pid is %d\n", pid);
+    }
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -301,6 +315,7 @@ struct shell_command cmds[] = {
     { "f00f", &cmd_f00f, NULL, "The Four Bytes Of The Apocalypse." },
     { "sched", &cmd_sched, NULL, "Display scheduling information." },
     { "ring3", &cmd_ring3, NULL, "Run a test in user mode." },
+    { "fork", &cmd_fork, NULL, "Fork the shell." },
     
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };
