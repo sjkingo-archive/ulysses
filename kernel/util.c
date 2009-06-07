@@ -47,9 +47,9 @@ static void check_init(void)
     /* Get init's task and make sure it is valid */
     init = get_task(kern.init_pid);
     if (init == NULL || strcmp(init->name, "init") != 0) {
+        i++;
         kprintf("sanity_check(): init not running, trying to (re)start it\n");
         start_init();
-        i++;
     }
 }
 
@@ -68,7 +68,6 @@ static void run_init(void)
 void start_init(void)
 {
     TRACE_ONCE;
-    return;
     pid_t pid = do_fork();
     if (pid == 0) {
         run_init();
@@ -81,6 +80,8 @@ void start_init(void)
 void sanity_check(void)
 {
     TRACE_ONCE;
+
+    check_init();
 
     /* ... maybe not */
 #ifdef COMEFROM

@@ -96,12 +96,12 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     kthread_create(kthreadd, "kthreadd");
     
     /* XXX this is where we would load init process off the initrd */
+    start_init();
 
     /* And we're done. */
     kprintf("Kernel startup complete in %ds (%dms)\n", 
             kern.current_time_offset.tv_sec,
             kern.current_time_offset.tv_msec);
-
     /* This is the kernel task (pid 0), so drop to an idle */
     idle_cpu();
 
