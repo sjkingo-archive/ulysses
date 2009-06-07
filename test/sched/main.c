@@ -66,31 +66,39 @@ extern void add_to_queue(task_t *t);
 extern task_t *get_task(pid_t pid);
 extern task_t *pick_next_task(void);
 
+static task_t *create_task(pid_t pid)
+{
+    task_t *t = malloc(sizeof(task_t));
+    t->pid = pid;
+    t->ready = 1;
+    t->next = NULL;
+    return t;
+}
+
+#define NUM_TASKS 1000
+
 int main(void)
 {
-    task_t *tasks[4];
+    task_t *tasks[NUM_TASKS];
     unsigned short i;
     
     init_sched();
 
     /* Test adding some tasks to the queue */
     assert(get_task(0) == NULL);
-    for (i = 0; i < 4; i++) {
-        task_t *t = malloc(sizeof(task_t));
-        t->pid = i;
-        t->ready = 1;
-        t->next = NULL;
+    for (i = 0; i < NUM_TASKS; i++) {
+        task_t *t = create_task((pid_t)i);
         add_to_queue(t);
         assert(get_task(i) == t);
         tasks[i] = t;
+        printf("sched: new task %d\n", i);
     }
-    assert(get_task(4) == NULL);
+    assert(get_task(i) == NULL);
     
     /* Test picking procs */
-    assert(pick_next_task() == tasks[0]);
-    assert(pick_next_task() == tasks[1]);
-    assert(pick_next_task() == tasks[2]);
-    assert(pick_next_task() == tasks[3]);
+    for (i = 0; i < NUM_TASKS; i++) {
+        assert(pick_next_task() == tasks[i]);
+    }
     assert(pick_next_task() == tasks[0]);
 
     return 0;
