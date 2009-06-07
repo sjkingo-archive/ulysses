@@ -61,7 +61,7 @@ static void run_init(void)
     TRACE_ONCE;
     kern.init_pid = do_getpid();
     change_name("init");
-    kprintf("init(): running with pid %d\n", kern.init_pid);
+    kprintf("init: running with pid %d\n", kern.init_pid);
     while (1);
 }
 
