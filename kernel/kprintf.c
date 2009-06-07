@@ -33,9 +33,7 @@
 static void kputc(const char c, flag_t all)
 {
     append_char(c, TRUE, all);
-#if LOG_COM1
     write_serial(COM1, c);
-#endif
 }
 
 /* kputs()

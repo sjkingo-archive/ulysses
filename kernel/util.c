@@ -98,7 +98,9 @@ void print_startup(void)
     TRACE_ONCE;
     kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
     kprintf("Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>\n");
+
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
+    kprintf("Sending all log messages to serial device COM1\n");
 
 #ifdef _ARCH_x86
     kprintf("Compiled for x86\n");
@@ -121,10 +123,6 @@ void print_startup(void)
 #ifdef __OPTIMIZE__
     kprintf("Warning: compiled with -Ox optimisations; expect limited "
             "debugging capacity\n");
-#endif
-
-#if LOG_COM1
-    kprintf("Sending all log messages to serial device COM1\n");
 #endif
 
     kprintf("Detected %u KB of lower and %u KB of upper memory\n", 

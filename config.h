@@ -26,12 +26,6 @@
  */
 #define TIMER_FREQ 1000
 
-/* LOG_COM1
- *  If this is set to 1, the kernel will duplicate any output to the log VT
- *  to COM1 port for debugging.
- */
-#define LOG_COM1 1
-
 /* VERSION_NUM
  * VERSION_CN
  *  Version number and codename of the kernel.
