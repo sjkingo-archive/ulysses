@@ -102,10 +102,11 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     kprintf("Kernel startup complete in %ds (%dms)\n", 
             kern.current_time_offset.tv_sec,
             kern.current_time_offset.tv_msec);
-    /* This is the kernel task (pid 0), so drop to an idle */
-    idle_cpu();
 
-    /* we should never get here */
+    /* This is the kernel task (pid 0), so drop to an idle. This should never
+     * return, so panic if it did.
+     */
+    idle_cpu();
     panic("kernel task died");
     return; /* and if we ever get here, then we really don't care anymore */
 }
