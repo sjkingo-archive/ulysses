@@ -136,9 +136,10 @@ void print_startup(void)
             kern.startup_datetime.year, kern.startup_datetime.month,
             kern.startup_datetime.day, kern.startup_datetime.hour,
             kern.startup_datetime.min, kern.startup_datetime.sec);
-    kprintf("Kernel heap located at %p\n", KHEAP_START);
     kprintf("Kernel stack located at %p with size %d bytes\n", STACK_LOC, 
             STACK_SIZE);
+    kprintf("Kernel heap located at %p with initial size %p bytes\n", 
+            KHEAP_START, KHEAP_INITIAL_SIZE);
 }
 
 inline void lock_kernel(void)
