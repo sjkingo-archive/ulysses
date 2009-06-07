@@ -32,12 +32,6 @@
  */
 #define LOG_COM1 1
 
-/* SHELL_COM2
- *  If this is set to 1, the kernel will attempt to read events from COM2
- *  and interpret them as shell commands.
- */
-#define SHELL_COM2 1
-
 /* VERSION_NUM
  * VERSION_CN
  *  Version number and codename of the kernel.

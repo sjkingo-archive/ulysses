@@ -133,18 +133,6 @@ static void print_prompt(void)
     kprintf("%s", SHELL_PROMPT);
 }
 
-static void serial_thread(void)
-{
-    TRACE_ONCE;
-    init_serial(COM2);
-    kprintf("Reading shell commands from serial port COM2\n");
-    while (1) {
-        char c = read_serial(COM2);
-        buffer_keypress(c);
-        kthread_yield();
-    }
-}
-
 void run_shell(void)
 {
     TRACE_ONCE;
@@ -159,11 +147,6 @@ void run_shell(void)
     }
     last_cmd_index = 0;
     last_up_index = 0;
-
-#if SHELL_COM2
-    /* Activate the COM2 interface */
-    kthread_create(serial_thread, "serial_shell");
-#endif
 
     print_prompt();
     while (1) {

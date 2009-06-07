@@ -11,7 +11,6 @@ qemu $debug \
     -boot a \
     -m 8 \
     -serial "file:log.txt" \
-    -serial tcp:localhost:5555,server,nowait \
     &
 
 if [ "$debug" != "" ]; then
