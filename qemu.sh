@@ -5,6 +5,7 @@ if [ "$1" = "gdb" ]; then
 fi
 
 qemu $debug \
+    -d cpu_reset \
     -fda arch/x86/boot/grub.img \
     -hda fat:arch/x86/boot \
     -boot a \
