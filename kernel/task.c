@@ -233,16 +233,12 @@ task_t *new_task(const char *name)
 void free_task(task_t *task)
 {
     TRACE_ONCE;
-    return; /* XXX this function seems buggy and causes a page fault the next 
-               time kmalloc_a() is called.
-            */
     kfree(task->name);
     kfree(task->kernel_stack);
     if (task->kthread != NULL) {
         kfree(task->kthread);
         task->kthread = NULL;
     }
-    /* XXX we can't free the stack or a page fault will occur */
     kfree(task);
 }
 

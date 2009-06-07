@@ -172,7 +172,9 @@ static void cmd_dummy(void)
 
 static void kt_bomb(void)
 {
-    while (1) kthread_yield();
+    kprintf("kthread %d will yield once and exit\n", do_getpid());
+    kthread_yield();
+    kthread_exit();
 }
 
 static void cmd_kt_bomb(void)
