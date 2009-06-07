@@ -26,9 +26,9 @@
 
 # -v is verbosity
 if [ "$1" == "-v" ] ; then
-    exec 3>&1
+    verbose=1
 else
-    exec 3>/dev/null
+    verbose=0
 fi
 
 total=0
@@ -43,14 +43,37 @@ for dir in `ls -l | grep ^d | awk '{ print $8 }'` ; do
     echo "-----------------------------------"
     
     pushd $dir >/dev/null || exit 2
-    ./main >&3
+
+    # determine where to send test case output - we do this here since it's
+    # inside the test case's subdir
+    if [ $verbose -eq 1 ] ; then
+        exec 3>.output
+    else
+        exec 3>/dev/null
+    fi
+
+    # run the test case, putting its output in a file (or null if no -v), and
+    # capture time's output
+    time_out="`(time ./main 1>&3 2>&3) 2>&1`"
     status=$?
+
+    # if there is any output, print it now
+    if [ -f "./.output" ] ; then
+        cat ./.output
+        rm -f ./.output
+    fi
+
+    # extract the actual amount of time the command took (real)
+    time="`echo $time_out | grep real | awk '{ print $2 }'`"
+
+    # output if the test failed or not
     if [ $status -ne 0 ] ; then
-        echo "FAILED: $dir/main exited with status $status"
+        echo "FAILED: $dir/main exited with status $status in $time"
         failed=$((failed+1))
     else 
-        echo "SUCCESS: $dir/main"
+        echo "SUCCESS: $dir/main in $time"
     fi
+
     popd >/dev/null
     echo
 done
