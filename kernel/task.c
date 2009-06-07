@@ -96,30 +96,28 @@ static void switch_task(flag_t save)
     switch_kernel_stack();
     
     if (kern.flags.debug_task) {
-        kprintf("switch_task(): switching to pid %d (%s)\n", 
-                current_task->pid, current_task->name);
+        kprintf("switch_task(): switching to pid %d (%s); eip %p; ebp %p; "
+                "esp %p\n", current_task->pid, current_task->name,
+                (unsigned int *)eip, (unsigned int *)ebp, 
+                (unsigned int *)esp);
     }
 
     /* We need to do a couple of other things if this is a kernel thread */
     if (current_task->kthread != NULL) {
         kthread_running();
     }
-
-    unlock_kernel();
-
+   
     /* Perform the actual context switch:
-     *  1. Firstly disable interrupts since this isn't reentrant,
-     *  2. Temporarily put the new instruction pointer in a GP register,
-     *  3. Load the stack and base pointers from the "new" task,
-     *  4. Change the page directory,
-     *  5. Put a dummy val in EAX so we recognise that we just task switched,
-     *  6. Enable interrupts,
-     *  7. Do nothing so the pipelined sti actually takes effect,
-     *  8. Jumps to the instruction pointer we put in ECX, which "continues"
+     *  1. Temporarily put the new instruction pointer in a GP register,
+     *  2. Load the stack and base pointers from the "new" task,
+     *  3. Change the page directory,
+     *  4. Put a dummy val in EAX so we recognise that we just task switched,
+     *  5. Enable interrupts,
+     *  6. Do nothing so the pipelined sti actually takes effect,
+     *  7. Jumps to the instruction pointer we put in ECX, which "continues"
      *     executing the "new" task.
      */
     __asm__ __volatile__("       \
-            cli;                 \
             mov %0, %%ecx;       \
             mov %1, %%esp;       \
             mov %2, %%ebp;       \
@@ -135,12 +133,16 @@ static void switch_task(flag_t save)
     panic("Context switch failed");
 }
 
+/* setup_stack()
+ *  Create the default stack for the given task. The stack is 4 KB that grows
+ *  backward -- that is, grows to a *lower* memory address. This is why we
+ *  set esp to the end of the allocated area and grow it backwards.
+ */
 static void setup_stack(task_t *t)
 {
     TRACE_ONCE;
-    /* We offset the stack for flags register */
-    unsigned int *ebp = kmalloc(2048); /* bottom of stack */
-    unsigned int *stack = ebp + 2048; /* we need 2KB for defaults */
+    unsigned int *esp = kmalloc(0x1000) + 0x1000; /* 4 KB stack, at top */
+    unsigned int *stack = esp;
 
     *--stack = 0x202;       /* EFLAGS */
     *--stack = 0x08;        /* CS */
@@ -164,7 +166,25 @@ static void setup_stack(task_t *t)
     /* bottom of stack */
 
     t->esp = (unsigned int)stack; /* the rest of the stack */
-    t->ebp = (unsigned int)ebp;
+    t->ebp = (unsigned int)esp;
+}
+
+static task_t *clone_task(task_t *parent)
+{
+    task_t *c = new_task(parent->name);
+    c->ppid = parent->pid;
+    c->uid = parent->uid;
+    c->egid = parent->egid;
+    c->rgid = parent->rgid;
+
+    /* We aren't using the default stack */
+    kfree((void *)c->ebp);
+    c->ebp = 0;
+    c->esp = 0;
+
+    /* Clone the parent's page directory */
+    c->page_dir = clone_dir(parent->page_dir);
+    return c;
 }
 
 void init_task(void)
@@ -277,57 +297,33 @@ pid_t do_fork(void)
     TRACE_ONCE;
     unsigned int eip;
     task_t *child, *parent;
-    page_dir_t *page_dir;
-
-    /* Sometimes it doesn't make sense to fork */
-    if (current_task->pid == 0 || current_task->kthread != NULL) {
-        errno = ECANCELED;
-        return -1;
-    }
 
     lock_kernel();
 
-    /* We need this later */
+    /* Clone the parent */
     parent = current_task;
-
-    /* Clone the parent's page directory */
-    page_dir = clone_dir(current_directory);
-
-    /* Set up the child task */
-    child = new_task(parent->name);
-    child->ppid = parent->pid;
-    child->uid = parent->uid;
-    child->egid = parent->egid;
-    child->rgid = parent->rgid;
-    child->page_dir = page_dir;
-
-#if TASK_DEBUG
-    kprintf("do_fork() parent: new child \"%s\", pid %d, uid %d, egid %d, "
-            "rgid %d\n", child->name, child->pid, child->uid, child->egid,
-            child->rgid);
-#endif
-
-    /* Tell the scheduler about this task */
-    add_to_queue(child);
+    child = clone_task(parent);
+    if (kern.flags.debug_task) {
+        kprintf("do_fork() parent: new child \"%s\", pid %d, uid %d\n", 
+                child->name, child->pid, child->uid);
+    }
 
     /* Entry point for the new task */
-    eip = read_eip();
+    eip = read_eip(); /* both tasks will continue executing from here */
     if (current_task == parent) {
         /* Parent, set up the pointers for the child */
-        unsigned int esp, ebp;
-        
-        __asm__ __volatile("mov %%ebp, %0" : "=r" (ebp));
-        __asm__ __volatile("mov %%esp, %0" : "=r" (esp));
-
-        child->esp = esp;
-        child->ebp = ebp;
+        __asm__ __volatile("mov %%esp, %0" : "=r" (child->esp));
+        __asm__ __volatile("mov %%ebp, %0" : "=r" (child->ebp));
         child->eip = eip;
         
+        /* Tell the scheduler about this task */
+        add_to_queue(child);
+
+        /* We only need to unlock the kernel here since we're returning now */
         unlock_kernel();
         return child->pid;
     } else {
-        /* Child, exit */
-        unlock_kernel();
+        /* Child */
         return 0;
     }
 }
