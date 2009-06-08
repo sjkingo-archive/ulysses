@@ -48,7 +48,7 @@ static inline void handle_exception(struct cpu_exception exc)
             break; /* would never get here anyway */
 
         case ACTION_WARN:
-            kprintf("CPU exception: %d\n", exc.name);
+            kprintf("%s in pid %d\n", exc.name, do_getpid());
         case ACTION_IGNORE:
             break;
     }
