@@ -82,6 +82,7 @@ int main(void)
     task_t *tasks[NUM_TASKS];
     unsigned short i;
     
+    kern.flags.debug_sched = 1;
     init_sched();
 
     /* Test adding some tasks to the queue */
