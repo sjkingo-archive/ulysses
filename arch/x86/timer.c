@@ -35,15 +35,16 @@ void timer_tick(registers_t *regs)
     if (regs->int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
     
     /* A timer tick occurs every x milliseconds, so add that interval to the
-     * kernel's msec counter.
+     * kernel's msec counter and ask the task manager to update the CPU time
+     * of the current task.
      */
     ticks++;
     kern.current_time_offset.tv_msec += tick_interval;
+    update_cpu_time();
 
     /* Update the kernel's second counter every second (1000 ms) */
     if ((kern.current_time_offset.tv_msec % 1000) == 0) {
         kern.current_time_offset.tv_sec++;
-        update_cpu_time();
         sanity_check();
 
         if (kern.flags.debug_ticks) {
