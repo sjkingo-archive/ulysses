@@ -27,14 +27,21 @@
 # -v is verbosity
 if [ "$1" == "-v" ] ; then
     verbose=1
+    shift
 else
     verbose=0
+fi
+
+if [ $# -eq 1 ] ; then
+    test="$1"
+else
+    test="`ls -l | grep ^d | awk '{ print $8 }'`"
 fi
 
 total=0
 failed=0
 
-for dir in `ls -l | grep ^d | awk '{ print $8 }'` ; do
+for dir in $test ; do
     total=$((total+1))
     echo "==================================="
     echo "Test #$total: $dir"
