@@ -30,7 +30,7 @@
  * VERSION_CN
  *  Version number and codename of the kernel.
 */
-#define VERSION_NUM "0.1.9"
+#define VERSION_NUM "0.2.0"
 #define VERSION_CN "amnesiac"
 
 #endif
