@@ -31,6 +31,9 @@
 
 #include <string.h>
 
+/* flag to tell us whether to try and restart init or not */
+flag_t restart_init = FALSE;
+
 /* check_init(void)
  *  Check to make sure init is running, and restart it if not.
  */
@@ -83,7 +86,9 @@ void sanity_check(void)
 {
     TRACE_ONCE;
 
-    check_init();
+    if (restart_init) {
+        check_init();
+    }
 
     /* ... maybe not */
 #ifdef COMEFROM

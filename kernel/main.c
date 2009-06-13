@@ -41,6 +41,9 @@ struct kernel kern;
 extern void startup_x86(void *, int);
 #endif
 
+/* see util.c */
+extern flag_t restart_init;
+
 /* This is the stack pointer that multiboot sets up for us. Eventually
  * we will move this to a higher address.
  */
@@ -88,6 +91,7 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     
     /* XXX this is where we would load init process off the initrd */
     start_init();
+    restart_init = TRUE;
 
     /* And we're done */
     kprintf("Kernel startup complete in %ds (%dms)\n", 
