@@ -50,14 +50,6 @@ static void cmd_uptime(void)
             kern.current_time_offset.tv_msec);
 }
 
-static void cmd_uptime_loop(void)
-{
-    TRACE_ONCE;
-    while (1) {
-        cmd_uptime();
-    }
-}
-
 static void cmd_comefrom(void)
 {
     TRACE_ONCE;
@@ -108,17 +100,6 @@ static void cmd_ps(void)
     }
 }
 
-static void cmd_sched(void)
-{
-    TRACE_ONCE;
-    kprintf("CPU (s)\tNAME\n");
-    task_t *t = tasks_queue.head;
-    while (t != NULL) {
-        kprintf("%d\t%s\n", t->cpu_time, t->name);
-        t = t->next;
-    }
-}
-
 extern struct shell_command cmds[]; /* we're using it before it is declared */
 static void cmd_help(void)
 {
@@ -162,12 +143,6 @@ static void cmd_kt_test(void)
     for (i = 0; i < 3; i++) {
         kthread_create(kt_test, "kt_test");
     }
-}
-
-static void cmd_dummy(void)
-{
-    TRACE_ONCE;
-    dummy();
 }
 
 static void kt_bomb(void)
@@ -300,7 +275,6 @@ struct shell_command cmds[] = {
     /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },
     { "uptime", &cmd_uptime, NULL, "Output current kernel uptime." },
-    { "uptime_loop", &cmd_uptime_loop, NULL, "Output current kernel uptime forever." },
     { "halt", &shutdown, NULL, "Shut down the operating system." },
     { "COMEFROM", &cmd_comefrom, NULL, NULL },
     { "dump_tasks", &dump_all_tasks, NULL, "Dump scheduling queue information." },
@@ -313,12 +287,10 @@ struct shell_command cmds[] = {
     { "kt_test", &cmd_kt_test, NULL, "Run a kthreads test." },
     { "kt_bomb", &cmd_kt_bomb, NULL, "Spawn kernel threads until the OS "
             "crashes." },
-    { "dummy", &cmd_dummy, NULL, "Send a dummy system call." },
     { "errno", &cmd_errno, NULL, "Output the value of errno." },
     { "f00f", &cmd_f00f, NULL, "The Four Bytes Of The Apocalypse." },
-    { "sched", &cmd_sched, NULL, "Display scheduling information." },
     { "ring3", &cmd_ring3, NULL, "Run a test in user mode." },
-    { "fork", &cmd_fork, NULL, "Fork the shell." },
+    { "fork", &cmd_fork, NULL, "Fork the shell. This shouldn't work!" },
     
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };
