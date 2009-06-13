@@ -17,8 +17,11 @@
  *
  */
 
+#include <ulysses/screen.h>
+
 #include <ctype.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -277,6 +280,18 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 			flags |= SIGN;
 		case 'u':
 			break;
+
+            /* colours */
+        case '[':
+            {
+                char *s = (char *)fmt;
+                char *bg = strsep(&s, ",");
+                char *fg = strsep(&s, "]");
+                change_colour(simple_strtol(bg, NULL, 10), 
+                        simple_strtol(fg, NULL, 10));
+                fmt = strchr(fmt, ']'); /* move past the end */
+            }
+            continue;
 
 		default:
 			*str++ = '%';
