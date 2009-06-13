@@ -30,7 +30,7 @@ static char current_colour;
 void init_screen(void)
 {
     screen.mem = VIDMEM_START;
-    change_colour(BLACK, WHITE);
+    change_colour(BLACK, LGRAY);
     clear_screen();
 }
 
