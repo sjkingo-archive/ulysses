@@ -1,4 +1,4 @@
-/* arch/x86/startup.c - low-level hardware setup
+/* arch/x86/startup.c - x86 entry point and low-level hardware setup
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>
@@ -45,6 +45,7 @@ extern unsigned int placement_address; /* kheap.c */
 extern unsigned int end; /* linker.ld */
 
 extern void init_a20(void); /* see a20.s */
+extern void kernel_main(unsigned int); /* see kernel/startup.c */
 
 static void set_time(void)
 {
@@ -86,7 +87,7 @@ static void init_multiboot(void *mdb, unsigned int magic)
     }
 }
 
-void startup_x86(void *mdb, unsigned int magic)
+void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
     TRACE_ONCE;
 
@@ -126,6 +127,7 @@ void startup_x86(void *mdb, unsigned int magic)
     init_keyboard();
     test_cpu_bugs();
 
-    /* And finally, enable interrupts */
+    /* And finally, enable interrupts and load the kernel proper */
     STI;
+    kernel_main(initial_stack);
 }

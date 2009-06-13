@@ -1,4 +1,4 @@
-/* kernel/main.c - the kernel's entry point
+/* kernel/main.c - the kernel proper
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>
@@ -30,16 +30,10 @@
 #include <ulysses/util.h>
 #include <ulysses/vt.h>
 
-#include "../config.h"
-
 #include <sys/types.h>
 #include <unistd.h>
 
 struct kernel kern;
-
-#ifdef _ARCH_x86
-extern void startup_x86(void *, int);
-#endif
 
 /* see util.c */
 extern flag_t restart_init;
@@ -49,7 +43,11 @@ extern flag_t restart_init;
  */
 unsigned int initial_esp;
 
-void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
+/* kernel_main()
+ *  This is called by the low-level architecture startup routine. It sets up
+ *  the kernel proper and generally gets the operating system off the ground.
+ */
+void kernel_main(unsigned int initial_stack)
 {
     TRACE_ONCE;
 
@@ -63,11 +61,6 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     kern.flags.debug_task = FALSE;
     kern.flags.debug_interrupt = FALSE;
     kern.flags.debug_ticks = FALSE;
- 
-    /* Perform architecture-specific startup stuff */
-#ifdef _ARCH_x86
-    startup_x86(mdb, magic);
-#endif
 
     /* Before we do anything with the higher-level kernel, move the kernel 
      * stack to a known location. This has to copy and remap all absolute

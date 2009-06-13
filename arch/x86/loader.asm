@@ -19,7 +19,7 @@
 global loader
 global mboot
 
-extern _kmain
+extern _kmain_x86
 extern code
 extern bss
 extern end
@@ -51,6 +51,6 @@ loader:
     push ebx ; multiboot info struct
 
     cli ; we don't want interrupts for a while yet
-    call _kmain
+    call _kmain_x86
     jmp $ ; infinite loop
 
