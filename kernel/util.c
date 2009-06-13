@@ -18,6 +18,7 @@
  */
 
 #include "../config.h"
+#include <ulysses/cpu.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
@@ -61,7 +62,7 @@ static void run_init(void)
     kern.init_pid = do_getpid();
     change_name("init");
     kprintf("init: running with pid %d\n", kern.init_pid);
-    while (1);
+    idle_cpu();
 }
 
 void start_init(void)

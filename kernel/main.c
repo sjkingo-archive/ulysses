@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/cpu.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
@@ -44,16 +45,6 @@ extern void startup_x86(void *, int);
  * we will move this to a higher address.
  */
 unsigned int initial_esp;
-
-/* idle_cpu()
- *  Loop forever in S1 sleep state. Set interrupts before halting the CPU
- *  to ensure the CPU has active interrupt lines.
- */
-static void idle_cpu(void)
-{
-    TRACE_ONCE;
-    while(1) __asm__ __volatile__("sti ; hlt");
-}
 
 void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
