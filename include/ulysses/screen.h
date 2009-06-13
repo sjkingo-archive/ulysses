@@ -9,8 +9,25 @@
 #define WIDTH 80
 #define HEIGHT 25
 
-/* Colours */
-#define COLOUR_WB 0x07 /* white on black */
+enum screen_colours {
+    BLACK,
+    BLUE,
+    GREEN,
+    CYAN,
+    RED,
+    MAGENTA,
+    BROWN,
+    LGRAY,
+    DGRAY,
+    LBLUE,
+    LGREEN,
+    LCYAN,
+    LRED,
+    LMAGENTA,
+    LYELLOW,
+    WHITE,
+    DEFAULT,
+};
 
 #define TAB "        " /* 8 spaces */
 
@@ -45,11 +62,17 @@ void move_cursor(const unsigned int x, const unsigned int y);
 /* put_char()
  *  Put a single character to screen with the given colour code.
  */
-void put_char(const char c, const char colour);
+void put_char(const char c);
 
 /* flush_screen()
  *  Clear the screen and write data to it.
  */
 void flush_screen(const char *data);
+
+/* change_colour()
+ *  Change the current screen colour to the (bg,fg) pair given.
+ *  This will affect any further characters (re)wrtten to the screen.
+ */
+void change_colour(const char bg, const char fg);
 
 #endif

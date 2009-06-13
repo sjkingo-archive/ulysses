@@ -21,9 +21,16 @@
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
+/* Turn (bg,fg) pair into colour attribute */
+#define COLOUR(b, f) ((b << 4) | (f & 0x0F))
+
+/* the current colour attribute to use when writing to screen */
+static char current_colour;
+
 void init_screen(void)
 {
     screen.mem = VIDMEM_START;
+    change_colour(BLACK, WHITE);
     clear_screen();
 }
 
@@ -33,7 +40,7 @@ void clear_screen(void)
     register unsigned int i;
     for (i = 0; i < (WIDTH * HEIGHT * 2); i++) {
         screen.mem[i] = ' ';
-        screen.mem[++i] = COLOUR_WB; 
+        screen.mem[++i] = current_colour;
     }
     move_cursor(0, 0);
     screen.next_x = 0;
@@ -79,7 +86,7 @@ static void scroll_screen(void)
     move_cursor(screen.next_x, last_line);
 }
 
-void put_char(const char c, const char colour)
+void put_char(const char c)
 {
     TRACE_ONCE;
     unsigned int index;
@@ -115,7 +122,7 @@ void put_char(const char c, const char colour)
     /* Each character in video mem is 2 bytes: we call this a cell */
     index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
     screen.mem[index] = c;
-    screen.mem[++index] = colour;
+    screen.mem[++index] = current_colour;
     
     /* Incremement the x position and move the cursor to the next cell */
     move_cursor(++screen.next_x, screen.next_y);
@@ -126,7 +133,13 @@ void flush_screen(const char *data)
     TRACE_ONCE;
     clear_screen();
     while (*data) {
-        put_char(*data, COLOUR_WB);
+        put_char(*data);
         data++;
     }
+}
+
+void change_colour(const char bg, const char fg)
+{
+    TRACE_ONCE;
+    current_colour = COLOUR(bg, fg);
 }

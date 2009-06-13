@@ -26,6 +26,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* kputc()
  *  Append a raw character. All other kput..() call this.
@@ -162,6 +163,21 @@ do_format: /* yuk, but the only way to get back here */
 
                 case '%':
                     kputc('%', all);
+                    break;
+
+                case '[': /* colour: %[bg, fg] */
+                    fmt++;
+                    {
+                        char *end = strchr(fmt, ']');
+                        if (end != NULL) {
+                            char *tok = (char *)fmt;
+                            char *bg = strsep(&tok, ",");
+                            char *fg = strsep(&tok, "]");
+                            change_colour(strtol(bg, NULL, 10), 
+                                    strtol(fg, NULL, 10));
+                            fmt = end; /* move past the colour format */
+                        }
+                    }
                     break;
 
                 default:

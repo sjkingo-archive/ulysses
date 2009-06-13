@@ -28,8 +28,9 @@ void do_panic(const char *msg, const char *file, int line)
     TRACE_ONCE;
     static int panicking = 0;
     if (panicking++) halt(); /* prevent recursive panics - thanks AST */
-    
-    kprintf_all("\n\nKernel panic: %s\n", msg);
+
+    kprintf_all("\n\n%[4,15]");
+    kprintf_all("Kernel panic: %s\n", msg);
 
 #if __GNUC__
     /* Try and work out where the panic came from */

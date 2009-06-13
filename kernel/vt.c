@@ -77,7 +77,7 @@ void append_char(const char c, flag_t write, flag_t all)
     }
 
     if (write) {
-        put_char(c, COLOUR_WB); /* write through to the screen directly */
+        put_char(c); /* write through to the screen directly */
     }
 }
 
