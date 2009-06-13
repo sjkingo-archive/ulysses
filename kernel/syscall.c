@@ -104,7 +104,7 @@ int sys_write(int fd, const char *buf, size_t count)
     }
 
     for (i = 0; i < count; i++) {
-        append_char(buf[i], TRUE);
+        kprintf("%c", buf[i]);
     }
 
     return i;
