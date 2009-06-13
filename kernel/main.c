@@ -86,12 +86,12 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     init_vt();
     print_startup();
 
-    /* Start the kthread daemon going to set up other kernel threads */
-    kthread_create(kthreadd, "kthreadd");
-    
     /* XXX this is where we would load init process off the initrd */
     start_init();
     restart_init = TRUE;
+    
+    /* Start the kthread daemon going to set up other kernel threads */
+    kthread_create(kthreadd, "kthreadd");
 
     /* And we're done */
     kprintf("Kernel startup complete in %ds (%dms)\n\n", 
