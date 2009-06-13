@@ -148,6 +148,7 @@ void run_shell(void)
     last_cmd_index = 0;
     last_up_index = 0;
 
+    kprintf("\n");
     print_prompt();
     while (1) {
         char c = next_key();
