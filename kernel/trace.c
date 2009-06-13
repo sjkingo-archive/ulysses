@@ -67,7 +67,7 @@ void func_trace(unsigned int max_frames)
     TRACE_ONCE;
     unsigned int i, *ebp;
 
-    kprintf_all("Function call trace (from top of stack):\n");
+    kprintf("Function call trace (from top of stack):\n");
 
     ebp = &max_frames - 2;
     for (i = 0; i < max_frames; i++) {
@@ -83,9 +83,9 @@ void func_trace(unsigned int max_frames)
         /* Lookup the symbol */
         sym = lookup_symbol(eip);
         if (sym == NULL) {
-            kprintf_all("#%d %p in ???\n", i, eip);
+            kprintf("#%d %p in ???\n", i, eip);
         } else {
-            kprintf_all("#%d %p in %s ()\n", i, eip, sym->name);
+            kprintf("#%d %p in %s ()\n", i, eip, sym->name);
         }
 
         /* Since we don't have symbols before _kmain, just stop here */

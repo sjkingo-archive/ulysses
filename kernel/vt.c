@@ -63,19 +63,10 @@ static void append_to_vt(const char c, unsigned short vt)
     virtual_terms[vt].data[virtual_terms[vt].next++] = c;
 }
 
-void append_char(const char c, flag_t write, flag_t all)
+void append_char(const char c, flag_t write)
 {
     TRACE_ONCE;
-
-    if (all) {
-        unsigned short i;
-        for (i = 0; i < NUM_VT; i++) {
-            append_to_vt(c, i);
-        }
-    } else {
-        append_to_vt(c, active_vt);
-    }
-
+    append_to_vt(c, active_vt);
     if (write) {
         put_char(c); /* write through to the screen directly */
     }

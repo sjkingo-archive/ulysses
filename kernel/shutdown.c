@@ -29,8 +29,8 @@ void do_panic(const char *msg, const char *file, int line)
     static int panicking = 0;
     if (panicking++) halt(); /* prevent recursive panics - thanks AST */
 
-    kprintf_all("\n\n%[0,12]");
-    kprintf_all("Kernel panic: %s\n", msg);
+    kprintf("\n\n%[0,12]");
+    kprintf("Kernel panic: %s\n", msg);
 
 #if __GNUC__
     /* Try and work out where the panic came from */
@@ -38,15 +38,15 @@ void do_panic(const char *msg, const char *file, int line)
     symbol_t *sym = lookup_symbol(source_addr);
 
     if (sym == NULL) {
-        kprintf_all("%p in ??? () ", source_addr);
+        kprintf("%p in ??? () ", source_addr);
     } else {
-        kprintf_all("%p in %s () ", source_addr, sym->name);
+        kprintf("%p in %s () ", source_addr, sym->name);
     }
 #else
-    kprintf_all("??? in ??? () ");
+    kprintf("??? in ??? () ");
 #endif
     
-    kprintf_all("at %s:%d\n\n", file, line);
+    kprintf("at %s:%d\n\n", file, line);
 
     /* Dump a function call trace to screen for use in debugging */
     func_trace(50);
@@ -57,8 +57,8 @@ void do_panic(const char *msg, const char *file, int line)
 void shutdown(void)
 {
     TRACE_ONCE;
-    kprintf_all("Shutting down Ulysses\n");
-    kprintf_all("Killing all tasks...\n");
+    kprintf("Shutting down Ulysses\n");
+    kprintf("Killing all tasks...\n");
     kill_all_tasks();
     /* XXX allow the scheduler to actually remove the tasks? */
     halt(); /* XXX but for now, just halt */

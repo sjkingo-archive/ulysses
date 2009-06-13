@@ -31,16 +31,16 @@
 /* kputc()
  *  Append a raw character. All other kput..() call this.
  */
-static void kputc(const char c, flag_t all)
+static void kputc(const char c)
 {
-    append_char(c, TRUE, all);
+    append_char(c, TRUE);
     write_serial(COM1, c);
 }
 
 /* kputs()
  *  Print a NULL-terminated string character-by-character.
  */
-static void kputs(const char *str, flag_t all)
+static void kputs(const char *str)
 {
     const char *ptr; /* since we may want to change what str is pointing to */
     if (str == NULL) {
@@ -50,7 +50,7 @@ static void kputs(const char *str, flag_t all)
     }
 
     while (*ptr != '\0') {
-        kputc(*ptr, all);
+        kputc(*ptr);
         ptr++;
     }
 }
@@ -59,26 +59,25 @@ static void kputs(const char *str, flag_t all)
  *  Convert a signed integer to string and and put it. 
  *  See kputdu() for unsigned.
  */
-static void kputd(const int d, flag_t all)
+static void kputd(const int d)
 {
-    kputs(itoa(d), all);
+    kputs(itoa(d));
 }
 
 /* kputdu()
  *  Convert an *un*signed integer to string and put it.
  *  See kputd() for signed.
  */
-static void kputdu(const unsigned int ud, flag_t all)
+static void kputdu(const unsigned int ud)
 {
-    kputs(itoa(ud), all); /* XXX itoa() takes a signed int! */
+    kputs(itoa(ud)); /* XXX itoa() takes a signed int! */
 }
 
 /* kputx()
  *  Given the hex table to use, convert to string and put.
  *  hex_table can be either HEX_UPPER or HEX_LOWER.
  */
-static void kputx(const unsigned long hex, const char hex_table[16], 
-        flag_t all)
+static void kputx(const unsigned long hex, const char hex_table[16])
 {
     unsigned long h = hex; /* since we are modifying it */
     char str[32];
@@ -89,26 +88,26 @@ static void kputx(const unsigned long hex, const char hex_table[16],
         *--ptr = hex_table[(h % 0x10)];
     } while ((h /= 0x10) > 0);
 
-    kputs(ptr, all);
+    kputs(ptr);
 }
 
-static void do_padding(int num, char c, flag_t all)
+static void do_padding(int num, char c)
 {
     int i;
     if (num <= 0) {
         return;
     }
     for (i = 0; i < num; i++) {
-        kputc(c, all);
+        kputc(c);
     }
 }
 
 /* kprint()
  *  Formats and puts individual chars from the format string fmt. This does
- *  the actual work of kprintf() and kprintf_all().
+ *  the actual work of kprintf().
  *  Thank you Ken Thompson for giving us this ugly mess >_<
  */
-static void kprint(const char *fmt, va_list argp, flag_t all)
+static void kprint(const char *fmt, va_list argp)
 {
     int padding = 0;
     while (*fmt != '\0') {
@@ -118,37 +117,37 @@ static void kprint(const char *fmt, va_list argp, flag_t all)
 do_format: /* yuk, but the only way to get back here */
             switch (*fmt) {
                 case 's':
-                    kputs(va_arg(argp, char *), all);
+                    kputs(va_arg(argp, char *));
                     break;
 
                 case 'c':
-                    kputc(va_arg(argp, char), all);
+                    kputc(va_arg(argp, char));
                     break;
 
                 case 'u': /* unsigned int */
-                    kputdu(va_arg(argp, unsigned int), all);
+                    kputdu(va_arg(argp, unsigned int));
                     break;
 
                 case 'i': /* signed int */
                 case 'd':
                     if (padding > 0) {
                         int d = va_arg(argp, int);
-                        do_padding((padding - numdigits(d, 10)), '0', all);
-                        kputd(d, all);
+                        do_padding((padding - numdigits(d, 10)), '0');
+                        kputd(d);
                         padding = 0;
                     } else {
-                        kputd(va_arg(argp, int), all);
+                        kputd(va_arg(argp, int));
                     }
                     break;
 
                 case 'p': /* pointer, print a 0x and fall through */
-                    kputs("0x", all);
+                    kputs("0x");
                 case 'X': /* uppercase hex */
-                    kputx(va_arg(argp, unsigned long), HEX_UPPER, all);
+                    kputx(va_arg(argp, unsigned long), HEX_UPPER);
                     break;
 
                 case 'x': /* lowercase hex */
-                    kputx(va_arg(argp, unsigned long), HEX_LOWER, all);
+                    kputx(va_arg(argp, unsigned long), HEX_LOWER);
                     break;
 
                 case '0': /* pad with 0's */
@@ -162,7 +161,7 @@ do_format: /* yuk, but the only way to get back here */
                     break;
 
                 case '%':
-                    kputc('%', all);
+                    kputc('%');
                     break;
 
                 case '[': /* colour: %[bg, fg] */
@@ -182,12 +181,12 @@ do_format: /* yuk, but the only way to get back here */
 
                 default:
                     /* print it raw */
-                    kputc('%', all);
-                    kputc(*fmt, all);
+                    kputc('%');
+                    kputc(*fmt);
             }
         } else {
             if (*fmt == '\0') return;
-            kputc(*fmt, all);
+            kputc(*fmt);
         }
 
         fmt++;
@@ -204,14 +203,6 @@ int kprintf(const char *fmt, ...)
 	bytes = vsprintf(buf, fmt, args);
 	va_end(args);
 
-    kputs(buf, FALSE);
+    kputs(buf);
 	return bytes;
-}
-
-void kprintf_all(const char *fmt, ...)
-{
-    va_list argp;
-    va_start(argp, fmt);
-    kprint(fmt, argp, TRUE); /* print to all VTs */
-    va_end(argp);
 }

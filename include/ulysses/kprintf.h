@@ -7,10 +7,7 @@
  *  printf() for the kernel. Takes a format string and variable arguments
  *  list, formats the string using given args and specifiers, and appends
  *  the formatted string to the active VT.
- * kprintf_all()
- *  As above, but print to all VTs.
  */
 int kprintf(const char *fmt, ...);
-void kprintf_all(const char *fmt, ...);
 
 #endif

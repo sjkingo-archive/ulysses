@@ -47,9 +47,9 @@ void flush_vt(void);
 
 /* append_char()
  *  Appends the given character to the current VT's buffer and writes it to
- *  screen if write is true. If all is true, write to all VTs.
+ *  screen if write is true.
  */
-void append_char(const char c, flag_t write, flag_t all);
+void append_char(const char c, flag_t write);
 
 /* remove_last_line()
  *  Remove the last line (up to \n) from the current virtual terminal and
