@@ -94,7 +94,7 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     restart_init = TRUE;
 
     /* And we're done */
-    kprintf("Kernel startup complete in %ds (%dms)\n", 
+    kprintf("Kernel startup complete in %ds (%dms)\n\n", 
             kern.current_time_offset.tv_sec,
             kern.current_time_offset.tv_msec);
     
