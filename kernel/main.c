@@ -17,7 +17,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ulysses/cpu.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
@@ -34,6 +33,7 @@
 #include "../config.h"
 
 #include <sys/types.h>
+#include <unistd.h>
 
 struct kernel kern;
 
@@ -89,15 +89,20 @@ void _kmain(void *mdb, unsigned int magic, unsigned int initial_stack)
     /* XXX this is where we would load init process off the initrd */
     start_init();
 
-    /* And we're done. */
+    /* And we're done */
     kprintf("Kernel startup complete in %ds (%dms)\n", 
             kern.current_time_offset.tv_sec,
             kern.current_time_offset.tv_msec);
-
-    /* This is the kernel task (pid 0), so drop to an idle. This should never
-     * return, so panic if it did.
+    
+    /* We need to wait a bit here for all the threads to settle themselves 
+     * before going away.
      */
-    idle_cpu();
+    sleep(100);
+
+    /* The kernel task has finished the startup, so remove the task from the
+     * system. This should never return, so panic if it does.
+     */
+    task_exit();
     panic("kernel task died");
     return; /* and if we ever get here, then we really don't care anymore */
 }

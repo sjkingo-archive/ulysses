@@ -254,12 +254,6 @@ void kill_task(pid_t pid)
     TRACE_ONCE;
     task_t *t;
 
-    /* Don't allow the kernel to be killed */
-    if (pid == 0) {
-        kprintf("kill: You can't kill the kernel.\n");
-        return;
-    }
-
     /* Try and find the task */
     t = get_task(pid);
     if (t == NULL) {
