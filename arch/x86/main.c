@@ -31,6 +31,7 @@
 #include <ulysses/serial.h>
 #include <ulysses/screen.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/smbios.h>
 #include <ulysses/syscall.h>
 #include <ulysses/timer.h>
 #include <ulysses/trace.h>
@@ -109,10 +110,11 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
      *  7. Enable the A20 address line
      *  8. Enter protected mode
      *  9. Activate memory paging
-     *  10. Identify the CPU(s) attached to the system
-     *  11. Set up clock timer
-     *  12. Set up the keyboard driver
-     *  13. Test for some known CPU bugs
+     *  10. Identify the CPU(s) attached to the system through CPUID
+     *  11. Read the SMBIOS information
+     *  12. Set up clock timer
+     *  13. Set up the keyboard driver
+     *  14. Test for some known CPU bugs
      */
     init_screen(); /* must be before any kprintf() or panic() */
     init_serial(COM1);
@@ -124,6 +126,7 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     enter_pm();
     init_paging();
     get_cpuid();
+    read_smbios();
     init_timer(TIMER_FREQ);
     init_keyboard();
     test_cpu_bugs();
