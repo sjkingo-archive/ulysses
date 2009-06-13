@@ -72,6 +72,8 @@ void start_init(void)
     if (pid == 0) {
         run_init();
         task_exit();
+    } else if (pid == -1) {
+        kprintf("fork() returned -1 in pid %d\n", do_getpid());
     }
 }
 
