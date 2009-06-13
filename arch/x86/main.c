@@ -44,7 +44,7 @@
 extern unsigned int placement_address; /* kheap.c */
 extern unsigned int end; /* linker.ld */
 
-extern void init_a20(void); /* see a20.s */
+extern void init_a20(void); /* see a20.asm */
 extern void kernel_main(unsigned int); /* see kernel/kernel.c */
 
 static void set_time(void)
@@ -93,9 +93,9 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     TRACE_ONCE;
 
     /* Disable interrupts in case someone removes the cli instruction from
-     * loader.s (hint: don't remove it from loader.s please :-))
+     * loader.asm (hint: don't remove it from loader.asm please :-))
      */
-    CLI;
+    lock_kernel();
 
     /* Initialise the various low-level x86 stuff.
      *
@@ -120,8 +120,8 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     init_multiboot(mdb, magic);
     init_gdt();
     init_idt();
-    init_a20(); /* see flush.s */
-    enter_pm(); /* see flush.s */
+    init_a20();
+    enter_pm();
     init_paging();
     get_cpuid();
     init_timer(TIMER_FREQ);
@@ -129,6 +129,6 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     test_cpu_bugs();
 
     /* And finally, enable interrupts and load the kernel proper */
-    STI;
+    unlock_kernel();
     kernel_main(initial_stack);
 }
