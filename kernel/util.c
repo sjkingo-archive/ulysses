@@ -139,11 +139,13 @@ void print_startup(void)
             kern.mbi->mem_lower, kern.mbi->mem_upper);
     kprintf("Detected 1 CPU(s): %s %s at %d MHz\n", kern.cpu_vendor, 
             kern.cpu_model, kern.cpu_freq);
-    kprintf("CMOS-provided time 2%03d-%02d-%02d %02d:%02d:%02d (no timezone; "
-            "probably UTC)\n", 
-            kern.startup_datetime.year, kern.startup_datetime.month,
-            kern.startup_datetime.day, kern.startup_datetime.hour,
-            kern.startup_datetime.min, kern.startup_datetime.sec);
+    kprintf("CMOS-provided time 2%0*d-%0*d-%0*d %0*d:%0*d:%0*d (no timezone; "
+            "probably UTC)\n", 3, kern.startup_datetime.year, 
+            2, kern.startup_datetime.month,
+            2, kern.startup_datetime.day,
+            2, kern.startup_datetime.hour,
+            2, kern.startup_datetime.min, 
+            2, kern.startup_datetime.sec);
     kprintf("Kernel stack located at %p with size %d bytes\n", STACK_LOC, 
             STACK_SIZE);
     kprintf("Kernel heap located at %p with initial size %p bytes\n", 
