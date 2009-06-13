@@ -194,12 +194,18 @@ do_format: /* yuk, but the only way to get back here */
     }
 }
 
-void kprintf(const char *fmt, ...)
+int kprintf(const char *fmt, ...)
 {
-    va_list argp;
-    va_start(argp, fmt);
-    kprint(fmt, argp, FALSE);
-    va_end(argp);
+	char buf[1024];
+	va_list args;
+	int bytes;
+
+	va_start(args, fmt);
+	bytes = vsprintf(buf, fmt, args);
+	va_end(args);
+
+    kputs(buf, FALSE);
+	return bytes;
 }
 
 void kprintf_all(const char *fmt, ...)

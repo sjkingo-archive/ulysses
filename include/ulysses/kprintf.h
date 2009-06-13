@@ -10,7 +10,7 @@
  * kprintf_all()
  *  As above, but print to all VTs.
  */
-void kprintf(const char *fmt, ...);
+int kprintf(const char *fmt, ...);
 void kprintf_all(const char *fmt, ...);
 
 #endif

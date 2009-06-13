@@ -16,5 +16,11 @@ typedef char *va_list;
 						    - __vasz(type))))
 #define va_end(ap)
 
+/* vsprintf()
+ *  Format the format string given into a buffer given by buf.
+ *  Return the number of characters actually written.
+ */
+int vsprintf(char *buf, const char *fmt, va_list args);
+
 #endif
 
