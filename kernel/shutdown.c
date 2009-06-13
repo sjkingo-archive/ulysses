@@ -29,7 +29,7 @@ void do_panic(const char *msg, const char *file, int line)
     static int panicking = 0;
     if (panicking++) halt(); /* prevent recursive panics - thanks AST */
 
-    kprintf_all("\n\n%[4,15]");
+    kprintf_all("\n\n%[0,12]");
     kprintf_all("Kernel panic: %s\n", msg);
 
 #if __GNUC__
