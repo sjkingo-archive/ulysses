@@ -9,24 +9,25 @@
 #define WIDTH 80
 #define HEIGHT 25
 
+/* Colour attributes */
 enum screen_colours {
-    BLACK,
-    BLUE,
-    GREEN,
-    CYAN,
-    RED,
-    MAGENTA,
-    BROWN,
-    LGRAY,
-    DGRAY,
-    LBLUE,
-    LGREEN,
-    LCYAN,
-    LRED,
-    LMAGENTA,
-    LYELLOW,
-    WHITE,
-    DEFAULT,
+    BLACK=0,
+    BLUE=1,
+    GREEN=2,
+    CYAN=3,
+    RED=4,
+    MAGENTA=5,
+    BROWN=6,
+    LGRAY=7,
+    DGRAY=8,
+    LBLUE=9,
+    LGREEN=10,
+    LCYAN=11,
+    LRED=12,
+    LMAGENTA=13,
+    LYELLOW=14,
+    WHITE=15,
+    DEFAULT=16,
 };
 
 #define TAB "        " /* 8 spaces */
