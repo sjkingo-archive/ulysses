@@ -52,5 +52,4 @@ loader:
 
     cli ; we don't want interrupts for a while yet
     call _kmain_x86
-    jmp $ ; infinite loop
-
+    jmp $ ; we should never, ever, ever get here but busy loop if we do

@@ -100,6 +100,5 @@ void kernel_main(unsigned int initial_stack)
      * system. This should never return, so panic if it does.
      */
     task_exit();
-    panic("kernel task died");
-    return; /* and if we ever get here, then we really don't care anymore */
+    panic("Kernel task did not die when it was supposed to :-(");
 }

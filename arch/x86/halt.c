@@ -44,4 +44,5 @@ void halt(void)
             "me.\"\n");
     kprintf("\t-- Edsger W. Dijkstra, 30 August 1995\n");
     while (1);
+    /* if we get here, then reach around and pull the bloody power cord out */
 }

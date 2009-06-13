@@ -131,4 +131,9 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     /* And finally, enable interrupts and load the kernel proper */
     unlock_kernel();
     kernel_main(initial_stack);
+
+    /* If we get here, then something very bad has happened so we just give
+     * up and run away like a scared mouse...
+     */
+    halt();
 }
