@@ -35,6 +35,15 @@ size_t strlen(const char *s)
     return count;
 }
 
+size_t strnlen(const char *s, size_t count)
+{
+    const char *str = s;
+    size_t c = 0;
+
+    while (*str++ && count--) ++c;
+    return c;
+}
+
 char *strcpy(char *dest, const char *src)
 {
     return memcpy(dest, src, (size_t)(strlen(src) + 1));

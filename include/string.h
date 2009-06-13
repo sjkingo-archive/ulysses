@@ -21,6 +21,12 @@ void *memcpy(void *dest, const void *src, size_t n);
  */
 size_t strlen(const char *s);
 
+/* strnlen()
+ *  Buffer-safe version strlen: return length of s or count, whichever
+ *  comes first.
+ */
+size_t strnlen(const char *s, size_t count);
+
 /* strcpy()
  *  Copy string src into dest. The destination dest must be large enough.
  *  Return a pointer to start of destination.
