@@ -31,7 +31,7 @@ FLAGS equ MODULEALIGN | MEMINFO ; multiboot flag
 MAGIC equ 0x1BADB002 ; bad boo 2?
 CHECKSUM equ -(MAGIC + FLAGS)
 
-[bits 32]
+bits 32
 
 mboot:
     dd MAGIC
