@@ -27,8 +27,9 @@
 
 void halt(void)
 {
-    CLI; /* since we're about to die anyway */
-    kprintf("\nKernel uptime %d seconds\n", kern.current_time_offset.tv_sec);
+    lock_kernel(); /* since we're about to die anyway */
+    kprintf("Kernel uptime %ds (%dms)\n", kern.current_time_offset.tv_sec,
+            kern.current_time_offset.tv_msec);
     kprintf("CPU halt\n");
     while (1) __asm__ __volatile__("hlt");
 
