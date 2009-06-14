@@ -8,6 +8,14 @@
 /*  Convert a binary-coded decimal to an integer. */
 #define BCD_INT(bcd) (((bcd & 0xF0) >> 4) * 10 + (bcd & 0x0F))
 
+/* Perform 64-bit division through 2 32-bit registers */
+#define do_div(n,base) ({ \
+    int __res; \
+    __res = ((unsigned long) n) % (unsigned) base; \
+    n = ((unsigned long) n) / (unsigned) base; \
+    __res; \
+})
+
 /* Output a byte to the given I/O port */
 static inline void outb(const unsigned int port, unsigned int value)
 {

@@ -18,6 +18,7 @@
  */
 
 #include <ulysses/screen.h>
+#include <ulysses/util_x86.h>
 
 #include <ctype.h>
 #include <stdarg.h>
@@ -33,13 +34,6 @@
 #define LEFT 16 /* left justified */
 #define SMALL 32 /* Must be 32 == 0x20 */
 #define SPECIAL 64 /* 0x */
-
-#define do_div(n,base) ({ \
-    int __res; \
-    __res = ((unsigned long) n) % (unsigned) base; \
-    n = ((unsigned long) n) / (unsigned) base; \
-    __res; \
-})
 
 static const char digits[16] = "0123456789ABCDEF";
 
