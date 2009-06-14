@@ -249,6 +249,16 @@ static void cmd_flag(char **args)
     }
 }
 
+static void cmd_echo(char **args)
+{
+    TRACE_ONCE;
+    while (*args != NULL) {
+        kprintf("%s ", *args);
+        args++;
+    }
+    kprintf("\n");
+}
+
 void cmd_fork(void)
 {
     TRACE_ONCE;
@@ -271,6 +281,7 @@ struct shell_command cmds[] = {
     { "cat", NULL, &cmd_cat, "Concatenate the contents of the given filename "
             "to screen." },
     { "flag", NULL, &cmd_flag, "Change kernel flag given by second argument." },
+    { "echo", NULL, &cmd_echo, "Display a line of text given by the arguments." },
 
     /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },
