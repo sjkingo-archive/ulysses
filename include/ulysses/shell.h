@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 
-#define SHELL_PROMPT "ulysses> "
+#define SHELL_PROMPT "# "
 #define SHELL_BUF_SIZE 1024
 #define SHELL_MAX_HISTORY 100
 
