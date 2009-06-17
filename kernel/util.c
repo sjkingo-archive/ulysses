@@ -112,10 +112,6 @@ void print_startup(void)
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
     kprintf("Sending all log messages to serial device COM1\n");
 
-#ifdef _ARCH_x86
-    kprintf("Compiled for x86\n");
-#endif
-
 #ifdef __GNUC__
     kprintf("Compiled by gcc %s on %s at %s (localtime)\n", __VERSION__, 
             __DATE__, __TIME__);
@@ -124,12 +120,6 @@ void print_startup(void)
             "debugging symbols\n");
 #endif
 
-#ifdef __LP64__
-    kprintf("Compiled with 64-bit long int support\n");
-#endif
-#ifdef __STRICT_ANSI__
-    kprintf("Warning: compiled with -ansi (how did that even work?)\n");
-#endif
 #ifdef __OPTIMIZE__
     kprintf("Warning: compiled with -Ox optimisations; expect limited "
             "debugging capacity\n");
