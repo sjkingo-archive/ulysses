@@ -141,7 +141,7 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     /* We've finished low-level setup */
     end_time = rdtsc();
     startup_time = end_time - start_time;
-    do_div(startup_time, TSC_MAGIC);
+    div64(startup_time, TSC_MAGIC);
 
     /* And finally, enable interrupts and load the kernel proper */
     unlock_kernel();
