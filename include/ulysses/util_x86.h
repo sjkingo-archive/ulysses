@@ -16,6 +16,17 @@
     __res; \
 })
 
+/* Trigger a page fault (for whatever reason one would have in doing so) */
+#define PF __asm__ __volatile__("jmp 0x0")
+
+/* Send a system call on software interrupt 80 */
+#define INT80(x) \
+({ \
+    int __a; \
+    __asm__ __volatile__("int $0x80" : "=a" (__a) : "0" (x)); \
+    __a; \
+})
+
 /* Output a byte to the given I/O port */
 static inline void outb(const unsigned int port, unsigned int value)
 {

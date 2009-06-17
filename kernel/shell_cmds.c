@@ -31,6 +31,7 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
+#include <ulysses/util_x86.h>
 
 #include <errno.h>
 #include <stdlib.h>
@@ -62,7 +63,7 @@ static void cmd_comefrom(void)
 static void cmd_pf(void)
 {
     TRACE_ONCE;
-    __asm__ __volatile__("jmp 0x0");
+    PF;
 }
 
 static void cmd_history(void)
@@ -81,7 +82,7 @@ static void cmd_int_80(char **args)
     int a, num;
     
     num = strtol(args[0], NULL, 10);
-    __asm__ __volatile__("int $0x80" : "=a" (a) : "0" (num));
+    a = INT80(num);
 }
 
 static void cmd_ps(void)
