@@ -6,7 +6,7 @@ env = Environment(
     CC = 'gcc', 
     CFLAGS = '-m32 -g -O -Wall -Wextra -isystem include -fno-builtin', 
     LINKFLAGS = '-m32 -nostdinc -nostdlib -nostartfiles -nodefaultlibs -T ' \
-            'arch/x86/linker.ld arch/x86/loader.o', # we cheat and add loader
+            'arch/x86/linker.ld',
     ASFLAGS = '-f elf',
 )
 env.Decider('timestamp-match')

@@ -18,6 +18,7 @@
  */
 
 ENTRY (loader)
+STARTUP (arch/x86/loader.o)
 
 SECTIONS {
 
