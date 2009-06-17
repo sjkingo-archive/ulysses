@@ -55,11 +55,6 @@ void kthreadd(void);
  */
 pid_t kthread_create(void (*func)(void), const char *name);
 
-/* kthread_clone()
- *  Clones the calling kernel thread.
- */
-pid_t kthread_clone(void);
-
 /* kthread_yield()
  *  Voluntarily yield the current kernel thread, allowing the task manager to 
  *  run another task.
