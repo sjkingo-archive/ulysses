@@ -273,6 +273,18 @@ void cmd_fork(void)
     }
 }
 
+static void cmd_kmalloc(void)
+{
+    TRACE_ONCE;
+    int i;
+    int iter = 10000;
+    int size = 10;
+    for (i = 0; i < iter; i++) {
+        kprintf("kmalloc %d returned %p\n", i, kmalloc(size));
+    }
+    kprintf("%d bytes allocated\n", iter*size);
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -302,6 +314,7 @@ struct shell_command cmds[] = {
     { "f00f", &cmd_f00f, NULL, "The Four Bytes Of The Apocalypse." },
     { "ring3", &cmd_ring3, NULL, "Run a test in user mode." },
     { "fork", &cmd_fork, NULL, "Fork the shell. This shouldn't work!" },
+    { "kmalloc", &cmd_kmalloc, NULL, "Run a kmalloc test." },
     
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };
