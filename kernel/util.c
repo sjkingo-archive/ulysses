@@ -120,11 +120,6 @@ void print_startup(void)
             "debugging symbols\n");
 #endif
 
-#ifdef __OPTIMIZE__
-    kprintf("Warning: compiled with -Ox optimisations; expect limited "
-            "debugging capacity\n");
-#endif
-
     print_memory_map();
     kprintf("Detected 1 CPU(s): %s %s at %d MHz\n", kern.cpu_vendor, 
             kern.cpu_model, kern.cpu_freq);
@@ -135,10 +130,6 @@ void print_startup(void)
             2, kern.startup_datetime.hour,
             2, kern.startup_datetime.min, 
             2, kern.startup_datetime.sec);
-    kprintf("Kernel stack located at %p with size %d bytes\n", STACK_LOC, 
-            STACK_SIZE);
-    kprintf("Kernel heap located at %p with initial size %p bytes\n", 
-            KHEAP_START, KHEAP_INITIAL_SIZE);
 }
 
 inline void lock_kernel(void)
