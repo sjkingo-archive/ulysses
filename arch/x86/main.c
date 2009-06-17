@@ -94,7 +94,7 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
     TRACE_ONCE;
 
-    register unsigned long long start_time, end_time;
+    register unsigned long long start_time;
 
     /* Disable interrupts in case someone removes the cli instruction from
      * loader.asm (hint: don't remove it from loader.asm please :-))
@@ -102,8 +102,8 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     lock_kernel();
 
     /* Since we've disabled interrupts (and haven't even got a working timer
-     * yet, we get the time from the real-time clock. This is often more 
-     * accurate anyway...
+     * yet), we get the time from the real-time clock on the CPU. This is often
+     * more accurate anyway...
      */
     start_time = rdtsc();
 
@@ -139,8 +139,7 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     test_cpu_bugs();
 
     /* We've finished low-level setup */
-    end_time = rdtsc();
-    startup_time = end_time - start_time;
+    startup_time =rdtsc() - start_time;
     div64(startup_time, TSC_MAGIC);
 
     /* And finally, enable interrupts and load the kernel proper */
