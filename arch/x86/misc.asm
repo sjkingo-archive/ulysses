@@ -1,4 +1,4 @@
-; arch/x86/task.s - miscellaneous task management routines
+; arch/x86/misc.asm - miscellaneous task management routines
 ; part of Ulysses, a tiny operating system
 ;
 ; Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>
