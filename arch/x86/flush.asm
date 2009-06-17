@@ -33,7 +33,6 @@ gdt_flush:
     mov gs, ax
     mov ss, ax
     jmp 0x08:.flush ; offset to code segment
-
 .flush:
    ret
 
@@ -47,14 +46,11 @@ idt_flush:
 ; Enter protected mode
 global enter_pm
 enter_pm:
-    cli ; not reentrant
     mov eax, cr0
     or eax, 1 ; PM bit
     mov cr0, eax
     jmp 0x08:.pm ; far jump into protected mode
-
 .pm:
-    sti
     ret
 
 ; Tell the CPU about our single TSS for task switching

@@ -21,8 +21,6 @@ section .text
 
 global init_a20
 init_a20:
-    cli ; this isn't reentrant
-    
     call a20wait
     mov al, 0xAD
     out 0x64, al
@@ -49,8 +47,6 @@ init_a20:
     out 0x64, al
     
     call a20wait
-
-    sti
     ret
 
 a20wait:
