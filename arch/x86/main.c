@@ -47,6 +47,8 @@ extern unsigned int end; /* linker.ld */
 extern void init_a20(void); /* see a20.asm */
 extern void kernel_main(unsigned int); /* see kernel/kernel.c */
 
+unsigned long long startup_time;
+
 static void set_time(void)
 {
     TRACE_ONCE;
@@ -92,10 +94,18 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
     TRACE_ONCE;
 
+    register unsigned long long start_time, end_time;
+
     /* Disable interrupts in case someone removes the cli instruction from
      * loader.asm (hint: don't remove it from loader.asm please :-))
      */
     lock_kernel();
+
+    /* Since we've disabled interrupts (and haven't even got a working timer
+     * yet, we get the time from the real-time clock. This is often more 
+     * accurate anyway...
+     */
+    start_time = rdtsc();
 
     /* Initialise the various low-level x86 stuff.
      *
@@ -127,6 +137,11 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     init_timer(TIMER_FREQ);
     init_keyboard();
     test_cpu_bugs();
+
+    /* We've finished low-level setup */
+    end_time = rdtsc();
+    startup_time = end_time - start_time;
+    do_div(startup_time, TSC_MAGIC);
 
     /* And finally, enable interrupts and load the kernel proper */
     unlock_kernel();

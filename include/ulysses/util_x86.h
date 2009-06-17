@@ -60,6 +60,7 @@ static inline unsigned char inb(unsigned int port)
 /* Read the current value of the read time-stamp counter on the CPU
  * and return it as a 64-bit wide int for high-resolution time
  */
+#define TSC_MAGIC 1662543
 static inline unsigned long long rdtsc(void)
 {
     unsigned int a, d;

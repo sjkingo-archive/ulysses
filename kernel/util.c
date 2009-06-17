@@ -31,6 +31,9 @@
 
 #include <string.h>
 
+/* Time to do low-level setup */
+extern unsigned long long startup_time;
+
 /* flag to tell us whether to try and restart init or not */
 flag_t restart_init = FALSE;
 
@@ -104,11 +107,13 @@ void sanity_check(void)
 void print_startup(void)
 {
     TRACE_ONCE;
+
     kprintf("%[0,15]");
     kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
     kprintf("Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>\n\n");
     kprintf("%[0,7]");
 
+    kprintf("Low-level startup complete in %Ldms\n", startup_time);
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
     kprintf("Sending all log messages to serial device COM1\n");
 
