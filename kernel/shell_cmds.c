@@ -21,6 +21,7 @@
 #include <ulysses/gdt.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
+#include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shell.h>
 #include <ulysses/shell_cmds.h>
