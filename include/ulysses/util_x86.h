@@ -27,6 +27,22 @@
     __a; \
 })
 
+/* Read the current stack pointer and return it */
+#define READ_ESP() \
+({ \
+    int __a; \
+    __asm__ __volatile__("mov %%esp, %0" : "=r" (__a)); \
+    __a; \
+})
+
+/* Read the stack base pointer and return it */
+#define READ_EBP() \
+({ \
+    int __a; \
+    __asm__ __volatile__("mov %%ebp, %0" : "=r" (__a)); \
+    __a; \
+})
+
 /* Output a byte to the given I/O port */
 static inline void outb(const unsigned int port, unsigned int value)
 {

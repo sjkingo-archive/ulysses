@@ -28,6 +28,7 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
+#include <ulysses/util_x86.h>
 
 #include <errno.h>
 #include <string.h>
@@ -62,8 +63,8 @@ static void switch_task(flag_t save)
 
     /* We need these registers later */
     if (save) {
-        __asm__ __volatile__("mov %%esp, %0" : "=r" (esp));
-        __asm__ __volatile__("mov %%ebp, %0" : "=r" (ebp));
+        esp = READ_ESP();
+        ebp = READ_EBP();
     }
 
     /* Read the current instruction pointer. Two things could have happened 
@@ -310,8 +311,8 @@ pid_t do_fork(void)
     eip = read_eip(); /* both tasks will continue executing from here */
     if (current_task == parent) {
         /* Parent, set up the pointers for the child */
-        __asm__ __volatile("mov %%esp, %0" : "=r" (child->esp));
-        __asm__ __volatile("mov %%ebp, %0" : "=r" (child->ebp));
+        child->esp = READ_ESP();
+        child->ebp = READ_EBP();
         child->eip = eip;
         
         /* Tell the scheduler about this task */
