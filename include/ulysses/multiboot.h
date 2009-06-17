@@ -69,4 +69,17 @@ typedef struct memory_map {
     unsigned long type;
 } memory_map_t;
 
+enum mb_memory_types {
+    MB_RAM=1,
+    MB_RESERVED=2,
+    MB_ACPI=3,
+    MB_NVS=4,
+    MB_UNUSABLE=5,
+};
+
+/* print_memory_map()
+ *  Print a dump of the multiboot-provided memory map.
+ */
+void print_memory_map(void);
+
 #endif

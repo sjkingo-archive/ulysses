@@ -135,8 +135,7 @@ void print_startup(void)
             "debugging capacity\n");
 #endif
 
-    kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
-            kern.mbi->mem_lower, kern.mbi->mem_upper);
+    print_memory_map();
     kprintf("Detected 1 CPU(s): %s %s at %d MHz\n", kern.cpu_vendor, 
             kern.cpu_model, kern.cpu_freq);
     kprintf("CMOS-provided time 2%0*d-%0*d-%0*d %0*d:%0*d:%0*d (no timezone; "
