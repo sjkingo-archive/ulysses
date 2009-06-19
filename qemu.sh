@@ -1,16 +1,17 @@
 #!/bin/bash
 
+./make_iso.sh || exit $?
+
 if [ "$1" = "gdb" ]; then
     debug="-s -S"
 fi
 
 qemu $debug \
     -d cpu_reset \
-    -fda arch/x86/boot/grub.img \
-    -hda fat:arch/x86/boot \
-    -boot a \
+    -cdrom boot/kernel.iso \
+    -boot d \
     -m 8 \
-    -serial "file:log.txt" \
+    -serial "file:boot/log.txt" \
     &
 
 if [ "$debug" != "" ]; then
