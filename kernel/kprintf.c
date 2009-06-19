@@ -17,7 +17,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../config.h"
 #include <ulysses/kprintf.h>
 #include <ulysses/serial.h>
 #include <ulysses/screen.h>

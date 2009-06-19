@@ -1,12 +1,9 @@
 #ifndef _ULYSSES_KERNEL_H
 #define _ULYSSES_KERNEL_H
 
-/* This sets up any global variables (pre-processor definitions should go
- * in /config.h instead) for the kernel.
+/* This sets up any global variables and pre-processor definitions for the
+ * kernel.
  */
-
-/* Our own headers */
-#include "../../config.h" /* must be first */
 
 #include <ulysses/datetime.h>
 #include <ulysses/multiboot.h>
@@ -14,10 +11,12 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-/* Ensure a valid architecture was declared */
-#ifndef _ARCH_x86
-#error No _ARCH_* defined!
-#endif
+/* VERSION_NUM
+ * VERSION_CN
+ *  Version number and codename of the kernel.
+*/
+#define VERSION_NUM "0.2.0"
+#define VERSION_CN "amnesiac"
 
 /* Kernel stack is 8 KB */
 #define STACK_LOC 0xA0000000
