@@ -1,6 +1,0 @@
-default 0
-timeout 5
-
-title Ulysses 0.2.0
-kernel /kernel
-module /initrd.img
