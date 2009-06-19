@@ -8,10 +8,10 @@ fi
 
 qemu $debug \
     -d cpu_reset \
-    -cdrom boot/kernel.iso \
+    -cdrom ../boot/kernel.iso \
     -boot d \
     -m 8 \
-    -serial "file:boot/log.txt" \
+    -serial "file:../boot/log.txt" \
     &
 
 if [ "$debug" != "" ]; then
