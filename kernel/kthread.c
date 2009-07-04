@@ -18,7 +18,6 @@
  */
 
 #include <ulysses/gdt.h>
-#include <ulysses/initrd.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kthread.h>
 #include <ulysses/kprintf.h>
@@ -38,7 +37,6 @@ void kthreadd(void)
     TRACE_ONCE;
     kthreadd_pid = do_getpid();
     kprintf("kthreadd: running with pid %d\n", kthreadd_pid);
-    kthread_create(run_initrd, "initrd");
     kthread_create(run_shell, "shell");
     while (1) kthread_yield(); /* waiting for work */
 }

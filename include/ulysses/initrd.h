@@ -29,11 +29,16 @@ struct file {
     void *data;
 };
 
-/* run_initrd()
- *  Runs the initrd, setting up root filesystem.
+/* setup_initrd()
+ *  Sets up the initrd by parsing the multiboot module and turning it into
+ *  a VFS.
  */
-void run_initrd(void);
+void setup_initrd(void);
 
+/* load_file()
+ *  Load a file from the initrd with the given name and return a pointer to
+ *  its file structure.
+ */
 struct file *load_file(char *name);
 
 #endif

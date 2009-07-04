@@ -76,6 +76,9 @@ void kernel_main(unsigned int initial_stack)
     init_vt();
     print_startup();
 
+    /* Create a VFS out of the initrd */
+    setup_initrd();
+
     /* Start the kthread daemon going to set up other kernel threads */
     kthread_create(kthreadd, "kthreadd");
 

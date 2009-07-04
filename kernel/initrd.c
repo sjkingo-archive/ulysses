@@ -116,14 +116,13 @@ struct file *load_file(char *name)
     return f;
 }
 
-void run_initrd(void)
+void setup_initrd(void)
 {
     unsigned int i, loc;
 
-    /* If no initrd module was given, then there is no work for us to do */
     if (kern.mbi->mods_count == 0) {
-        kprintf("initrd: boot module not found, aborting\n");
-        kthread_exit();
+        kprintf("initrd: boot module not found\n");
+        return;
     }
 
     loc = *(unsigned int *)kern.mbi->mods_addr;
@@ -148,6 +147,7 @@ void run_initrd(void)
     initrd_root->ptr = 0;
     initrd_root->impl = 0;
     fs_root = initrd_root;
+    kprintf("initrd: root VFS set up\n");
 
     /* /dev */
     initrd_dev = (fs_node_t *)kmalloc(sizeof(fs_node_t));
@@ -166,6 +166,7 @@ void run_initrd(void)
     initrd_dev->finddir = &initrd_finddir;
     initrd_dev->ptr = 0;
     initrd_dev->impl = 0;
+    kprintf("initrd: /dev VFS set up\n");
 
     root_nodes = (fs_node_t *)kmalloc(sizeof(fs_node_t) * 
             initrd_header->nfiles);
@@ -189,7 +190,4 @@ void run_initrd(void)
         root_nodes[i].close = 0;
         root_nodes[i].impl = 0;
     }
-
-    /* Wait for work to come in */
-    while (1) kthread_yield();
 }
