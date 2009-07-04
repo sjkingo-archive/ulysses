@@ -1,7 +1,12 @@
 #!/bin/bash
 DIR="../arch/x86/boot"
 OUTPUT_DIR="../boot"
+
 ./make_menu.sh
+
+echo "target remote localhost:1234" > gdb-startup
+echo "symbol-file $DIR/kernel" >> gdb-startup
+
 mkisofs -R -q  \
     -b boot/grub/stage2_eltorito \
     -no-emul-boot \
