@@ -21,6 +21,7 @@
 #include <ulysses/kprintf.h>
 #include <ulysses/initrd.h>
 #include <ulysses/paging.h>
+#include <ulysses/trace.h>
 
 #include <string.h>
 #include <sys/types.h>
@@ -34,12 +35,15 @@
  */
 static struct elf_header *parse_elf(struct file *f)
 {
+    TRACE_ONCE;
+
     struct elf_header *elf = (struct elf_header *)f->data;
     if (elf->e_ident[EI_MAG0] != 0x7F || elf->e_ident[EI_MAG1] != 'E' || 
             elf->e_ident[EI_MAG2] != 'L' || elf->e_ident[EI_MAG3] != 'F' ||
             elf->e_ident[EI_CLASS] != ELFCLASS32) {
         return NULL;
     }
+
     return elf;
 }
 
@@ -48,6 +52,8 @@ static struct elf_header *parse_elf(struct file *f)
  */
 static char *get_symbol_string(unsigned char *buf, unsigned int index)
 {
+    TRACE_ONCE;
+
     unsigned int i;
     struct elf_header *eh = (struct elf_header *)buf;
 
@@ -82,6 +88,8 @@ static char *get_symbol_string(unsigned char *buf, unsigned int index)
  */
 static unsigned int move_sections(struct file *f, struct elf_header *elf, page_dir_t *dir)
 {
+    TRACE_ONCE;
+
     struct elf_program_header *phdrs;
     unsigned int i;
 
@@ -136,6 +144,8 @@ static unsigned int move_sections(struct file *f, struct elf_header *elf, page_d
 /* XXX this is buggy and doesn't appear to return the correct address */
 static unsigned int find_entry_point(struct file *f, struct elf_header *elf)
 {
+    TRACE_ONCE;
+
     unsigned int i;
 
     for (i = 0; i < elf->e_shnum; i++) {
@@ -171,6 +181,8 @@ static unsigned int find_entry_point(struct file *f, struct elf_header *elf)
  */
 static void print_elf(char *name, struct elf_header *elf)
 {
+    TRACE_ONCE;
+
     kprintf("%s:", name);
 
     /* File's class */
@@ -238,6 +250,8 @@ static void print_elf(char *name, struct elf_header *elf)
  */
 void dump_symbols(struct file *f, struct elf_header *elf)
 {
+    TRACE_ONCE;
+
     unsigned int i;
 
     for (i = 0; i < elf->e_shnum; i++) {
@@ -263,6 +277,8 @@ void dump_symbols(struct file *f, struct elf_header *elf)
 
 int load_elf(struct file *f, page_dir_t *dir)
 {
+    TRACE_ONCE;
+
     struct elf_header *elf = parse_elf(f);
     if (elf == NULL) {
         kprintf("elf: %s is not a valid 32-bit ELF binary\n", f->name);

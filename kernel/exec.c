@@ -21,6 +21,7 @@
 #include <ulysses/kprintf.h>
 #include <ulysses/initrd.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 #include <ulysses/sched.h>
 
 #include <errno.h>
@@ -30,6 +31,8 @@ extern volatile page_dir_t *current_directory;
 
 int do_execv(const char *path, char *const argv[])
 {
+    TRACE_ONCE;
+
     int entry;
     struct file *f;
 
