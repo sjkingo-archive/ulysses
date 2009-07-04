@@ -62,31 +62,31 @@ static inline void exit(void)
 #define SYS_SHUTDOWN 2
 int sys_shutdown(void);
 
-/* sys_write(fd, buf, count)
- *  Write up to count bytes from the buffer buf to the file descriptor fd.
- *  Return the number of bytes actually written (which may be less than count
- *  if the buffer was smaller).
- */
-#define SYS_WRITE 3
-int sys_write(int fd, const char *buf, size_t count);
-static inline ssize_t write(int fd, const char *buf, size_t bytes)
-{
-    int __r;
-    syscall3(SYS_WRITE, fd, (int)buf, bytes);
-    return (ssize_t)__r;
-}
-
 /* sys_read(fd, buf, count)
  *  Read up to count bytes from file descriptor fd into the buffer pointed to
  *  by buf. Return the number of bytes actually read (which may be less than
  *  count).
  */
-#define SYS_READ 4
+#define SYS_READ 3
 int sys_read(int fd, char *buf, size_t count);
 static inline ssize_t read(int fd, char *buf, size_t count)
 {
     int __r;
     syscall3(SYS_READ, fd, (int)buf, count);
+    return (ssize_t)__r;
+}
+
+/* sys_write(fd, buf, count)
+ *  Write up to count bytes from the buffer buf to the file descriptor fd.
+ *  Return the number of bytes actually written (which may be less than count
+ *  if the buffer was smaller).
+ */
+#define SYS_WRITE 4
+int sys_write(int fd, const char *buf, size_t count);
+static inline ssize_t write(int fd, const char *buf, size_t bytes)
+{
+    int __r;
+    syscall3(SYS_WRITE, fd, (int)buf, bytes);
     return (ssize_t)__r;
 }
 
