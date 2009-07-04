@@ -18,6 +18,7 @@
  */
 
 #include <ulysses/elf.h>
+#include <ulysses/exec.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/initrd.h>
 #include <ulysses/task.h>
@@ -56,4 +57,42 @@ int do_execv(const char *path, char *const argv[])
 
     errno = ENOEXEC;
     return -1;
+}
+
+pid_t create_init(void)
+{
+    TRACE_ONCE;
+
+    struct file *f;
+    int eip;
+
+    /* Ensure init isn't running already */
+    if (find_task("init") != NULL) {
+        kprintf("create_init: init is already running\n");
+        return;
+    }
+    
+    /* Load the init file off the initrd */
+    f = load_file("init");
+    if (f == NULL) {
+        kprintf("create_init: init not found in initrd\n");
+        return;
+    }
+    
+    /* Create a new task and load the ELF executable into memory */
+    task_t *task = new_task("init");
+    eip = load_elf(f, task->page_dir);
+    if (eip == -1) {
+        kprintf("create_init: init was not a valid executable\n");
+        free_task(task);
+        return;
+    }
+
+    /* Set the entry point and schedule the task */
+    task->eip = eip;
+    add_to_queue(task);
+
+    /* all done */
+    kprintf("create_init: init process created (pid %d)\n", task->pid);
+    return task->pid;
 }

@@ -39,4 +39,10 @@ void dump_all_tasks(void);
  */
 task_t *get_task(pid_t pid);
 
+/* find_task()
+ *  Returns a pointer to the first task structure matching the given name,
+ *  or NULL if none exist.
+ */
+task_t *find_task(const char *name);
+
 #endif

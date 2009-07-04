@@ -24,6 +24,7 @@
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
 
+#include <string.h>
 #include <sys/types.h>
 
 struct queue tasks_queue;
@@ -144,6 +145,19 @@ task_t *get_task(pid_t pid)
     task_t *t = tasks_queue.head;
     while (t != NULL) {
         if (t->pid == pid) {
+            return t;
+        }
+        t = t->next;
+    }
+    return NULL;
+}
+
+task_t *find_task(const char *name)
+{
+    TRACE_ONCE;
+    task_t *t = tasks_queue.head;
+    while (t != NULL) {
+        if (strcmp(t->name, name) == 0) {
             return t;
         }
         t = t->next;

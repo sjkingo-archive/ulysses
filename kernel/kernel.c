@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/exec.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
@@ -78,6 +79,7 @@ void kernel_main(unsigned int initial_stack)
 
     /* Create a VFS out of the initrd */
     setup_initrd();
+    create_init();
 
     /* Start the kthread daemon going to set up other kernel threads */
     kthread_create(kthreadd, "kthreadd");

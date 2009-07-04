@@ -18,6 +18,7 @@
  */
 
 #include <ulysses/cputest.h>
+#include <ulysses/exec.h>
 #include <ulysses/gdt.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
@@ -287,6 +288,12 @@ static void cmd_kmalloc(void)
     kprintf("%d bytes allocated\n", iter*size);
 }
 
+static void cmd_init(void)
+{
+    TRACE_ONCE;
+    create_init();
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -317,6 +324,7 @@ struct shell_command cmds[] = {
     { "ring3", &cmd_ring3, NULL, "Run a test in user mode." },
     { "fork", &cmd_fork, NULL, "Fork the shell. This shouldn't work!" },
     { "kmalloc", &cmd_kmalloc, NULL, "Run a kmalloc test." },
+    { "init", &cmd_init, NULL, "Set up the init process." },
     
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };
