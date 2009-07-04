@@ -35,9 +35,6 @@
 
 struct kernel kern;
 
-/* see util.c */
-extern flag_t restart_init;
-
 /* This is the stack pointer that multiboot sets up for us. Eventually
  * we will move this to a higher address.
  */
@@ -79,10 +76,6 @@ void kernel_main(unsigned int initial_stack)
     init_vt();
     print_startup();
 
-    /* XXX this is where we would load init process off the initrd */
-    start_init();
-    restart_init = TRUE;
-    
     /* Start the kthread daemon going to set up other kernel threads */
     kthread_create(kthreadd, "kthreadd");
 

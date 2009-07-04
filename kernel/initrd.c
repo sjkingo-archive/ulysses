@@ -189,18 +189,6 @@ void run_initrd(void)
         root_nodes[i].close = 0;
         root_nodes[i].impl = 0;
     }
-    
-    /* Load the init program */
-    struct file *init = load_file("init");
-    if (init == NULL) {
-        kprintf("initrd: /init not found in rootfs, aborting\n");
-        kthread_exit();
-    } else {
-        ((char *)init->data)[init->size++] = '\0';
-        kprintf("initrd: loaded init (%d bytes) from rootfs\n", init->size);
-        kprintf("initrd: init contents '%s'\n", (char *)init->data);
-        kfree(init);
-    }
 
     /* Wait for work to come in */
     while (1) kthread_yield();

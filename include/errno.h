@@ -9,5 +9,7 @@ extern int errno;
 #define EPERM 3 /* Operation not permitted */
 #define ESRCH 4 /* Not such process */
 #define ECANCELED 5 /* Operation cancelled */
+#define ENOENT 6 /* No such file or directory */
+#define ENOEXEC 7 /* Executable format error */
 
 #endif

@@ -33,64 +33,11 @@
 /* Time to do low-level setup */
 extern unsigned long long startup_time;
 
-/* flag to tell us whether to try and restart init or not */
-flag_t restart_init = FALSE;
-
-/* check_init(void)
- *  Check to make sure init is running, and restart it if not.
- */
-static void check_init(void)
-{
-    static unsigned short i = 0;
-    task_t *init;
-
-    /* Don't just keep spinning and restarting init if it keeps dieing */
-    if (i == 4) {
-        panic("Giving up trying to restart init");
-    }
-
-    /* Get init's task and make sure it is valid */
-    init = get_task(kern.init_pid);
-    if (init == NULL || strcmp(init->name, "init") != 0) {
-        i++;
-        kprintf("sanity_check(): init not running, trying to (re)start it\n");
-        start_init();
-    }
-}
-
-/* run_init()
- *  init "task". Currently does nothing.
- */
-static void run_init(void)
-{
-    TRACE_ONCE;
-    kern.init_pid = do_getpid();
-    change_name("init");
-    kprintf("init: running with pid %d\n", kern.init_pid);
-    idle_cpu();
-}
-
-void start_init(void)
-{
-    TRACE_ONCE;
-    pid_t pid = do_fork();
-    if (pid == 0) {
-        run_init();
-        task_exit();
-    } else if (pid == -1) {
-        kprintf("fork() returned -1 in pid %d\n", do_getpid());
-    }
-}
-
 /* just kidding Dijkstra */
 #define COMEFROM goto
 void sanity_check(void)
 {
     TRACE_ONCE;
-
-    if (restart_init) {
-        check_init();
-    }
 
     /* ... maybe not */
 #ifdef COMEFROM
