@@ -55,22 +55,20 @@ void print_startup(void)
 {
     TRACE_ONCE;
 
+#ifndef __GNUC__
+    kprintf("Warning: not compiled by gcc; this disables a lot of nice "
+            "debugging symbols\n");
+#endif
+
     kprintf("%[0,15]");
-    kprintf("Ulysses\tv%s (codename: %s)\n", VERSION_NUM, VERSION_CN);
+    kprintf("Ulysses\tv%s (%s) gcc %s on %s %s (localtime)\n", 
+            VERSION_NUM, VERSION_CN, __VERSION__, __DATE__, __TIME__);
     kprintf("Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>\n\n");
     kprintf("%[0,7]");
 
     kprintf("Low-level startup complete in %Ldms\n", startup_time);
     kprintf("Kernel command line: '%s'\n", kern.cmdline);
     kprintf("Sending all log messages to serial device COM1\n");
-
-#ifdef __GNUC__
-    kprintf("Compiled by gcc %s on %s at %s (localtime)\n", __VERSION__, 
-            __DATE__, __TIME__);
-#else
-    kprintf("Warning: not compiled by gcc; this disables a lot of nice "
-            "debugging symbols\n");
-#endif
 
     print_memory_map();
     kprintf("Detected 1 CPU(s): %s %s at %d MHz\n", kern.cpu_vendor, 
