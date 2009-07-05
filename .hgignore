@@ -4,3 +4,5 @@ syntax: glob
 arch/x86/boot/kernel
 .sconsign.dblite
 log.txt
+tools/gdb-startup
+boot/
