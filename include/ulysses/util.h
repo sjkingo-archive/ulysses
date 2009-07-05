@@ -5,6 +5,8 @@
 
 #include <ulysses/util_x86.h>
 
+#include <sys/types.h>
+
 /* sanity_check()
  *  Perform a sanity check of the kernel's data structures and physical memory
  *  locations. If anything fails the check, a panic() will be issued.
@@ -29,5 +31,10 @@ inline void unlock_kernel(void);
  *  flags (old config.h preprocessor).
  */
 void parse_cmdline(const char *cmdline);
+
+/* do_msuptime()
+ *  Return the kernel's current uptime in milliseconds.
+ */
+mseconds_t do_msuptime(void);
 
 #endif

@@ -19,14 +19,15 @@
  *
  * The dispatcher for this is in arch/X/syscall.c.
  * To add a new system call:
- *   1. Add a new definition, macro (optional) and function declaration to
- *      <include/syscall.h>. Make sure you pick a new, unused number for the
- *      syscall.
+ *   1. Add a new definition to <include/ulysses/callnr.h> and function
+ *      declaration to <include/ulysses/syscall.h>.  Make sure you pick a new,
+ *      unused number for the syscall.
  *   2. Create the function to do the work of the system call in this file.
  *      The template for naming is sys_X, where X is the name of the syscall.
  *   3. Add an entry to the syscall table.
  */
 
+#include <ulysses/callnr.h>
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/task.h>
@@ -41,17 +42,17 @@
 
 /* System call table */
 struct syscall_entry syscalls[] = {
-    { SYS_DUMMY, &sys_dummy, },
-    { SYS_EXIT, &sys_exit, },
-    { SYS_SHUTDOWN, &sys_shutdown, },
-    { SYS_WRITE, &sys_write, },
-    { SYS_READ, &sys_read, },
-    { SYS_OPEN, &sys_open, },
-    { SYS_CLOSE, &sys_close, },
-    { SYS_GETUID, &sys_getuid, },
-    { SYS_GETPID, &sys_getpid, },
-    { SYS_FORK, &sys_fork, },
-    { SYS_MSUPTIME, &sys_msuptime, },
+    { __NR_dummy, &sys_dummy, },
+    { __NR_exit, &sys_exit, },
+    { __NR_fork, &sys_fork, },
+    { __NR_read, &sys_read, },
+    { __NR_write, &sys_write, },
+    { __NR_open, &sys_open, },
+    { __NR_close, &sys_close, },
+    { __NR_waitpid, &sys_waitpid, },
+    { __NR_execve, &sys_execve, },
+    { __NR_getpid, &sys_getpid, },
+    { __NR_getuid, &sys_getuid, },
     { 0, NULL }, /* sentinel entry; do not remove */
 };
 
@@ -76,15 +77,16 @@ int sys_exit(void)
     return -1;
 }
 
-int sys_shutdown(void)
+int sys_fork(void)
 {
     TRACE_ONCE;
-    if (do_getuid() != 0) {
-        kprintf("Only root can do that.\n");
-        return -1;
-    }
-    shutdown();
-    errno = ESRCH;
+    return do_fork();
+}
+
+int sys_read(int fd, char *buf, size_t count)
+{
+    TRACE_ONCE;
+    errno = EBADF;
     return -1;
 }
 
@@ -110,13 +112,6 @@ int sys_write(int fd, const char *buf, size_t count)
     return i;
 }
 
-int sys_read(int fd, char *buf, size_t count)
-{
-    TRACE_ONCE;
-    errno = EBADF;
-    return -1;
-}
-
 int sys_open(void)
 {
     TRACE_ONCE;
@@ -129,10 +124,16 @@ int sys_close(void)
     return -1;
 }
 
-int sys_getuid(void)
+int sys_waitpid(int pid, int *status, int options)
 {
     TRACE_ONCE;
-    return do_getuid();
+    return -1;
+}
+
+int sys_execve(const char *filename, char *const argv[], char *const envp[])
+{
+    TRACE_ONCE;
+    return do_execv(filename, argv);
 }
 
 int sys_getpid(void)
@@ -141,14 +142,8 @@ int sys_getpid(void)
     return do_getpid();
 }
 
-int sys_fork(void)
+int sys_getuid(void)
 {
     TRACE_ONCE;
-    return do_fork();
-}
-
-mseconds_t sys_msuptime(void)
-{
-    TRACE_ONCE;
-    return kern.current_time_offset.tv_msec;
+    return do_getuid();
 }

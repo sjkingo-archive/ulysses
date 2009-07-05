@@ -29,6 +29,7 @@
 #include <ulysses/util.h>
 
 #include <string.h>
+#include <sys/types.h>
 
 /* Time to do low-level setup */
 extern unsigned long long startup_time;
@@ -111,4 +112,10 @@ void parse_cmdline(const char *cmdline)
             kern.flags.debug_ticks = TRUE;
         }
     }
+}
+
+mseconds_t do_msuptime(void)
+{
+    TRACE_ONCE;
+    return kern.current_time_offset.tv_msec;
 }

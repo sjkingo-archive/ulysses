@@ -71,7 +71,7 @@ void kthread_exit(void)
 {
     TRACE_ONCE;
     current_task->kthread->state = STATE_DESTROYING;
-    exit();
+    sys_exit();
 }
 
 void kthread_running(void)

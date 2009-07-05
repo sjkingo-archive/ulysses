@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/callnr.h>
 #include <ulysses/cputest.h>
 #include <ulysses/exec.h>
 #include <ulysses/gdt.h>
@@ -208,8 +209,8 @@ static void kt_ring3(void)
     unsigned int len = strlen(msg);
 
     switch_to_ring3();
-    dummy();
-    write(STDOUT_FILENO, msg, len);
+    syscall0(__NR_dummy);
+    syscall3(__NR_write, STDOUT_FILENO, msg, len);
     while (1); /* spin a bit */
 }
 
