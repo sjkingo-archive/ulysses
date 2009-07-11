@@ -1,0 +1,13 @@
+import os
+subdirs = [d for d in os.listdir('.') if not d.startswith('.') and \
+        os.path.isdir(d)]
+
+env = Environment(
+    CC = 'gcc', 
+    CFLAGS = '-m32 -g -O -Wall -Wextra -isystem ../include -nostdinc', 
+)
+env.Decider('timestamp-match')
+Export('env')
+
+# Build all of the modules
+SConscript(dirs=subdirs)
