@@ -38,6 +38,18 @@ symbol_t *lookup_symbol(void *addr)
     return NULL;
 }
 
+symbol_t *get_trace_symbol(const char *func_name)
+{
+    symbol_t *s = head;
+    while (s != NULL) {
+        if (strcmp(s->name, func_name)) {
+            return s;
+        }
+        s = s->next;
+    }
+    return NULL;
+}
+
 void add_trace_symbol(const char func_name[], void *addr)
 {
     /* Don't add duplicate symbols */

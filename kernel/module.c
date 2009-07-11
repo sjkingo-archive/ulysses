@@ -75,8 +75,6 @@ void load_module(const char *name)
         mod.cleanup = cleanup_sym;
     }
 
-    /* XXX perform relocation */
-
     /* If we got here, the module is valid and can be loaded */
     mod.name = name;
     mods[next_mod_index++] = mod;

@@ -130,6 +130,11 @@ enum sh_type {
     SHT_DYNSYM,
 };
 
+enum reloc_type {
+    R_ABSOL=0x01,
+    R_REL=0x02,
+};
+
 /* dump_symbols()
  *  Print all of the symbols present in the given (valid) ELF executable.
  */

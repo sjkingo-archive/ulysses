@@ -27,6 +27,11 @@ typedef struct symbol {
  */
 symbol_t *lookup_symbol(void *addr);
 
+/* get_trace_symbol()
+ *  Find the function given by func_name and return its symbol.
+ */
+symbol_t *get_trace_symbol(const char *func_name);
+
 /* add_trace_symbol()
  *  Expands from TRACE_ONCE macro to register a function as a symbol.
  *  Don't call this manually unless you really have a reason to do so.

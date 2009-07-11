@@ -29,6 +29,9 @@
 #define ELF_ENTRY_POINT "main"
 #define ELF_ENTRY_EIP 0x080480F4
 
+#define ELF32_R_SYM(i) ((i) >> 8)
+#define ELF32_R_TYPE(i) ((unsigned char)(i))
+
 /* parse_elf()
  *  Parse the given file and, provided the binary is a valid 32-bit ELF
  *  executable, return a pointer to the ELF header.
@@ -184,6 +187,97 @@ static unsigned int find_entry_point(struct file *f, struct elf_header *elf)
 }
 #endif
 
+static struct elf_symbol_table *fill_symbol_struct(unsigned char *buf, 
+        unsigned int offset)
+{
+    unsigned int i;
+    struct elf_header *eh = (struct elf_header *)buf;
+    struct elf_symbol_table *symtab;
+
+    for(i = 0; i < eh->e_shnum; i++) {
+        struct elf_section_header *sh = (struct elf_section_header *)(buf + 
+                eh->e_shoff + (i * eh->e_shentsize));
+        if (sh->sh_type == 2) {
+            symtab = (struct elf_symbol_table *)(buf + sh->sh_offset + 
+                    (offset * sh->sh_entsize));
+            return (struct elf_symbol_table *)symtab;
+        }
+    }
+
+    return NULL;
+}
+
+static void perform_relocation(struct file *f, struct elf_header *elf)
+{
+    unsigned int i, reloc_addr, mem_addr;
+
+    for (i = 0; i < elf->e_shnum; i++) {
+        struct elf_section_header *header;
+        unsigned int j;
+
+        header = (struct elf_section_header *)(f->data + elf->e_shoff + 
+                (i * elf->e_shentsize));
+
+        /* We only care about relocatable sections */
+        if (header->sh_type != SHT_REL) {
+            continue;
+        }
+
+        for (j = 0; j < header->sh_size; j += header->sh_entsize) {
+            struct elf_relocation *reloc = (struct elf_relocation *)(
+                    f->data + header->sh_offset + j);
+            struct elf_symbol_table *table = fill_symbol_struct(f->data, 
+                    ELF32_R_SYM(reloc->r_info));
+
+            /* Resolve this reference */
+            char *sym_name = get_symbol_string(f->data, table->st_name);
+            symbol_t *s = get_trace_symbol(sym_name);
+            if (s == NULL) {
+                kprintf("perform_relocation: unresolved relative "
+                        "symbol %s\n", sym_name);
+            }
+
+            /* Perform the actual relocation */
+            switch (ELF32_R_TYPE(reloc->r_info)) {
+                case R_ABSOL:
+                    mem_addr = (unsigned int)f->data + reloc->r_offset;
+                    mem_addr += get_section_offset(f->data, header->sh_info);
+
+                    if (table->st_shndx == 0) {
+                        reloc_addr = (unsigned int)s->addr;
+                    } else {
+                        reloc_addr = (unsigned int)f->data + table->st_value +
+                            *(int *)mem_addr;
+                        reloc_addr += get_section_offset(f->data,
+                                table->st_shndx);
+                    }
+                    *(unsigned int *)mem_addr = reloc_addr;
+                    break;
+
+                case R_REL:
+                    mem_addr = (unsigned int)f->data + reloc->r_offset;
+                    mem_addr += get_section_offset(f->data, header->sh_info);
+
+                    if (table->st_shndx == 0) {
+                        reloc_addr = (unsigned int)s->addr;
+                    } else {
+                        reloc_addr = (unsigned int)f->data + table->st_value;
+                        reloc_addr += get_section_offset(f->data, 
+                                table->st_shndx);
+                    }
+
+                    reloc_addr = mem_addr - reloc_addr + 4;
+                    *(unsigned int *)mem_addr = -reloc_addr;
+                    break;
+
+                default:
+                    kprintf("Unknown relocation type %X\n", 
+                            ELF32_R_SYM(reloc->r_info));
+            }
+        }
+    }
+}
+
 /* print_elf()
  *  Print a one line representation of the ELF executable, similar to Linux's
  *  file(1).
@@ -332,6 +426,8 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move)
     if (move && !move_sections(f, elf, dir)) {
         return NULL;
     }
+
+    perform_relocation(f, elf);
 
     elf->e_entry = (unsigned int)ELF_ENTRY_POINT;
     return elf;
