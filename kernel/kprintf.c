@@ -21,7 +21,6 @@
 #include <ulysses/serial.h>
 #include <ulysses/screen.h>
 #include <ulysses/trace.h>
-#include <ulysses/shutdown.h>
 #include <ulysses/vt.h>
 
 #include <stdarg.h>
