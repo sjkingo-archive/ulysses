@@ -291,3 +291,9 @@ void move_stack(void *new_start, unsigned int size)
     __asm__ __volatile__("mov %0, %%esp" : : "r" (new_esp));
     __asm__ __volatile__("mov %0, %%ebp" : : "r" (new_ebp));
 }
+
+page_dir_t *get_kernel_dir(void)
+{
+    TRACE_ONCE;
+    return kernel_directory;
+}

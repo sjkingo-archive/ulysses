@@ -34,8 +34,8 @@ int do_execv(const char *path, char *const argv[])
 {
     TRACE_ONCE;
 
-    int entry;
     struct file *f;
+    struct elf_header *elf;
 
     f = load_file((char *)path);
     if (f == NULL) {
@@ -43,8 +43,8 @@ int do_execv(const char *path, char *const argv[])
         return -1;
     }
 
-    entry = load_elf(f, (page_dir_t *)current_directory);
-    if (entry == -1) {
+    elf = load_elf(f, (page_dir_t *)current_directory, TRUE);
+    if (elf == NULL) {
         errno = ENOEXEC;
         return -1;
     }
@@ -53,7 +53,7 @@ int do_execv(const char *path, char *const argv[])
     argv = NULL;
 
     /* Jump to the entry point */
-    __asm__ __volatile__("mov %0, %%ecx ; jmp *%%ecx" : : "r" (entry));
+    __asm__ __volatile__("mov %0, %%ecx ; jmp *%%ecx" : : "r" (elf->e_entry));
 
     errno = ENOEXEC;
     return -1;
@@ -64,7 +64,7 @@ pid_t create_init(void)
     TRACE_ONCE;
 
     struct file *f;
-    int eip;
+    struct elf_header *elf;
 
     /* Ensure init isn't running already */
     if (find_task("init") != NULL) {
@@ -81,15 +81,15 @@ pid_t create_init(void)
     
     /* Create a new task and load the ELF executable into memory */
     task_t *task = new_task("init");
-    eip = load_elf(f, task->page_dir);
-    if (eip == -1) {
+    elf = load_elf(f, task->page_dir, TRUE);
+    if (elf == NULL) {
         kprintf("create_init: init was not a valid executable\n");
         free_task(task);
         return;
     }
 
     /* Set the entry point and schedule the task */
-    task->eip = eip;
+    task->eip = elf->e_entry;
     add_to_queue(task);
 
     /* all done */

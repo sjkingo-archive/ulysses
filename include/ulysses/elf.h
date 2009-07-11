@@ -4,6 +4,8 @@
 #include <ulysses/initrd.h>
 #include <ulysses/paging.h>
 
+#include <sys/types.h>
+
 struct elf_header {
     unsigned char e_ident[16];
     unsigned short e_type;
@@ -128,10 +130,21 @@ enum sh_type {
     SHT_DYNSYM,
 };
 
+/* dump_symbols()
+ *  Print all of the symbols present in the given (valid) ELF executable.
+ */
+void dump_symbols(struct file *f, struct elf_header *elf);
+
+/* find_symbol()
+ *  Return the address of the symbol present in the given (valid) ELF 
+ *  executable, or -1 if it was not found/
+ */
+int find_symbol(struct file *f, struct elf_header *elf, const char *name);
+
 /* load_elf()
  *  Load the ELF executable given by the valid file f into memory and return
  *  its entry point.
  */
-int load_elf(struct file *f, page_dir_t *dir);
+struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move);
 
 #endif

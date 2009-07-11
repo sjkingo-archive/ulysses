@@ -75,4 +75,9 @@ page_dir_t *clone_dir(page_dir_t *src);
  */
 void move_stack(void *new_start, unsigned int size);
 
+/* get_kernel_dir()
+ *  Returns a pointer to the current kernel page directory.
+ */
+page_dir_t *get_kernel_dir(void);
+
 #endif

@@ -81,6 +81,15 @@ static char *get_symbol_string(unsigned char *buf, unsigned int index)
     return NULL; /* this probably won't ever happen */
 }
 
+static unsigned int get_section_offset(unsigned char* buf, int info)
+{
+    struct elf_header* elf = (struct elf_header *)buf;
+    struct elf_section_header *header;
+    header = (struct elf_section_header *)(buf + elf->e_shoff + 
+            (info * elf->e_shentsize));
+    return header->sh_offset;
+}
+
 /* move_sections()
  *  Map the required pages and move the ELF executable into the requested 
  *  virtual memory address. The page directory is required to know which
@@ -94,11 +103,11 @@ static unsigned int move_sections(struct file *f, struct elf_header *elf, page_d
     unsigned int i;
 
     if (elf->e_phnum > 64) {
-        kprintf("elf: %s has too many program headers, aborting load\n", 
+        kprintf("elf: %s has too many program headers, aborting move\n", 
                 f->name);
         return FALSE;
     } else if (elf->e_phnum == 0) {
-        kprintf("elf: %s does not have any program headers, aborting load\n", 
+        kprintf("elf: %s does not have any program headers, aborting move\n", 
                 f->name);
         return FALSE;
     }
@@ -268,27 +277,62 @@ void dump_symbols(struct file *f, struct elf_header *elf)
         for (j = 0; j < header->sh_size; j += header->sh_entsize) {
             struct elf_symbol_table *table = (struct elf_symbol_table *)(
                      f->data + header->sh_offset + j);
-            kprintf("%p %s\n", table->st_value, 
-                    get_symbol_string(f->data, table->st_name));
+            char *str = get_symbol_string(f->data, table->st_name);
+            if (str != NULL && strcmp(str, "") != 0) {
+                kprintf("%p %s\n", table->st_value, str);
+            }
         }
         kprintf("\n");
     }
 }
 
-int load_elf(struct file *f, page_dir_t *dir)
+int find_symbol(struct file *f, struct elf_header *elf, const char *name)
+{
+    TRACE_ONCE;
+
+    unsigned int i;
+
+    for (i = 0; i < elf->e_shnum; i++) {
+        struct elf_section_header *header;
+        unsigned int j;
+        header = (struct elf_section_header *)(f->data + elf->e_shoff + 
+                (i * elf->e_shentsize));
+
+        /* We only care about symbol tables */
+        if (header->sh_type != SHT_SYMTAB) {
+            continue;
+        }
+
+        for (j = 0; j < header->sh_size; j += header->sh_entsize) {
+            struct elf_symbol_table *table = (struct elf_symbol_table *)(
+                    f->data + header->sh_offset + j);
+            char *str = get_symbol_string(f->data, table->st_name);
+            
+            if (strcmp(str, name) == 0) {
+                return (get_section_offset(f->data, table->st_shndx) + 
+                    table->st_value + (unsigned int)f->data);
+            }
+        }
+    }
+
+    return -1;
+}
+
+struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move)
 {
     TRACE_ONCE;
 
     struct elf_header *elf = parse_elf(f);
     if (elf == NULL) {
         kprintf("elf: %s is not a valid 32-bit ELF binary\n", f->name);
-        return -1;
+        return NULL;
     }
 
     print_elf(f->name, elf);
-    if (!move_sections(f, elf, dir)) {
-        return -1;
+    if (move && !move_sections(f, elf, dir)) {
+        return NULL;
     }
 
-    return ELF_ENTRY_EIP;
+    elf->e_entry = (unsigned int)ELF_ENTRY_POINT;
+    return elf;
 }
