@@ -25,6 +25,7 @@
 #include <ulysses/kernel.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kprintf.h>
+#include <ulysses/module.h>
 #include <ulysses/shell.h>
 #include <ulysses/shell_cmds.h>
 #include <ulysses/sched.h>
@@ -295,6 +296,15 @@ static void cmd_init(void)
     create_init();
 }
 
+static void cmd_lmod(char **args)
+{
+    TRACE_ONCE;
+    if (args[0] == NULL) {
+        return;
+    }
+    load_module(args[0]);
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -304,6 +314,7 @@ struct shell_command cmds[] = {
             "to screen." },
     { "flag", NULL, &cmd_flag, "Change kernel flag given by second argument." },
     { "echo", NULL, &cmd_echo, "Display a line of text given by the arguments." },
+    { "lmod", NULL, &cmd_lmod, "Load a kernel module." },
 
     /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },
