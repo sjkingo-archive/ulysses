@@ -17,19 +17,27 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/cpu.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
+#include <ulysses/util.h>
+#include <ulysses/util_x86.h>
+
+extern __volatile__ task_t *current_task;
 
 void do_panic(const char *msg, const char *file, int line)
 {
     TRACE_ONCE;
-    static int panicking = 0;
-    if (panicking++) halt(); /* prevent recursive panics - thanks AST */
 
-    kprintf("\n\n%[0,12]");
-    kprintf("Kernel panic: %s\n", msg);
+    lock_kernel();
+
+    /* prevent recursive panics - thanks AST */
+    static int panicking = 0;
+    if (panicking++) {
+        halt();
+    }
 
 #if __GNUC__
     /* Try and work out where the panic came from */
@@ -37,20 +45,24 @@ void do_panic(const char *msg, const char *file, int line)
     symbol_t *sym = lookup_symbol(source_addr);
 
     if (sym == NULL) {
-        kprintf("%p in ??? () ", source_addr);
+        kprintf("\n%p in ??? () ", source_addr);
     } else {
-        kprintf("%p in %s () ", source_addr, sym->name);
+        kprintf("\n%p in %s () ", source_addr, sym->name);
     }
 #else
-    kprintf("??? in ??? () ");
+    kprintf("\n??? in ??? () ");
 #endif
     
-    kprintf("at %s:%d\n\n", file, line);
+    kprintf("at %s:%d\n", file, line);
 
-    /* Dump a function call trace to screen for use in debugging */
+    /* Dump some debugging info */
     func_trace(50);
+    kprintf("Task %s (pid %d) was running\n", current_task->name, 
+            current_task->pid);
+    dump_regs();
 
-    halt(); /* bye bye */
+    kprintf("\nKernel panic: %s\n", msg);
+    HLT; /* bye bye */
 }
 
 void shutdown(void)

@@ -19,4 +19,12 @@
  */
 void idle_cpu(void);
 
+/* dump_regs()
+ *  Print the values stored in the CPU registers. This includes:
+ *    ebp, esp
+ *    eax, ebx, ecx, edx
+ *    edi and esi
+ */
+void dump_regs(void);
+
 #endif

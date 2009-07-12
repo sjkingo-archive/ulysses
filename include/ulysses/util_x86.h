@@ -4,6 +4,7 @@
 /* Shortcuts for enabling and disabling interrupts. */
 #define STI __asm__ __volatile__("sti ; nop")
 #define CLI __asm__ __volatile__("cli ; nop")
+#define HLT while (1) __asm__ __volatile__("hlt")
 
 /*  Convert a binary-coded decimal to an integer. */
 #define BCD_INT(bcd) (((bcd & 0xF0) >> 4) * 10 + (bcd & 0x0F))

@@ -24,6 +24,7 @@
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/util.h>
+#include <ulysses/util_x86.h>
 
 void halt(void)
 {
@@ -31,7 +32,7 @@ void halt(void)
     kprintf("Kernel uptime %ds (%dms)\n", kern.current_time_offset.tv_sec,
             kern.current_time_offset.tv_msec);
     kprintf("CPU halt\n");
-    while (1) __asm__ __volatile__("hlt");
+    HLT;
 
     /* Wow, the CPU on this machine must really be stuffed. Enter a busy
      * loop instead.
