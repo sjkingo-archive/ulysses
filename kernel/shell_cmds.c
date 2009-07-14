@@ -50,7 +50,7 @@ extern struct queue tasks_queue;
 static void cmd_uptime(void)
 {
     TRACE_ONCE;
-    kprintf("up %d seconds (%d milliseconds)\n", 
+    kprintf("up %ld seconds (%ld milliseconds)\n", 
             kern.current_time_offset.tv_sec, 
             kern.current_time_offset.tv_msec);
 }
@@ -94,7 +94,7 @@ static void cmd_ps(void)
     kprintf("PID\tPPID\tUID\tCPU\tSTATE\tNAME\n");
     task_t *t = tasks_queue.head;
     while (t != NULL) {
-        kprintf("%d\t%d\t%d\t%d\t", t->pid, t->ppid, t->uid, t->cpu_time);
+        kprintf("%d\t%d\t%d\t%ld\t", t->pid, t->ppid, t->uid, t->cpu_time);
         if (t->kthread == NULL) {
             kprintf("-\t%s", t->name);
         } else {
@@ -163,7 +163,7 @@ static void cmd_kt_bomb(void)
     unsigned long long i = 0;
     while (1) {
         pid_t pid = kthread_create(kt_bomb, "bomb");
-        kprintf("Spawned kthread %d with pid %d\n", i, pid);
+        kprintf("Spawned kthread %Ld with pid %d\n", i, pid);
         kthread_yield();
         i++;
     }

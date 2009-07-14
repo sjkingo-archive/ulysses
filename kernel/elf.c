@@ -344,7 +344,7 @@ static void print_elf(char *name, struct elf_header *elf)
             kprintf(" unknown machine.");
     }
 
-    kprintf(" entry point at %p,", elf->e_entry);
+    kprintf(" entry point at %p,", (void *)elf->e_entry);
     kprintf(" %d segments\n", elf->e_phnum);
 }
 
@@ -373,7 +373,7 @@ void dump_symbols(struct file *f, struct elf_header *elf)
                      f->data + header->sh_offset + j);
             char *str = get_symbol_string(f->data, table->st_name);
             if (str != NULL && strcmp(str, "") != 0) {
-                kprintf("%p %s\n", table->st_value, str);
+                kprintf("%p %s\n", (void *)table->st_value, str);
             }
         }
         kprintf("\n");

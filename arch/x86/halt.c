@@ -29,7 +29,8 @@
 void halt(void)
 {
     lock_kernel(); /* since we're about to die anyway */
-    kprintf("Kernel uptime %ds (%dms)\n", kern.current_time_offset.tv_sec,
+    kprintf("Kernel uptime %lds (%ldms)\n", 
+            kern.current_time_offset.tv_sec,
             kern.current_time_offset.tv_msec);
     kprintf("CPU halt\n");
     HLT;

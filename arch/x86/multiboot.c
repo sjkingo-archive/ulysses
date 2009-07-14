@@ -30,7 +30,7 @@ void print_memory_map(void)
         return;
     }
 
-    kprintf("Detected %u KB of lower and %u KB of upper memory\n", 
+    kprintf("Detected %lu KB of lower and %lu KB of upper memory\n", 
             kern.mbi->mem_lower, kern.mbi->mem_upper);
     kprintf("Multiboot-provided physical memory map:\n");
 
@@ -38,8 +38,8 @@ void print_memory_map(void)
             (kern.mbi->mmap_addr + kern.mbi->mmap_length);
             mmap = (memory_map_t *)((unsigned long)mmap + mmap->size + 
             sizeof(mmap->size))) {
-        kprintf("  %p - %p ", mmap->base_addr_low, (mmap->base_addr_low +
-                    mmap->length_low));
+        kprintf("  %p - %p ", (void *)mmap->base_addr_low, 
+                    (mmap->base_addr_low + (void *)mmap->length_low));
         switch (mmap->type) {
             case MB_RAM:
                 kprintf("(usable)\n");
@@ -55,7 +55,7 @@ void print_memory_map(void)
                 kprintf("(unusable)\n");
                 break;
             default:
-                kprintf("(unknown type %d)\n", mmap->type);
+                kprintf("(unknown type %lu)\n", mmap->type);
         }
     }
 }

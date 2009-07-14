@@ -85,7 +85,7 @@ void kernel_main(unsigned int initial_stack)
     kthread_create(kthreadd, "kthreadd");
 
     /* And we're done */
-    kprintf("Kernel startup complete in %dms\n\n",
+    kprintf("Kernel startup complete in %ldms\n\n",
             kern.current_time_offset.tv_msec);
     
     /* We need to wait a bit here for all the threads to settle themselves 

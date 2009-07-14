@@ -83,8 +83,8 @@ void isr_handler(registers_t regs)
         symbol_t *sym;
         void *addr = __builtin_return_address(1);
 
-        kprintf("\nInterrupt %d at %p, inside %p ", regs.int_no, regs.eip, 
-                addr);
+        kprintf("\nInterrupt %*p at %p, inside %p ", 2, (void *)regs.int_no, 
+                (void *)regs.eip, addr);
 
         /* Try to translate the last func's eip into a symbol */
         sym = lookup_symbol(addr);
@@ -92,9 +92,12 @@ void isr_handler(registers_t regs)
         else kprintf("in %s ()\n", sym->name);
 
         kprintf("err_code %d; dumping registers:\n", regs.err_code);
-        kprintf("edi %p\tesi %p\tebp %p\tesp %p\n"
-                "ebx %p\tedx %p\tecx %p\teax %p\n", regs.edi, regs.esi, 
-                regs.ebp, regs.esp, regs.ebx, regs.edx, regs.ecx, regs.eax);
+        kprintf("edi %p\tesi %p\teax %p\n", (void *)regs.edi, 
+                (void *)regs.esi, (void *)regs.eax);
+        kprintf("ebx %p\tecx %p\tedx %p\n", (void *)regs.ebx, 
+                (void *)regs.ecx, (void *)regs.edx);
+        kprintf("eip %p\tebp %p\tesp %p\n", (void *)regs.eip, 
+                (void *)regs.ebp, (void *)regs.esp);
     }
 
     /* Lookup and handle the exception */

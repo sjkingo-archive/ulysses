@@ -46,7 +46,7 @@ void dump_regs(void)
     __asm__ __volatile__("mov %%ecx, %0" : "=r" (ecx));
     __asm__ __volatile__("mov %%edx, %0" : "=r" (edx));
 
-    kprintf("edi %p\tesi %p\teax %p\n", edi, esi, eax);
-    kprintf("ebx %p\tecx %p\tedx %p\n", ebx, ecx, edx);
-    kprintf("eip %p\tebp %p\tesp %p\n", eip, ebp, esp);
+    kprintf("edi %p\tesi %p\teax %p\n", (void *)edi, (void *)esi, (void *)eax);
+    kprintf("ebx %p\tecx %p\tedx %p\n", (void *)ebx, (void *)ecx, (void *)edx);
+    kprintf("eip %p\tebp %p\tesp %p\n", (void *)eip, (void *)ebp, (void *)esp);
 }
