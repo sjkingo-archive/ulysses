@@ -21,116 +21,133 @@
 #include <ulysses/trace.h>
 #include <ulysses/util.h>
 
-/* Turn (bg,fg) pair into colour attribute */
-#define COLOUR(b, f) ((b << 4) | (f & 0x0F))
+/* the screen */
+static struct video_framebuffer screen;
 
 /* the current colour attribute to use when writing to screen */
-static char current_colour;
+static unsigned char current_bg;
+static unsigned char current_fg;
 
-void init_screen(void)
-{
-    screen.mem = VIDMEM_START;
-    change_colour(BLACK, LGRAY);
-    clear_screen();
-}
-
-void clear_screen(void)
+/* move_cursor()
+ *  Move the screen cursor to the specified coordinates.
+ */
+static inline void move_cursor(unsigned short x, unsigned short y)
 {
     TRACE_ONCE;
-    register unsigned int i;
-    for (i = 0; i < (WIDTH * HEIGHT * 2); i++) {
-        screen.mem[i] = ' ';
-        screen.mem[++i] = current_colour;
-    }
-    move_cursor(0, 0);
-    screen.next_x = 0;
-    screen.next_y = 0;
-}
-
-void move_cursor(const unsigned int x, const unsigned int y)
-{
-    TRACE_ONCE;
-    unsigned int index = x + (WIDTH * y);
+    unsigned short index = COORD_TO_OFFSET(x, y);
 
     /* High byte */
-    outb(0x3d4, 0xe); /* CRTC register */
-    outb(0x3d5, (index >> 8)); /* data */
+    outb(0x3D4, 0xE); /* CRTC register */
+    outb(0x3D5, (index >> 8)); /* data */
 
     /* Low byte */
-    outb(0x3d4, 0xf); /* CRTC register */
-    outb(0x3d5, (index & 0xFF)); /* data */
+    outb(0x3D4, 0xF); /* CRTC register */
+    outb(0x3D5, (index & 0xFF)); /* data */
 }
 
 /* scroll_screen()
- *  Move every character in video memory up one line. This is a very slow 
- *  and inefficient process, so we request GCC to place all variables on
- *  CPU registers instead of stack.
+ *  Move every character in video memory up one line.
+ *  Note that this is a very slow and inefficient process!
  */
 static void scroll_screen(void)
 {
     TRACE_ONCE;
-    /* Each char in memory is 2 bytes wide, so we need to deal with both when
-     * moving.
-     */
-    register unsigned short h = HEIGHT * 2;
-    register unsigned short w = WIDTH * 2;
-    register unsigned short last_line = HEIGHT - 1;
 
-    register unsigned short i;
-    for (i = 0; i < (h * w); i++) {
-        screen.mem[i - w] = screen.mem[i]; /* move one line backwards */
+    unsigned short i;
+    for (i = 0; i < SCREEN_COLS * SCREEN_ROWS * 2; i++) {
+        struct video_cell cell;
+        cell = (struct video_cell)screen.mem[i];
+        screen.mem[i-SCREEN_COLS] = cell; /* move backwards */
     }
 
     /* NOTE: do not update x! */
-    screen.next_y = last_line; /* write to the last line */
-    move_cursor(screen.next_x, last_line);
+    screen.next_coord_y = SCREEN_ROWS - 1; /* write to the last line */
+    move_cursor(screen.next_coord_x, screen.next_coord_y);
 }
 
-void put_char(const char c)
+/* clear_screen()
+ *  Clear the screen by writing blank spaces to it. Resets the cursor to 0x0.
+ */
+static void clear_screen(void)
 {
     TRACE_ONCE;
-    unsigned int index;
+    
+    unsigned short i;
+    for (i = 0; i < SCREEN_COLS * SCREEN_ROWS * 2; i++) {
+        struct video_cell cell;
+        cell.c = ' ';
+        cell.attrib = PAIR_TO_ATTRIB(current_bg, current_fg);
+        screen.mem[i] = cell;
+    }
+
+    move_cursor(0, 0);
+    screen.next_coord_x = 0;
+    screen.next_coord_y = 0;
+}
+
+void init_screen(void)
+{
+    TRACE_ONCE;
+
+    screen.mem = (struct video_cell *)VIDEO_MEM_START;
+    change_colour(COLOUR_BLACK, COLOUR_LGRAY);
+    clear_screen();
+}
+
+void put_char(unsigned char c)
+{
+    TRACE_ONCE;
+
+    struct video_cell this_cell;
+    unsigned short offset;
 
     /* Handle any cursor manipulations given by format specifiers */
     switch (c) {
         case '\b':
-            if (screen.next_x) screen.next_x--;
+            if (screen.next_coord_x > 0) {
+                screen.next_coord_x--;
+            }
             return;
 
         case '\n':
-            screen.next_y++;
+            screen.next_coord_y++;
             /* fall through to \r */
         case '\r':
-            screen.next_x = 0;
+            screen.next_coord_x = 0;
+            move_cursor(screen.next_coord_y, screen.next_coord_y);
             return;
 
         case '\t':
             /* XXX still doesn't work */
-            screen.next_x = (screen.next_x + 8) & ~(8 - 1);
+            screen.next_coord_x = (screen.next_coord_x + 8) & ~(8 - 1);
             return;
     }
 
     /* Overflow to new line if needed */
-    if (screen.next_x >= WIDTH) {
-        screen.next_x = 0;
-        screen.next_y++;
+    if (screen.next_coord_x >= SCREEN_COLS) {
+        screen.next_coord_x = 0;
+        screen.next_coord_y++;
     }
 
     /* Overflow the screen if needed */
-    if (screen.next_y >= HEIGHT) scroll_screen();
+    if (screen.next_coord_y >= SCREEN_ROWS) {
+        scroll_screen();
+    }
 
-    /* Each character in video mem is 2 bytes: we call this a cell */
-    index = (screen.next_x * 2) + ((screen.next_y * 2) * WIDTH);
-    screen.mem[index] = c;
-    screen.mem[++index] = current_colour;
+    /* Populate this cell */
+    this_cell.c = c;
+    this_cell.attrib = PAIR_TO_ATTRIB(current_bg, current_fg);
+    offset = COORD_TO_OFFSET(screen.next_coord_x, screen.next_coord_y);
+    screen.mem[offset] = this_cell;
     
     /* Incremement the x position and move the cursor to the next cell */
-    move_cursor(++screen.next_x, screen.next_y);
+    move_cursor(++screen.next_coord_x, screen.next_coord_y);
 }
 
 void flush_screen(const char *data)
 {
     TRACE_ONCE;
+
     clear_screen();
     while (*data) {
         put_char(*data);
@@ -141,5 +158,7 @@ void flush_screen(const char *data)
 void change_colour(const char bg, const char fg)
 {
     TRACE_ONCE;
-    current_colour = COLOUR(bg, fg);
+
+    current_bg = bg;
+    current_fg = fg;
 }

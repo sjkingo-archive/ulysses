@@ -5,44 +5,46 @@
  * screen to be a "square" in video memory.
  */
 
-#define VIDMEM_START ((unsigned char *)0xb8000)
-#define WIDTH 80
-#define HEIGHT 25
+#define VIDEO_MEM_START 0xB8000
 
-/* Colour attributes */
+/* Dimensions of the screen */
+#define SCREEN_COLS 80
+#define SCREEN_ROWS 25
+
+/* Some useful macros */
+#define PAIR_TO_ATTRIB(bg, fg) ((bg << 4) | (fg & 0x0F))
+#define COORD_TO_OFFSET(x, y) ((y * SCREEN_COLS) + x)
+
+struct video_cell {
+    unsigned char c;
+    unsigned char attrib;
+};
+
+struct video_framebuffer {
+    struct video_cell *mem;
+    unsigned short next_coord_x;
+    unsigned short next_coord_y;
+};
+
+/* Colour values that make up attributes */
 enum screen_colours {
-    BLACK=0,
-    BLUE=1,
-    GREEN=2,
-    CYAN=3,
-    RED=4,
-    MAGENTA=5,
-    BROWN=6,
-    LGRAY=7,
-    DGRAY=8,
-    LBLUE=9,
-    LGREEN=10,
-    LCYAN=11,
-    LRED=12,
-    LMAGENTA=13,
-    LYELLOW=14,
-    WHITE=15,
-    DEFAULT=16,
+    COLOUR_BLACK=0x00,
+    COLOUR_BLUE=0x01,
+    COLOUR_GREEN=0x02,
+    COLOUR_CYAN=0x03,
+    COLOUR_RED=0x04,
+    COLOUR_MAGENTA=0x05,
+    COLOUR_BROWN=0x06,
+    COLOUR_LGRAY=0x07,
+    COLOUR_DGRAY=0x08,
+    COLOUR_LBLUE=0x09,
+    COLOUR_LGREEN=0x10,
+    COLOUR_LCYAN=0x11,
+    COLOUR_LRED=0x12,
+    COLOUR_LMAGENTA=0x13,
+    COLOUR_LBROWN=0x14,
+    COLOUR_WHITE=0x15,
 };
-
-#define TAB "        " /* 8 spaces */
-
-/* The hexidecimal alphabet */
-#define HEX_LOWER "0123456789abcdef"
-#define HEX_UPPER "0123456789ABCDEF"
-
-/* A screen is defined as an 80x25 location in video memory */
-struct vidmem {
-    unsigned char *mem;
-    unsigned int next_x;
-    unsigned int next_y;
-};
-struct vidmem screen;
 
 /* init_screen()
  *  Initialises the first 80x25 screen in memory and clears it, ready to be
@@ -50,20 +52,10 @@ struct vidmem screen;
  */
 void init_screen(void);
 
-/* clear_screen()
- *  Clear the screen by writing blank spaces to it. Resets the cursor to 0x0.
- */
-void clear_screen(void);
-
-/* move_cursor()
- *  Move the screen cursor to the specified coordinates.
- */
-void move_cursor(const unsigned int x, const unsigned int y);
-
 /* put_char()
  *  Put a single character to screen with the given colour code.
  */
-void put_char(const char c);
+void put_char(unsigned char c);
 
 /* flush_screen()
  *  Clear the screen and write data to it.
