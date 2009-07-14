@@ -8,6 +8,6 @@
  *  list, formats the string using given args and specifiers, and appends
  *  the formatted string to the active VT.
  */
-int kprintf(const char *fmt, ...);
+int kprintf(const char *fmt, ...)  __attribute__ ((format (printf, 1, 2)));
 
 #endif
