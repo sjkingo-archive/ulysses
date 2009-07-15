@@ -1,5 +1,5 @@
 #!/bin/bash
-scons -Q && \
+scons -Q -j4 && \
 pushd tools && \
 ./qemu.sh $@ && \
 popd
