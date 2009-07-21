@@ -42,7 +42,7 @@ symbol_t *get_trace_symbol(const char *func_name)
 {
     symbol_t *s = head;
     while (s != NULL) {
-        if (strcmp(s->name, func_name)) {
+        if (strcmp(s->name, func_name) == 0) {
             return s;
         }
         s = s->next;
