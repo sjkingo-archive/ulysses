@@ -29,8 +29,6 @@ extern __volatile__ task_t *current_task;
 
 void do_panic(const char *msg, const char *file, int line)
 {
-    TRACE_ONCE;
-
     lock_kernel();
 
     /* prevent recursive panics - thanks AST */
@@ -67,7 +65,6 @@ void do_panic(const char *msg, const char *file, int line)
 
 void shutdown(void)
 {
-    TRACE_ONCE;
     kprintf("Shutting down Ulysses\n");
     kprintf("Killing all tasks...\n");
     kill_all_tasks();

@@ -22,12 +22,6 @@
 
 #include <string.h>
 
-#ifdef TRACE_ONCE
-#error "WARNING! Do not place any tracing calls into this file because it \
-will cause a stack overflow inside the kernel heap code."
-#endif
-/* you have been warned... */
-
 char standard_lessthan_predicate(type_t a, type_t b)
 {
     if (a < b) {

@@ -32,7 +32,6 @@
 #include <ulysses/shutdown.h>
 #include <ulysses/syscall.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 #include <ulysses/util_x86.h>
 
@@ -49,7 +48,6 @@ extern struct queue tasks_queue;
 
 static void cmd_uptime(void)
 {
-    TRACE_ONCE;
     kprintf("up %ld seconds (%ld milliseconds)\n", 
             kern.current_time_offset.tv_sec, 
             kern.current_time_offset.tv_msec);
@@ -57,7 +55,6 @@ static void cmd_uptime(void)
 
 static void cmd_comefrom(void)
 {
-    TRACE_ONCE;
     kprintf("Oh come on, we all know that Dijkstra was right:\n");
     kprintf("<http://www.cs.utexas.edu/users/EWD/transcriptions/"
             "EWD02xx/EWD215.html>\n");
@@ -65,13 +62,11 @@ static void cmd_comefrom(void)
 
 static void cmd_pf(void)
 {
-    TRACE_ONCE;
     PF;
 }
 
 static void cmd_history(void)
 {
-    TRACE_ONCE;
     int i;
     for (i = SHELL_MAX_HISTORY; i >= 0; i--) {
         kprintf("%s", last_cmds[i]);
@@ -81,7 +76,6 @@ static void cmd_history(void)
 
 static void cmd_int_80(char **args)
 {
-    TRACE_ONCE;
     int a, num;
     
     num = strtol(args[0], NULL, 10);
@@ -90,7 +84,6 @@ static void cmd_int_80(char **args)
 
 static void cmd_ps(void)
 {
-    TRACE_ONCE;
     kprintf("PID\tPPID\tUID\tCPU\tSTATE\tNAME\n");
     task_t *t = tasks_queue.head;
     while (t != NULL) {
@@ -108,7 +101,6 @@ static void cmd_ps(void)
 extern struct shell_command cmds[]; /* we're using it before it is declared */
 static void cmd_help(void)
 {
-    TRACE_ONCE;
     unsigned int i = 0;
     while (cmds[i].cmd != NULL) {
         kprintf("%s", cmds[i].cmd);
@@ -127,14 +119,12 @@ static void cmd_help(void)
 
 static void cmd_exit(void)
 {
-    TRACE_ONCE;
     kprintf("Shell is exiting; press F8 to start a new one.\n");
     kthread_exit();
 }
 
 static void kt_test(void)
 {
-    TRACE_ONCE;
     unsigned short i;
     for (i = 0; i < 5; i++) {
         kprintf("Hello from pid %d: i %d\n", do_getpid(), i);
@@ -143,7 +133,6 @@ static void kt_test(void)
 
 static void cmd_kt_test(void)
 {
-    TRACE_ONCE;
     unsigned short i;
     for (i = 0; i < 3; i++) {
         kthread_create(kt_test, "kt_test");
@@ -159,7 +148,6 @@ static void kt_bomb(void)
 
 static void cmd_kt_bomb(void)
 {
-    TRACE_ONCE;
     unsigned long long i = 0;
     while (1) {
         pid_t pid = kthread_create(kt_bomb, "bomb");
@@ -171,27 +159,23 @@ static void cmd_kt_bomb(void)
 
 static void cmd_errno(void)
 {
-    TRACE_ONCE;
     kprintf("%d\n", errno);
 }
 
 static void cmd_kill(char **args)
 {
-    TRACE_ONCE;
     pid_t pid = (pid_t)strtol(args[0], NULL, 10);
     kill_task(pid);
 }
 
 static void cmd_f00f(void)
 {
-    TRACE_ONCE;
     test_f00f();
     kprintf("This CPU doesn't appear to have the f00f bug. Yay!\n");
 }
 
 static void cmd_cat(char **args)
 {
-    TRACE_ONCE;
     
     struct file *f = load_file(args[0]);
     if (f == NULL) {
@@ -204,7 +188,6 @@ static void cmd_cat(char **args)
 
 static void kt_ring3(void)
 {
-    TRACE_ONCE;
     char *msg = "Hello via SYS_WRITE in usermode; now going into a busy "
             "loop to test preemption.";
     unsigned int len = strlen(msg);
@@ -217,13 +200,11 @@ static void kt_ring3(void)
 
 static void cmd_ring3(void)
 {
-    TRACE_ONCE;
     kthread_create(kt_ring3, "ring3");
 }
 
 static void cmd_flag(char **args)
 {
-    TRACE_ONCE;
     flag_t a;
 
     if (args[0] == NULL || args[1] == NULL) {
@@ -256,7 +237,6 @@ static void cmd_flag(char **args)
 
 static void cmd_echo(char **args)
 {
-    TRACE_ONCE;
     while (*args != NULL) {
         kprintf("%s ", *args);
         args++;
@@ -266,7 +246,6 @@ static void cmd_echo(char **args)
 
 void cmd_fork(void)
 {
-    TRACE_ONCE;
     pid_t pid = do_fork();
     if (pid == -1) {
         kprintf("do_fork() failed and returned -1: check errno\n");
@@ -280,7 +259,6 @@ void cmd_fork(void)
 
 static void cmd_kmalloc(void)
 {
-    TRACE_ONCE;
     int i;
     int iter = 10000;
     int size = 10;
@@ -292,13 +270,11 @@ static void cmd_kmalloc(void)
 
 static void cmd_init(void)
 {
-    TRACE_ONCE;
     create_init();
 }
 
 static void cmd_lmod(char **args)
 {
-    TRACE_ONCE;
     if (args[0] == NULL) {
         return;
     }

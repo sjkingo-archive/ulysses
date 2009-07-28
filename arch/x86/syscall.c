@@ -21,7 +21,6 @@
 #include <ulysses/kprintf.h>
 #include <ulysses/syscall.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 #include <ulysses/shutdown.h>
 
 extern struct syscall_entry syscalls[];
@@ -29,7 +28,6 @@ extern unsigned int num_syscalls;
 
 void syscall_handler(registers_t *regs)
 {
-    TRACE_ONCE;
     struct syscall_entry sc;
     int ret;
 

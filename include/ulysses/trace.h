@@ -15,15 +15,6 @@ typedef struct symbol {
     struct symbol *next;
 } symbol_t;
 
-/* This only works if the kernel was compiled with GCC; don't add trace
- * symbols if another compiler was used.
- */
-#if __GNUC__
-#define TRACE_ONCE do {} while(0)
-#else
-#define TRACE_ONCE do {} while(0)
-#endif
-
 /* get_closest_symbol()
  *  Find the function symbol that this address is offset into.
  */

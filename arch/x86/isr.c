@@ -30,8 +30,6 @@
 
 static inline void handle_exception(struct cpu_exception exc)
 {
-    TRACE_ONCE;
-
     /* Execute the action */
     switch (exc.action) {
         case ACTION_PANIC:
@@ -55,8 +53,6 @@ static inline void handle_exception(struct cpu_exception exc)
 
 static inline flag_t lookup_exception(registers_t *regs)
 {
-    TRACE_ONCE;
-
     struct cpu_exception exc;
     int i = 0;
 
@@ -77,8 +73,6 @@ static inline flag_t lookup_exception(registers_t *regs)
 
 void isr_handler(registers_t regs)
 {
-    TRACE_ONCE;
-
     if (kern.flags.debug_interrupt) {
         symbol_t *sym;
         void *addr = __builtin_return_address(1);
@@ -108,8 +102,6 @@ void isr_handler(registers_t regs)
 
 void irq_handler(registers_t regs)
 {
-    TRACE_ONCE;
-
     /* Write an end of interrupt signal to the PICs. This needs to be done
      * *before* executing any exception handler, since the IRQ line will not
      * get reactivated until the EOI is sent.

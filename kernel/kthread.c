@@ -25,7 +25,6 @@
 #include <ulysses/shell.h>
 #include <ulysses/syscall.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 
 #include <string.h>
 
@@ -34,7 +33,6 @@ static pid_t kthreadd_pid;
 
 void kthreadd(void)
 {
-    TRACE_ONCE;
     kthreadd_pid = do_getpid();
     kprintf("kthreadd: running with pid %d\n", kthreadd_pid);
     kthread_create(run_shell, "shell");
@@ -43,8 +41,6 @@ void kthreadd(void)
 
 pid_t kthread_create(void (*func)(void), const char *name)
 {
-    TRACE_ONCE;
-
     /* Set up task */
     task_t *task = new_task(name);
     task->eip = (unsigned int)*func;
@@ -62,20 +58,17 @@ pid_t kthread_create(void (*func)(void), const char *name)
 
 void kthread_yield(void)
 {
-    TRACE_ONCE;
     current_task->kthread->state = STATE_SLEEPING;
     change_current_task();
 }
 
 void kthread_exit(void)
 {
-    TRACE_ONCE;
     current_task->kthread->state = STATE_DESTROYING;
     sys_exit();
 }
 
 void kthread_running(void)
 {
-    TRACE_ONCE;
     current_task->kthread->state = STATE_RUNNING;
 }

@@ -25,7 +25,6 @@
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 #include <ulysses/util_x86.h>
 
@@ -44,13 +43,11 @@ extern void ring3_exit(void);
 
 static pid_t new_pid(void)
 {
-    TRACE_ONCE;
     return next_pid++;
 }
 
 static void switch_task(flag_t save)
 {
-    TRACE_ONCE;
     unsigned int esp, ebp, eip;
 
     if (current_task == NULL) {
@@ -139,7 +136,6 @@ static void switch_task(flag_t save)
  */
 static void setup_stack(task_t *t)
 {
-    TRACE_ONCE;
     unsigned int *esp = kmalloc(0x1000) + 0x1000; /* 4 KB stack, at top */
     unsigned int *stack = esp;
 
@@ -188,7 +184,6 @@ static task_t *clone_task(task_t *parent)
 
 void init_task(void)
 {
-    TRACE_ONCE;
     /* Only allow this function to be called once */
     static flag_t initTask;
     if (initTask) panic("init_task() already set up");
@@ -204,7 +199,6 @@ void init_task(void)
 
 task_t *new_task(const char *name)
 {
-    TRACE_ONCE;
     task_t *t = (task_t *)kmalloc(sizeof(task_t));
     t->pid = new_pid();
     t->ppid = 0;
@@ -231,7 +225,6 @@ task_t *new_task(const char *name)
 
 void free_task(task_t *task)
 {
-    TRACE_ONCE;
     kfree(task->name);
     kfree(task->kernel_stack);
     if (task->kthread != NULL) {
@@ -243,14 +236,12 @@ void free_task(task_t *task)
 
 void task_exit(void)
 {
-    TRACE_ONCE;
     current_task->ready = 0; /* tell the scheduler to remove this task */
     switch_task(FALSE); /* don't save state */
 }
 
 void kill_task(pid_t pid)
 {
-    TRACE_ONCE;
     task_t *t;
 
     /* Try and find the task */
@@ -271,7 +262,6 @@ void kill_task(pid_t pid)
 
 void kill_all_tasks(void)
 {
-    TRACE_ONCE;
     unsigned int i;
     for (i = next_pid - 1; i > 0; i--) {
         task_t *t = get_task(i);
@@ -283,7 +273,6 @@ void kill_all_tasks(void)
 
 pid_t do_fork(void)
 {
-    TRACE_ONCE;
     unsigned int eip;
     task_t *child, *parent;
 
@@ -327,19 +316,16 @@ pid_t do_fork(void)
 
 pid_t do_getpid(void)
 {
-    TRACE_ONCE;
     return current_task->pid;
 }
 
 uid_t do_getuid(void)
 {
-    TRACE_ONCE;
     return current_task->uid;
 }
 
 void check_current_task(void)
 {
-    TRACE_ONCE;
     if (current_task == NULL) {
         return;
     }
@@ -368,31 +354,26 @@ void check_current_task(void)
 
 void switch_kernel_stack(void)
 {
-    TRACE_ONCE;
     set_kernel_stack(current_task->kernel_stack + KERNEL_STACK_SIZE);
 }
 
 void change_current_task(void)
 {
-    TRACE_ONCE;
     switch_task(TRUE);
 }
 
 void set_current_ring3(void)
 {
-    TRACE_ONCE;
     current_task->ring = 3;
 }
 
 void update_cpu_time(void)
 {
-    TRACE_ONCE;
     current_task->cpu_time++;
 }
 
 void change_name(const char *new_name)
 {
-    TRACE_ONCE;
     kfree(current_task->name);
     current_task->name = (char *)kmalloc(strlen(new_name) + 1);
     strcpy(current_task->name, new_name);

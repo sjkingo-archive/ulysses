@@ -22,7 +22,6 @@
 #include <ulysses/initrd.h>
 #include <ulysses/module.h>
 #include <ulysses/paging.h>
-#include <ulysses/trace.h>
 
 #include <sys/types.h>
 
@@ -31,8 +30,6 @@ static unsigned short next_mod_index = 0;
 
 void load_module(const char *name)
 {
-    TRACE_ONCE;
-
     struct file *f;
     struct elf_header *elf;
     struct kernel_module mod;

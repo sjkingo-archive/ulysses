@@ -19,7 +19,6 @@
 
 #include <ulysses/gdt.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 #include <ulysses/tss.h>
 #include <ulysses/util.h>
 
@@ -88,13 +87,11 @@ void init_gdt(void)
 
 void set_kernel_stack(unsigned int stack)
 {
-    TRACE_ONCE;
     tss_entry.esp0 = stack;
 }
 
 void switch_to_ring3(void)
 {
-    TRACE_ONCE;
     switch_kernel_stack();
     set_current_ring3();
 

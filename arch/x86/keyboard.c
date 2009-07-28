@@ -22,7 +22,6 @@
 #include <ulysses/kthread.h>
 #include <ulysses/shell.h>
 #include <ulysses/shutdown.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 #include <ulysses/vt.h>
 
@@ -113,7 +112,6 @@ static struct {
 
 void init_keyboard(void)
 {
-    TRACE_ONCE;
     buffer.next_read_index = 0;
     buffer.next_append_index = 0;
     buffer.shift_state = FALSE;
@@ -123,7 +121,6 @@ void init_keyboard(void)
 
 char next_key(void)
 {
-    TRACE_ONCE;
     /* Are there any more characters to be read? */
     if (buffer.next_read_index >= buffer.next_append_index) {
         return 0;
@@ -133,7 +130,6 @@ char next_key(void)
 
 void keyboard_handler(registers_t *regs)
 {
-    TRACE_ONCE;
     unsigned int scancode = inb(0x60); /* read the scancode */
     unsigned int key;
 
@@ -212,7 +208,6 @@ void keyboard_handler(registers_t *regs)
 
 void buffer_keypress(char key)
 {
-    TRACE_ONCE;
     if ((buffer.next_append_index + 1) >= KB_BUFFER_SIZE) {
         buffer.next_append_index = 0;
     }

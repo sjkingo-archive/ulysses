@@ -18,20 +18,17 @@
  */
 
 #include <ulysses/kprintf.h>
-#include <ulysses/trace.h>
 #include <ulysses/util_x86.h>
 
 extern unsigned int read_eip();
 
 void idle_cpu(void)
 {
-    TRACE_ONCE;
     while(1) __asm__ __volatile__("sti ; hlt");
 }
 
 void dump_regs(void)
 {
-    TRACE_ONCE;
     int eip = read_eip();
     int esp = READ_ESP();
     int ebp = READ_EBP();

@@ -21,7 +21,6 @@
 #include <ulysses/kprintf.h>
 #include <ulysses/paging.h>
 #include <ulysses/shutdown.h>
-#include <ulysses/trace.h>
 
 #include <string.h> /* for memset() */
 
@@ -133,7 +132,6 @@ page_t *get_page(unsigned int addr, flag_t make, page_dir_t *dir)
  */
 void alloc_frame(page_t *page, int is_kernel, int is_writeable)
 {
-    TRACE_ONCE;
     unsigned int index; /* index of first free frame */
 
     if (page->frame != 0) return; /* already allocated */
@@ -161,7 +159,6 @@ void free_frame(page_t *page)
 
 void init_paging(void)
 {
-    TRACE_ONCE;
     unsigned int i, j, k;
 
     /* Set up page frames */
@@ -294,6 +291,5 @@ void move_stack(void *new_start, unsigned int size)
 
 page_dir_t *get_kernel_dir(void)
 {
-    TRACE_ONCE;
     return kernel_directory;
 }

@@ -26,7 +26,6 @@
 #include <ulysses/screen.h>
 #include <ulysses/shell.h>
 #include <ulysses/shell_cmds.h>
-#include <ulysses/trace.h>
 #include <ulysses/vt.h>
 
 #include <string.h>
@@ -43,8 +42,6 @@ extern struct shell_command cmds[];
  */
 static void reset_buffer(void)
 {
-    TRACE_ONCE;
-    
     if (shell.data == NULL) {
         shell.data = kmalloc(SHELL_BUF_SIZE);
     }
@@ -58,7 +55,6 @@ static void reset_buffer(void)
  */
 static void update_history(void)
 {
-    TRACE_ONCE;
     /* Wrap the history */
     if (last_cmd_index >= SHELL_MAX_HISTORY) {
         last_cmd_index = 0;
@@ -83,8 +79,6 @@ static void update_history(void)
  */
 static void execute_cmd(void)
 {
-    TRACE_ONCE;
-
     char *cmd, *arg;
     char *args[10];
     unsigned int i;
@@ -128,13 +122,11 @@ static void execute_cmd(void)
 
 static void print_prompt(void)
 {
-    TRACE_ONCE;
     kprintf("%s", SHELL_PROMPT);
 }
 
 void run_shell(void)
 {
-    TRACE_ONCE;
     shell.next_pos = 0;
     shell.data = NULL;
     reset_buffer();
@@ -161,7 +153,6 @@ void run_shell(void)
 
 void buffer_key(const char c)
 {
-    TRACE_ONCE;
     /* Wrap the next_pos if the buffer overflows */
     if ((shell.next_pos + 1) >= SHELL_BUF_SIZE) {
         shell.next_pos = 0;
@@ -180,7 +171,6 @@ void buffer_key(const char c)
 
 void shell_walk_history(flag_t dir)
 {
-    TRACE_ONCE;
     /* Copy the previous history command into the buffer */
     reset_buffer();
     strcpy(shell.data, last_cmds[last_up_index]);

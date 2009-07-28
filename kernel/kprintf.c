@@ -20,7 +20,6 @@
 #include <ulysses/kprintf.h>
 #include <ulysses/serial.h>
 #include <ulysses/screen.h>
-#include <ulysses/trace.h>
 #include <ulysses/vt.h>
 
 #include <stdarg.h>
@@ -54,7 +53,6 @@ static void kputs(const char *str)
 
 int kprintf(const char *fmt, ...)
 {
-    TRACE_ONCE;
 	char buf[1024];
 	va_list args;
 	int bytes;

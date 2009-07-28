@@ -25,7 +25,6 @@
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <string.h>
@@ -38,8 +37,6 @@ extern unsigned long long startup_time;
 #define COMEFROM goto
 void sanity_check(void)
 {
-    TRACE_ONCE;
-
     /* ... maybe not */
 #ifdef COMEFROM
     COMEFROM pass; /* default to passing */
@@ -53,8 +50,6 @@ void sanity_check(void)
 
 void print_startup(void)
 {
-    TRACE_ONCE;
-
 #ifndef __GNUC__
     kprintf("Warning: not compiled by gcc; this disables a lot of nice "
             "debugging symbols\n");
@@ -84,13 +79,11 @@ void print_startup(void)
 
 inline void lock_kernel(void)
 {
-    TRACE_ONCE;
     CLI;
 }
 
 inline void unlock_kernel(void)
 {
-    TRACE_ONCE;
     STI;
 }
 
@@ -114,6 +107,5 @@ void parse_cmdline(const char *cmdline)
 
 mseconds_t do_msuptime(void)
 {
-    TRACE_ONCE;
     return kern.current_time_offset.tv_msec;
 }

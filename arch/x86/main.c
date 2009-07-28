@@ -33,7 +33,6 @@
 #include <ulysses/shutdown.h>
 #include <ulysses/syscall.h>
 #include <ulysses/timer.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <string.h>
@@ -51,7 +50,6 @@ unsigned long long startup_time;
 
 static void set_time(void)
 {
-    TRACE_ONCE;
     kern.startup_datetime = cmos_datetime();
     kern.loaded_time.tv_sec = 0;
     kern.current_time_offset.tv_sec = 0;
@@ -59,7 +57,6 @@ static void set_time(void)
 
 static void init_multiboot(void *mdb, unsigned int magic)
 {
-    TRACE_ONCE;
     if (magic != MULTIBOOT_LOADER_MAGIC) {
         panic("Kernel not booted by a Multiboot loader");
     }
@@ -92,8 +89,6 @@ static void init_multiboot(void *mdb, unsigned int magic)
 /* The kernel entry point for the x86 archticture */
 void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
 {
-    TRACE_ONCE;
-
     register unsigned long long start_time;
 
     /* Disable interrupts in case someone removes the cli instruction from

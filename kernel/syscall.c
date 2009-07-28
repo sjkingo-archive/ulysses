@@ -31,7 +31,6 @@
 #include <ulysses/kernel.h>
 #include <ulysses/kprintf.h>
 #include <ulysses/task.h>
-#include <ulysses/trace.h>
 #include <ulysses/shutdown.h>
 #include <ulysses/syscall.h>
 #include <ulysses/vt.h>
@@ -64,14 +63,12 @@ unsigned int num_syscalls = (sizeof(syscalls) /
 
 int sys_dummy(void)
 {
-    TRACE_ONCE;
     kprintf("sys_dummy(): Dummy syscall; why was this called?\n");
     return 0;
 }
 
 int sys_exit(void)
 {
-    TRACE_ONCE;
     task_exit();
     errno = ESRCH;
     return -1;
@@ -79,20 +76,17 @@ int sys_exit(void)
 
 int sys_fork(void)
 {
-    TRACE_ONCE;
     return do_fork();
 }
 
 int sys_read(int fd, char *buf, size_t count)
 {
-    TRACE_ONCE;
     errno = EBADF;
     return -1;
 }
 
 int sys_write(int fd, const char *buf, size_t count)
 {
-    TRACE_ONCE;
     unsigned int i, len;
 
     if (fd > 2) {
@@ -114,36 +108,30 @@ int sys_write(int fd, const char *buf, size_t count)
 
 int sys_open(void)
 {
-    TRACE_ONCE;
     return -1;
 }
 
 int sys_close(void)
 {
-    TRACE_ONCE;
     return -1;
 }
 
 int sys_waitpid(int pid, int *status, int options)
 {
-    TRACE_ONCE;
     return -1;
 }
 
 int sys_execve(const char *filename, char *const argv[], char *const envp[])
 {
-    TRACE_ONCE;
     return do_execv(filename, argv);
 }
 
 int sys_getpid(void)
 {
-    TRACE_ONCE;
     return do_getpid();
 }
 
 int sys_getuid(void)
 {
-    TRACE_ONCE;
     return do_getuid();
 }

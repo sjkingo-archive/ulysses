@@ -18,7 +18,6 @@
  */
 
 #include <ulysses/screen.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 /* the screen */
@@ -33,7 +32,6 @@ static unsigned char current_fg;
  */
 static inline void move_cursor(unsigned short x, unsigned short y)
 {
-    TRACE_ONCE;
     unsigned short index = COORD_TO_OFFSET(x, y);
 
     /* High byte */
@@ -51,8 +49,6 @@ static inline void move_cursor(unsigned short x, unsigned short y)
  */
 static void scroll_screen(void)
 {
-    TRACE_ONCE;
-
     unsigned short i;
     for (i = 0; i < SCREEN_COLS * SCREEN_ROWS * 2; i++) {
         struct video_cell cell;
@@ -70,8 +66,6 @@ static void scroll_screen(void)
  */
 static void clear_screen(void)
 {
-    TRACE_ONCE;
-    
     unsigned short i;
     for (i = 0; i < SCREEN_COLS * SCREEN_ROWS * 2; i++) {
         struct video_cell cell;
@@ -87,8 +81,6 @@ static void clear_screen(void)
 
 void init_screen(void)
 {
-    TRACE_ONCE;
-
     screen.mem = (struct video_cell *)VIDEO_MEM_START;
     change_colour(COLOUR_BLACK, COLOUR_LGRAY);
     clear_screen();
@@ -96,8 +88,6 @@ void init_screen(void)
 
 void put_char(unsigned char c)
 {
-    TRACE_ONCE;
-
     struct video_cell this_cell;
     unsigned short offset;
 
@@ -146,8 +136,6 @@ void put_char(unsigned char c)
 
 void flush_screen(const char *data)
 {
-    TRACE_ONCE;
-
     clear_screen();
     while (*data) {
         put_char(*data);
@@ -157,8 +145,6 @@ void flush_screen(const char *data)
 
 void change_colour(const char bg, const char fg)
 {
-    TRACE_ONCE;
-
     current_bg = bg;
     current_fg = fg;
 }

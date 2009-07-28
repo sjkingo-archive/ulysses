@@ -19,7 +19,6 @@
 
 #include <ulysses/cmos.h>
 #include <ulysses/datetime.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 #include <sys/time.h>
@@ -27,7 +26,6 @@
 
 static unsigned char read_cmos(unsigned char reg)
 {
-    TRACE_ONCE;
     unsigned char v;
     outb(0x70, reg); /* open command port */
     v = inb(0x71); /* read from data port */
@@ -37,7 +35,6 @@ static unsigned char read_cmos(unsigned char reg)
 
 struct datetime cmos_datetime(void)
 {
-    TRACE_ONCE;
     struct datetime t;
     t.year = BCD_INT(read_cmos(DT_YR));
     t.month = BCD_INT(read_cmos(DT_MTH));

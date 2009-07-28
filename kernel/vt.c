@@ -17,13 +17,11 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ulysses/trace.h>
 #include <ulysses/screen.h>
 #include <ulysses/vt.h>
 
 void init_vt(void)
 {
-    TRACE_ONCE;
     unsigned short i, j;
 
     /* Init all the VTs to a blank state */
@@ -42,7 +40,6 @@ void init_vt(void)
 
 void switch_vt(unsigned short index)
 {
-    TRACE_ONCE;
     if (index >= NUM_VT) return;
     active_vt = index;
     flush_vt();
@@ -50,13 +47,11 @@ void switch_vt(unsigned short index)
 
 void flush_vt(void)
 {
-    TRACE_ONCE;
     flush_screen(virtual_terms[active_vt].data);
 }
 
 static void append_to_vt(const char c, unsigned short vt)
 {
-    TRACE_ONCE;
     if ((virtual_terms[vt].next + 1) >= MAX_CHARS) {
         virtual_terms[vt].next = 0;
     }
@@ -65,7 +60,6 @@ static void append_to_vt(const char c, unsigned short vt)
 
 void append_char(const char c, flag_t write)
 {
-    TRACE_ONCE;
     append_to_vt(c, active_vt);
     if (write) {
         put_char(c); /* write through to the screen directly */
@@ -74,7 +68,6 @@ void append_char(const char c, flag_t write)
 
 void remove_last_line(void)
 {
-    TRACE_ONCE;
     char *d = virtual_terms[active_vt].data + 
             (virtual_terms[active_vt].next - 1); /* ignore \n */
     while (*d != '\0' && *d != '\n') {

@@ -22,7 +22,6 @@
 #include <ulysses/timer.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
-#include <ulysses/trace.h>
 #include <ulysses/util.h>
 
 static unsigned long ticks;
@@ -30,7 +29,6 @@ static unsigned int tick_interval;
 
 void timer_tick(registers_t *regs)
 {
-    TRACE_ONCE;
     if (regs->int_no != IRQ0) panic("timer_tick() called for wrong IRQ!");
     
     /* A timer tick occurs every x milliseconds, so add that interval to the
@@ -58,7 +56,6 @@ void timer_tick(registers_t *regs)
 
 void init_timer(unsigned int freq)
 {
-    TRACE_ONCE;
     ticks = 0;
     tick_interval = 1000 / TIMER_FREQ; /* timer ticks every x msecs */
 
