@@ -23,14 +23,38 @@
 
 #include <string.h>
 
-symbol_t *head = NULL;
-symbol_t *tail = NULL;
+static symbol_t *head = NULL;
 
-symbol_t *lookup_symbol(void *addr)
+/* insert_sort()
+ *  Inserts the given element into the linked list in increasing order of 
+ *  address, using insertion sort.
+ */
+static void insert_sort(symbol_t *s)
+{
+    symbol_t *curr = head;
+    while (curr != NULL) {
+        if (s->addr <= curr->addr) {
+            s->next = curr;
+            curr->prev->next = s;
+            s->prev = curr->prev;
+            curr->prev = s;
+            return;
+        } else {
+            if (curr->next == NULL) {
+                curr->next = s;
+                s->prev = curr;
+                return;
+            }
+        }
+        curr = curr->next;
+    }
+}
+
+symbol_t *get_closest_symbol(void *addr)
 {
     symbol_t *s = head;
     while (s != NULL) {
-        if (s->addr == addr) {
+        if (addr > s->addr && addr < s->next->addr) {
             return s;
         }
         s = s->next;
@@ -52,56 +76,24 @@ symbol_t *get_trace_symbol(const char *func_name)
 
 void add_trace_symbol(const char func_name[], void *addr)
 {
-    /* Don't add duplicate symbols */
-    if (lookup_symbol(addr) != NULL) {
-        return;
-    }
-
     symbol_t *s = kmalloc(sizeof(symbol_t));
     s->name = func_name;
     s->addr = addr;
+    s->prev = NULL;
     s->next = NULL;
 
-    /* Add to list */
     if (head == NULL) {
         head = s;
-    } else if (tail == NULL) {
-        tail = s;
-        head->next = s;
     } else {
-        tail->next = s;
-        tail = s;
+        insert_sort(s);
     }
 }
 
-void func_trace(unsigned int max_frames)
+void dump_syms(void)
 {
-    TRACE_ONCE;
-    unsigned int i, *ebp;
-
-    kprintf("Call trace (from top of stack):\n");
-
-    ebp = &max_frames - 2;
-    for (i = 0; i < max_frames; i++) {
-        unsigned int eip;
-        symbol_t *sym;
-
-        /* Make sure we don't walk over the end of the stack */
-        eip = ebp[1];
-        if (eip <= 0x10) {
-            break;
-        }
-
-        /* Lookup the symbol */
-        sym = lookup_symbol(eip);
-        if (sym == NULL) {
-            kprintf(" #%d %p in ???\n", i, eip);
-            kprintf("(stack appears to be trashed -- aborting trace)\n");
-            break;
-        } else {
-            kprintf(" #%d %p in %s ()\n", i, eip, sym->name);
-        }
-
-        ebp = (unsigned int *)ebp[0]; /* unwind to previous */
+    symbol_t *s = head;
+    while (s != NULL) {
+        kprintf("%p %s\n", s->addr, s->name);
+        s = s->next;
     }
 }

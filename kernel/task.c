@@ -38,7 +38,6 @@ pid_t next_pid = 0;
 
 extern page_dir_t *kernel_directory;
 extern page_dir_t *current_directory;
-extern unsigned int read_eip(void);
 
 /* syscall_trap.s: This is used as an exit path from ring 3. */
 extern void ring3_exit(void);

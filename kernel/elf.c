@@ -231,11 +231,18 @@ static void perform_relocation(struct file *f, struct elf_header *elf)
 
             /* Resolve this reference */
             char *sym_name = get_symbol_string(f->data, table->st_name);
+            if (strcmp(sym_name, "") == 0) {
+                continue;
+            }
+
             symbol_t *s = get_trace_symbol(sym_name);
             if (s == NULL) {
                 kprintf("perform_relocation: unresolved relative "
                         "symbol %s\n", sym_name);
+                continue;
             }
+
+            kprintf("Resolving %s to %p\n", sym_name, s->addr);
 
             /* Perform the actual relocation */
             switch (ELF32_R_TYPE(reloc->r_info)) {
@@ -252,6 +259,7 @@ static void perform_relocation(struct file *f, struct elf_header *elf)
                                 table->st_shndx);
                     }
                     *(unsigned int *)mem_addr = reloc_addr;
+                    kprintf("relocated %s to %p\n", sym_name, (void *)reloc_addr);
                     break;
 
                 case R_REL:
@@ -268,6 +276,7 @@ static void perform_relocation(struct file *f, struct elf_header *elf)
 
                     reloc_addr = mem_addr - reloc_addr + 4;
                     *(unsigned int *)mem_addr = -reloc_addr;
+                    kprintf("relocated %s to %p\n", sym_name, (void *)reloc_addr);
                     break;
 
                 default:
@@ -346,6 +355,33 @@ static void print_elf(char *name, struct elf_header *elf)
 
     kprintf(" entry point at %p,", (void *)elf->e_entry);
     kprintf(" %d segments\n", elf->e_phnum);
+}
+
+static void add_kernel_symbols(struct file *f, struct elf_header *elf)
+{
+    unsigned int i;
+
+    for (i = 0; i < elf->e_shnum; i++) {
+        struct elf_section_header *header;
+        unsigned int j;
+        header = (struct elf_section_header *)(f->data + elf->e_shoff + 
+                (i * elf->e_shentsize));
+
+        /* We only care about symbol tables */
+        if (header->sh_type != SHT_SYMTAB) {
+            continue;
+        }
+
+        for (j = 0; j < header->sh_size; j += header->sh_entsize) {
+            struct elf_symbol_table *table = (struct elf_symbol_table *)(
+                     f->data + header->sh_offset + j);
+            char *str = get_symbol_string(f->data, table->st_name);
+            if (str != NULL && strcmp(str, "") != 0) {
+                add_trace_symbol(str, (void *)table->st_value);
+            }
+        }
+        kprintf("\n");
+    }
 }
 
 /* dump_symbols()
@@ -431,4 +467,22 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move)
 
     elf->e_entry = (unsigned int)ELF_ENTRY_POINT;
     return elf;
+}
+
+void load_kernel_symbols(void)
+{
+    struct file *f;
+    f = load_file("kernel");
+    if (f == NULL) {
+        kprintf("load_kernel: kernel not found in initrd\n");
+        return;
+    }
+
+    struct elf_header *elf = parse_elf(f);
+    if (elf == NULL) {
+        kprintf("load_kernel: %s is not a valid 32-bit ELF binary\n", f->name);
+        return;
+    }
+
+    add_kernel_symbols(f, elf);
 }

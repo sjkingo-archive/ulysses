@@ -37,12 +37,12 @@ typedef struct aout_table {
     unsigned long reserved;
 } aout_table_t;
 
-typedef struct elf_header {
+typedef struct mb_elf_header {
     unsigned long num;
     unsigned long size;
     unsigned long addr;
     unsigned long shndx;
-} elf_header_t;
+} mb_elf_header_t;
 
 typedef struct multiboot_info {
     unsigned long flags;
@@ -54,7 +54,7 @@ typedef struct multiboot_info {
     unsigned long mods_addr;
     union {
         aout_table_t aout_sym;
-        elf_header_t elf_sec;
+        mb_elf_header_t elf_sec;
     } u;
     unsigned long mmap_length;
     unsigned long mmap_addr;

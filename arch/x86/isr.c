@@ -87,7 +87,7 @@ void isr_handler(registers_t regs)
                 (void *)regs.eip, addr);
 
         /* Try to translate the last func's eip into a symbol */
-        sym = lookup_symbol(addr);
+        sym = get_closest_symbol(addr);
         if (sym == NULL) kprintf("in ??? ()\n");
         else kprintf("in %s ()\n", sym->name);
 

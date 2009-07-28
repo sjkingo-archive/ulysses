@@ -44,6 +44,9 @@
     __a; \
 })
 
+/* Read the current instruction pointer and return it */
+extern unsigned int read_eip(void);
+
 /* Output a byte to the given I/O port */
 static inline void outb(const unsigned int port, unsigned int value)
 {

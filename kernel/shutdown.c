@@ -42,7 +42,7 @@ void do_panic(const char *msg, const char *file, int line)
 #if __GNUC__
     /* Try and work out where the panic came from */
     void *source_addr = __builtin_return_address(1);
-    symbol_t *sym = lookup_symbol(source_addr);
+    symbol_t *sym = get_closest_symbol(source_addr);
 
     if (sym == NULL) {
         kprintf("\n%p in ??? () ", source_addr);
@@ -56,7 +56,7 @@ void do_panic(const char *msg, const char *file, int line)
     kprintf("at %s:%d\n", file, line);
 
     /* Dump some debugging info */
-    func_trace(50);
+    stack_trace();
     kprintf("Task %s (pid %d) was running\n", current_task->name, 
             current_task->pid);
     dump_regs();

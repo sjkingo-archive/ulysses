@@ -152,4 +152,9 @@ int find_symbol(struct file *f, struct elf_header *elf, const char *name);
  */
 struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move);
 
+/* load_kernel_symbols()
+ *  Load the kernel ELF executable and load its symbols for tracing.
+ */
+void load_kernel_symbols(void);
+
 #endif
