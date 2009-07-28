@@ -24,15 +24,21 @@
 void stack_trace(void)
 {
     unsigned int i = 0;
-    void *eip;
-    void **ebp;
+    void *eip, *end, **ebp;
+
+    symbol_t *end_sym = get_trace_symbol("__end");
+    if (end_sym == NULL) {
+        end = (void *)0x200000; /* provide some sentinel protection */
+    } else {
+        end = end_sym->addr;
+    }
 
     eip = (void *)read_eip();
     ebp = (void **)READ_EBP();
 
     kprintf("Call trace (from top of stack):\n");
 
-    while (eip < (void *)0x200000 && ebp) {
+    while (eip <= end && ebp) {
         symbol_t *sym = get_closest_symbol(eip);
         if (sym == NULL) {
             kprintf(" #%d %p in ???\n", i, eip);
