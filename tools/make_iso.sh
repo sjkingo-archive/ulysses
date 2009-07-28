@@ -2,6 +2,13 @@
 DIR="../arch/x86/boot"
 OUTPUT_DIR="../boot"
 
+# make the initrd first
+pushd ../init && \
+cp $DIR/kernel . && \
+./build.sh kernel >/dev/null && \
+rm -f kernel && \
+popd
+
 ./make_menu.sh
 
 echo "target remote localhost:1234" > gdb-startup
