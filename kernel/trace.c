@@ -54,7 +54,7 @@ symbol_t *get_closest_symbol(void *addr)
 {
     symbol_t *s = head;
     while (s != NULL) {
-        if (addr > s->addr && addr < s->next->addr) {
+        if (addr == s->addr || (addr > s->addr && addr < s->next->addr)) {
             return s;
         }
         s = s->next;
