@@ -32,6 +32,7 @@
 #include <ulysses/shutdown.h>
 #include <ulysses/syscall.h>
 #include <ulysses/task.h>
+#include <ulysses/trace.h>
 #include <ulysses/util.h>
 #include <ulysses/util_x86.h>
 
@@ -281,6 +282,11 @@ static void cmd_lmod(char **args)
     load_module(args[0]);
 }
 
+static void cmd_ksyms(void)
+{
+    dump_syms();
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -313,6 +319,8 @@ struct shell_command cmds[] = {
     { "fork", &cmd_fork, NULL, "Fork the shell. This shouldn't work!" },
     { "kmalloc", &cmd_kmalloc, NULL, "Run a kmalloc test." },
     { "init", &cmd_init, NULL, "Set up the init process." },
+    { "ksyms", &cmd_ksyms, NULL, "Dump the kernel symbols and their "
+            "addresses." },
     
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };

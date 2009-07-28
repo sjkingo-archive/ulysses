@@ -31,4 +31,9 @@ symbol_t *get_trace_symbol(const char *func_name);
  */
 void add_trace_symbol(const char func_name[], void *addr);
 
+/* dump_syms()
+ *  Output all of the symbols currently recorded.
+ */
+void dump_syms(void);
+
 #endif
