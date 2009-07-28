@@ -70,12 +70,12 @@ void kernel_main(unsigned int initial_stack)
     /* Now that all the lower-level startup has been done, we can set up
      * the higher-level kernel functions.
      */
-    init_sched();
-    init_task();
     init_vt();
     print_startup();
     setup_initrd();
     load_kernel_symbols();
+    init_sched();
+    init_task();
     create_init();
 
     /* Start the kthread daemon going to set up other kernel threads */
