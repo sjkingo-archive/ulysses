@@ -124,10 +124,16 @@ enum sh_type {
     SHT_HASH,
     SHT_DYNAMIC,
     SHT_NOTE,
-    SHT_NOTBITS,
+    SHT_NOBITS,
     SHT_REL,
     SHT_SHLIB,
     SHT_DYNSYM,
+};
+
+enum sh_flags {
+    SHF_WRITE=0x1,
+    SHF_ALLOC=0x2,
+    SHF_EXECINSTR=0x4,
 };
 
 enum reloc_type {
