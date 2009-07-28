@@ -266,7 +266,6 @@ static flag_t perform_relocation(struct file *f, struct elf_header *elf)
                     (sizeof(struct elf_relocation) * j) + 
                     sections[i].sh_offset);
             if (!apply_relocation(elf, sections[i], rel, f->data)) {
-                kprintf("relocation failed\n");
                 return FALSE;
             }
         }
