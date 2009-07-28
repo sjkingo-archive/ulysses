@@ -199,84 +199,80 @@ static struct elf_symbol_table *fill_symbol_struct(unsigned char *buf,
     return NULL;
 }
 
-static void perform_relocation(struct file *f, struct elf_header *elf)
+static flag_t apply_relocation(struct elf_header *elf, 
+        struct elf_section_header section, struct elf_relocation *rel, 
+        void *data)
 {
-    unsigned int i, reloc_addr, mem_addr;
+    struct elf_section_header *sect = (struct elf_section_header *)(data + 
+            elf->e_shoff + (elf->e_shentsize * section.sh_info));
+    struct elf_symbol_table *table = fill_symbol_struct(data, 
+            ELF32_R_SYM(rel->r_info));
+    unsigned int *location = (unsigned int *)((unsigned int)data + 
+            sect->sh_offset + rel->r_offset);
 
+    /* Extract the symbol's name */
+    char *sym_name = get_symbol_string(data, table->st_name);
+    if (sym_name == NULL) {
+        kprintf("apply_relocation: symbol name was not found in ELF "
+                "string table\n");
+        return FALSE;
+    }
+    if (strcmp(sym_name, "") == 0) {
+        /* This is actually fine -- just means nothing to relocate, so don't
+         * return an error.
+         */
+        return TRUE;
+    }
+
+    /* Resolve the symbol */
+    symbol_t *s = get_trace_symbol(sym_name);
+    if (s == NULL) {
+        kprintf("apply_relocation: unresolved symbol %s\n", sym_name);
+        return FALSE;
+    }
+
+    switch (ELF32_R_TYPE(rel->r_info)) {
+        case R_386_32: /* add value to location (absolute) */
+            *location += (unsigned int)s->addr;
+            break;
+        case R_386_PC32: /* as above, but subtract its position (relative) */
+            *location += (unsigned int)s->addr - (unsigned int)location;
+            break;
+        default:
+            kprintf("apply_relocation: unknown relocation type %d\n", 
+                    ELF32_R_TYPE(rel->r_info));
+            return FALSE;
+    }
+
+    return TRUE;
+}
+
+static flag_t perform_relocation(struct file *f, struct elf_header *elf)
+{
+    struct elf_section_header *sections;
+    sections = (struct elf_section_header *)(f->data + elf->e_shoff);
+
+    unsigned int i, j;
     for (i = 0; i < elf->e_shnum; i++) {
-        struct elf_section_header *header;
-        unsigned int j;
-
-        header = (struct elf_section_header *)(f->data + elf->e_shoff + 
-                (i * elf->e_shentsize));
-
         /* We only care about relocatable sections */
-        if (header->sh_type != SHT_REL) {
+        if (sections[i].sh_type != SHT_REL) {
             continue;
         }
 
-        for (j = 0; j < header->sh_size; j += header->sh_entsize) {
-            struct elf_relocation *reloc = (struct elf_relocation *)(
-                    f->data + header->sh_offset + j);
-            struct elf_symbol_table *table = fill_symbol_struct(f->data, 
-                    ELF32_R_SYM(reloc->r_info));
-
-            /* Resolve this reference */
-            char *sym_name = get_symbol_string(f->data, table->st_name);
-            if (strcmp(sym_name, "") == 0) {
-                continue;
-            }
-
-            symbol_t *s = get_trace_symbol(sym_name);
-            if (s == NULL) {
-                kprintf("perform_relocation: unresolved relative "
-                        "symbol %s\n", sym_name);
-                continue;
-            }
-
-            kprintf("Resolving %s to %p\n", sym_name, s->addr);
-
-            /* Perform the actual relocation */
-            switch (ELF32_R_TYPE(reloc->r_info)) {
-                case R_ABSOL:
-                    mem_addr = (unsigned int)f->data + reloc->r_offset;
-                    mem_addr += get_section_offset(f->data, header->sh_info);
-
-                    if (table->st_shndx == 0) {
-                        reloc_addr = (unsigned int)s->addr;
-                    } else {
-                        reloc_addr = (unsigned int)f->data + table->st_value +
-                            *(int *)mem_addr;
-                        reloc_addr += get_section_offset(f->data,
-                                table->st_shndx);
-                    }
-                    *(unsigned int *)mem_addr = reloc_addr;
-                    kprintf("relocated %s to %p\n", sym_name, (void *)reloc_addr);
-                    break;
-
-                case R_REL:
-                    mem_addr = (unsigned int)f->data + reloc->r_offset;
-                    mem_addr += get_section_offset(f->data, header->sh_info);
-
-                    if (table->st_shndx == 0) {
-                        reloc_addr = (unsigned int)s->addr;
-                    } else {
-                        reloc_addr = (unsigned int)f->data + table->st_value;
-                        reloc_addr += get_section_offset(f->data, 
-                                table->st_shndx);
-                    }
-
-                    reloc_addr = mem_addr - reloc_addr + 4;
-                    *(unsigned int *)mem_addr = -reloc_addr;
-                    kprintf("relocated %s to %p\n", sym_name, (void *)reloc_addr);
-                    break;
-
-                default:
-                    kprintf("Unknown relocation type %X\n", 
-                            ELF32_R_SYM(reloc->r_info));
+        /* Perform relocation on each section */
+        for (j = 0; j < sections[i].sh_size / 
+                sizeof(struct elf_relocation); j++) {
+            struct elf_relocation *rel = (struct elf_relocation *)(f->data + 
+                    (sizeof(struct elf_relocation) * j) + 
+                    sections[i].sh_offset);
+            if (!apply_relocation(elf, sections[i], rel, f->data)) {
+                kprintf("relocation failed\n");
+                return FALSE;
             }
         }
     }
+
+    return TRUE;
 }
 
 /* print_elf()
@@ -447,7 +443,9 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move)
         return NULL;
     }
 
-    perform_relocation(f, elf);
+    if (!perform_relocation(f, elf)) {
+        return NULL;
+    }
 
     elf->e_entry = (unsigned int)ELF_ENTRY_POINT;
     return elf;

@@ -48,8 +48,6 @@ void load_module(const char *name)
         return;
     }
 
-    dump_symbols(f, elf);
-
     /* Find and populate the init_module symbol */
     if ((init_sym.addr = find_symbol(f, elf, "init_module")) == -1) {
         kprintf("load_module: %s is not a valid kernel module "
@@ -75,5 +73,6 @@ void load_module(const char *name)
     /* If we got here, the module is valid and can be loaded */
     mod.name = name;
     mods[next_mod_index++] = mod;
+    mod.init.func();
     kprintf("load_module: kernel module %s loaded\n", name);
 }

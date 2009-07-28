@@ -131,8 +131,9 @@ enum sh_type {
 };
 
 enum reloc_type {
-    R_ABSOL=0x01,
-    R_REL=0x02,
+    R_386_NONE,
+    R_386_32,
+    R_386_PC32,
 };
 
 /* dump_symbols()
