@@ -430,7 +430,8 @@ int find_symbol(struct file *f, struct elf_header *elf, const char *name)
     return -1;
 }
 
-struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move)
+struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move, 
+        flag_t reloc)
 {
     struct elf_header *elf = parse_elf(f);
     if (elf == NULL) {
@@ -443,7 +444,7 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move)
         return NULL;
     }
 
-    if (!perform_relocation(f, elf)) {
+    if (reloc && !perform_relocation(f, elf)) {
         return NULL;
     }
 

@@ -151,7 +151,8 @@ int find_symbol(struct file *f, struct elf_header *elf, const char *name);
  *  Load the ELF executable given by the valid file f into memory and return
  *  its entry point.
  */
-struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move);
+struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move, 
+        flag_t reloc);
 
 /* load_kernel_symbols()
  *  Load the kernel ELF executable and load its symbols for tracing.

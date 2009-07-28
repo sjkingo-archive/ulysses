@@ -42,7 +42,7 @@ void load_module(const char *name)
         return;
     }
     
-    elf = load_elf(f, get_kernel_dir(), FALSE);
+    elf = load_elf(f, get_kernel_dir(), FALSE, TRUE);
     if (elf == NULL) {
         kprintf("load_module: %s was not a valid executable\n", name);
         return;

@@ -40,7 +40,7 @@ int do_execv(const char *path, char *const argv[])
         return -1;
     }
 
-    elf = load_elf(f, (page_dir_t *)current_directory, TRUE);
+    elf = load_elf(f, (page_dir_t *)current_directory, TRUE, FALSE);
     if (elf == NULL) {
         errno = ENOEXEC;
         return -1;
@@ -76,7 +76,7 @@ pid_t create_init(void)
     
     /* Create a new task and load the ELF executable into memory */
     task_t *task = new_task("init");
-    elf = load_elf(f, task->page_dir, TRUE);
+    elf = load_elf(f, task->page_dir, TRUE, FALSE);
     if (elf == NULL) {
         kprintf("create_init: init was not a valid executable\n");
         free_task(task);
