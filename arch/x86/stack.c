@@ -26,7 +26,7 @@ static void unwind_stack(void **ebp, void *end)
     void *eip = (void *)read_eip();
     unsigned int i = 0;
 
-    while (eip <= end && ebp) {
+    while (eip >= (void *)0x10000 && eip <= end && ebp) {
         symbol_t *sym = get_closest_symbol(eip);
         if (sym == NULL) {
             kprintf(" #%d %p in ???\n", i, eip);
