@@ -21,22 +21,10 @@
 #include <ulysses/trace.h>
 #include <ulysses/util_x86.h>
 
-void stack_trace(void)
+static void unwind_stack(void **ebp, void *end)
 {
+    void *eip = (void *)read_eip();
     unsigned int i = 0;
-    void *eip, *end, **ebp;
-
-    symbol_t *end_sym = get_trace_symbol("__end");
-    if (end_sym == NULL) {
-        end = (void *)0x200000; /* provide some sentinel protection */
-    } else {
-        end = end_sym->addr;
-    }
-
-    eip = (void *)read_eip();
-    ebp = (void **)READ_EBP();
-
-    kprintf("Call trace (from top of stack):\n");
 
     while (eip <= end && ebp) {
         symbol_t *sym = get_closest_symbol(eip);
@@ -52,4 +40,19 @@ void stack_trace(void)
         eip = ebp[1];
         ebp = (void **)ebp[0];
     }
+}
+
+void stack_trace(void)
+{
+    void *end;
+
+    symbol_t *end_sym = get_trace_symbol("__end");
+    if (end_sym == NULL) {
+        end = (void *)0x200000; /* provide some sentinel protection */
+    } else {
+        end = end_sym->addr;
+    }
+
+    kprintf("Call trace (from top of stack):\n");
+    unwind_stack((void **)READ_EBP(), end); /* kernel */
 }
