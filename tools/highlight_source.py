@@ -8,8 +8,9 @@ from pygments.formatters import HtmlFormatter
 
 root = '..'
 dirs = ['arch/x86', 'lib', 'kernel', 'include', 'include/ulysses', 'init', 
-        'tools', 'test', 'test/heap', 'test/sched', 'test/test_run']
-exts = ['.c', '.asm', '.h', '.sh', '.py']
+        'modules', 'modules/helloworld', 'tools', 'test', 'test/heap', 
+        'test/sched', 'test/test_run']
+exts = ['.c', '.asm', '.h', '.sh', '.py', 'SConstruct', 'SConscript']
 
 def output_file(src, dest, title, lexer):
     fp = open(src, 'r')
