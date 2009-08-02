@@ -6,3 +6,4 @@ arch/x86/boot/kernel
 log.txt
 tools/gdb-startup
 boot/
+doxygen_output/

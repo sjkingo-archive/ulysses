@@ -1,0 +1,30 @@
+PROJECT_NAME           = Ulysses
+PROJECT_NUMBER         = 0.2
+OUTPUT_DIRECTORY       = doxygen_output
+
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_HTML          = YES
+GENERATE_XML           = YES
+
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+
+CASE_SENSE_NAMES       = YES
+SORT_GROUP_NAMES       = YES
+ALPHABETICAL_INDEX     = YES
+SHOW_DIRECTORIES       = YES
+SHOW_NAMESPACES        = NO
+SOURCE_BROWSER         = YES
+
+# doxygen -l
+LAYOUT_FILE            = 
+INPUT                  = .
+EXCLUDE                = .hg vendor screenshots
+EXCLUDE_PATTERNS       = .*
+RECURSIVE              = YES
