@@ -22,7 +22,7 @@ typedef struct _cpuid_t {
 struct cpu_ident {
     unsigned int family;
     unsigned int model;
-    char vendor[12];
+    char vendor[13];
     char expl[64];
 };
 
