@@ -1,6 +1,6 @@
 #!/bin/bash
 REV="`hg log -l 1 --template '{rev}'`"
-TOP_DIR="/sjkwi/home/sam/sjkingston.com/ulysses_source"
+TOP_DIR="/sjkwi/home/sam/ulysses-os.com/source"
 DIR="$TOP_DIR/r$REV"
 
 rm -rf $DIR && 
