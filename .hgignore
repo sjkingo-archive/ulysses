@@ -7,3 +7,5 @@ log.txt
 tools/gdb-startup
 boot/
 doxygen_output/
+vendor/
+docs/
