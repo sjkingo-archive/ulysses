@@ -141,4 +141,9 @@ void stats_vmem_add(unsigned int bytes);
  */
 void change_name(const char *new_name);
 
+/* get_name()
+ *  Returns the name of the calling task.
+ */
+char *get_name(void);
+
 #endif
