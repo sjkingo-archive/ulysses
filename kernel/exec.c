@@ -58,36 +58,32 @@ int do_execv(const char *path, char *const argv[])
 
 pid_t create_init(void)
 {
+    return kexec("init");
+}
+
+pid_t kexec(const char *name)
+{
     struct file *f;
     struct elf_header *elf;
 
-    /* Ensure init isn't running already */
-    if (find_task("init") != NULL) {
-        kprintf("create_init: init is already running\n");
-        return;
-    }
-    
-    /* Load the init file off the initrd */
-    f = load_file("init");
+    /* Load the file off the initrd */
+    f = load_file(name);
     if (f == NULL) {
-        kprintf("create_init: init not found in initrd\n");
-        return;
+        kprintf("kexec: `%s` not found in initrd\n", name);
+        return -1;
     }
     
     /* Create a new task and load the ELF executable into memory */
-    task_t *task = new_task("init");
+    task_t *task = new_task(name);
     elf = load_elf(f, task->page_dir, TRUE, FALSE);
     if (elf == NULL) {
-        kprintf("create_init: init was not a valid executable\n");
+        kprintf("kexec: `%s` is not a valid executable\n", name);
         free_task(task);
-        return;
+        return -1;
     }
 
     /* Set the entry point and schedule the task */
     task->eip = elf->e_entry;
     add_to_queue(task);
-
-    /* all done */
-    kprintf("create_init: init process created (pid %d)\n", task->pid);
     return task->pid;
 }

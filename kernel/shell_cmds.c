@@ -83,6 +83,11 @@ static void cmd_int_80(char **args)
     a = INT80(num);
 }
 
+static void cmd_kexec(char **args)
+{
+    kexec(args[0]);
+}
+
 static void cmd_ps(void)
 {
     kprintf("PID\tPPID\tUID\tCPU\tVMEM\tSTATE\tNAME\n");
@@ -298,6 +303,7 @@ struct shell_command cmds[] = {
     { "flag", NULL, &cmd_flag, "Change kernel flag given by second argument." },
     { "echo", NULL, &cmd_echo, "Display a line of text given by the arguments." },
     { "lmod", NULL, &cmd_lmod, "Load a kernel module." },
+    { "kexec", NULL, &cmd_kexec, "Execute a process in the kernel." },
 
     /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },

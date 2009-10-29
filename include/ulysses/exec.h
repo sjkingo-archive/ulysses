@@ -19,4 +19,10 @@ int do_execv(const char *path, char *const argv[]);
  */
 pid_t create_init(void);
 
+/* kexec()
+ *  This is the kernel version of fork+exec -- the executable is loaded
+ *  from initrd and run in the kernel's address space.
+ */
+pid_t kexec(const char *name);
+
 #endif

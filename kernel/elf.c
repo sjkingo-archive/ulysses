@@ -27,7 +27,6 @@
 #include <sys/types.h>
 
 #define ELF_ENTRY_POINT "main"
-#define ELF_ENTRY_EIP 0x080480F4
 
 #define ELF32_R_SYM(i) ((i) >> 8)
 #define ELF32_R_TYPE(i) ((unsigned char)(i))
@@ -146,7 +145,6 @@ static unsigned int move_sections(struct file *f, struct elf_header *elf, page_d
     return TRUE; /* ready to rock and roll */
 }
 
-#if 0
 /* XXX this is buggy and doesn't appear to return the correct address */
 static unsigned int find_entry_point(struct file *f, struct elf_header *elf)
 {
@@ -166,18 +164,14 @@ static unsigned int find_entry_point(struct file *f, struct elf_header *elf)
         for (j = 0; j < header->sh_size; j += header->sh_entsize) {
             struct elf_symbol_table *table = (struct elf_symbol_table *)(
                     f->data + header->sh_offset + j);
-            char *name = get_symbol_string(f->data, table->st_name);
-            
-            if (strcmp(name, ELF_ENTRY_POINT) == 0) {
-                return (get_section_offset(f->data, table->st_shndx) + 
-                    table->st_value + (unsigned int)f->data);
+            if (strcmp(get_symbol_string(f->data, table->st_name), 
+                        ELF_ENTRY_POINT) == 0) {
+                return table->st_value;
             }
         }
     }
-
-    return elf->e_entry; /* default to start of ELF */
+    return elf->e_entry; /* default to start of ELF, which is probably wrong */
 }
-#endif
 
 static struct elf_symbol_table *fill_symbol_struct(unsigned char *buf, 
         unsigned int offset)
@@ -438,7 +432,9 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move,
         return NULL;
     }
 
+    elf->e_entry = find_entry_point(f, elf);
     print_elf(f->name, elf);
+
     if (move && !move_sections(f, elf, dir)) {
         return NULL;
     }
@@ -447,7 +443,6 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move,
         return NULL;
     }
 
-    elf->e_entry = (unsigned int)ELF_ENTRY_POINT;
     return elf;
 }
 
