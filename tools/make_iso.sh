@@ -4,9 +4,9 @@ OUTPUT_DIR="../boot"
 
 # make the initrd first
 pushd ../init && \
-cp $DIR/kernel . && \
-./build.sh kernel >/dev/null && \
-rm -f kernel && \
+cp $DIR/kernel files/ && \
+./build.sh >/dev/null && \
+rm -f files/kernel && \
 popd
 
 ./make_menu.sh

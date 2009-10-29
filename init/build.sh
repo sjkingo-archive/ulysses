@@ -2,5 +2,7 @@
 pushd .. && \
 scons -Q init && \
 popd && \
-./make_initrd $@ && \
-mv initrd.img ../arch/x86/boot/
+pushd files && \
+../make_initrd * && \
+mv initrd.img ../../arch/x86/boot/ && \
+popd
