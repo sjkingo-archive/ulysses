@@ -28,6 +28,7 @@ struct kernel_flags {
     flag_t debug_task;
     flag_t debug_interrupt;
     flag_t debug_ticks;
+    flag_t stats;
 };
 
 /* The main kernel data structure */

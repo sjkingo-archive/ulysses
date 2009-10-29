@@ -57,6 +57,7 @@ void kernel_main(unsigned int initial_stack)
     kern.flags.debug_task = FALSE;
     kern.flags.debug_interrupt = FALSE;
     kern.flags.debug_ticks = FALSE;
+    kern.flags.stats = FALSE;
 
     /* Before we do anything with the higher-level kernel, move the kernel 
      * stack to a known location. This has to copy and remap all absolute

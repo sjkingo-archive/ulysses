@@ -20,6 +20,7 @@
 #include <ulysses/kheap.h>
 #include <ulysses/oarray.h>
 #include <ulysses/paging.h>
+#include <ulysses/task.h>
 
 extern unsigned int end; /* declared in linker.ld */
 extern page_dir_t *kernel_directory; /* declared in paging.c */
@@ -264,6 +265,7 @@ static void free(void *p, heap_t *heap)
     header_t *header, *test_header;
     footer_t *footer, *test_footer;
     char do_add;
+    unsigned int block_size;
 
     if (p == 0) {
         return;
@@ -272,6 +274,8 @@ static void free(void *p, heap_t *heap)
     header = (header_t*)((unsigned int)p - sizeof(header_t));
     footer = (footer_t*)((unsigned int)header + header->size - 
             sizeof(footer_t));
+    block_size = header->size - (sizeof(header_t) + sizeof(footer_t)); 
+    stats_vmem_add(-block_size);
 
     header->is_hole = 1;
     do_add = 1;
@@ -349,6 +353,8 @@ static void free(void *p, heap_t *heap)
  */
 static void *kmalloc_int(unsigned int sz, int align, unsigned int *phys)
 {
+    stats_vmem_add(sz);
+
     if (kheap != 0) {
         void *addr = alloc(sz, (unsigned char)align, kheap);
         if (phys != 0) {

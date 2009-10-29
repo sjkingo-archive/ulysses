@@ -40,6 +40,8 @@ typedef struct task {
 
     int ring;
 
+    unsigned long stats_vmem; /* bytes of virtual memory this process owns */
+
     struct task *next; /* next proc in queue, or NULL if tail */
 } task_t;
 
@@ -128,6 +130,11 @@ void set_current_ring3(void);
  *  Updates the time the current task has spent on the CPU.
  */
 void update_cpu_time(void);
+
+/* stats_vmem_add()
+ *  Collect stats on this process' virtual memory usage.
+ */
+void stats_vmem_add(unsigned int bytes);
 
 /* change_name()
  *  Change the name of the callee task to that given by new_name.

@@ -101,6 +101,8 @@ void parse_cmdline(const char *cmdline)
             kern.flags.debug_interrupt = TRUE;
         } else if (strcmp(s, "--debug-ticks") == 0) {
             kern.flags.debug_ticks = TRUE;
+        } else if (strcmp(s, "--stats") == 0) {
+            kern.flags.stats = TRUE;
         }
     }
 }

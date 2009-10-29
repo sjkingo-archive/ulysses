@@ -218,6 +218,7 @@ task_t *new_task(const char *name)
     t->cpu_time = 0;
     t->kthread = NULL;
     t->ring = 0;
+    t->stats_vmem = 0;
     t->next = NULL;
     setup_stack(t);
     return t;
@@ -370,6 +371,19 @@ void set_current_ring3(void)
 void update_cpu_time(void)
 {
     current_task->cpu_time++;
+}
+
+void stats_vmem_add(unsigned int bytes)
+{
+    if (current_task == NULL) {
+        return;
+    }
+    if (kern.flags.stats) {
+        kprintf("vmem sz: `%s`: old=%ld, +%d, new=%ld\n", current_task->name, 
+                current_task->stats_vmem, bytes, 
+                current_task->stats_vmem + bytes);
+    }
+    current_task->stats_vmem += bytes;
 }
 
 void change_name(const char *new_name)
