@@ -392,3 +392,8 @@ void change_name(const char *new_name)
     current_task->name = (char *)kmalloc(strlen(new_name) + 1);
     strcpy(current_task->name, new_name);
 }
+
+char *get_name(void)
+{
+    return current_task->name;
+}
