@@ -9,6 +9,10 @@
 /*  Convert a binary-coded decimal to an integer. */
 #define BCD_INT(bcd) (((bcd & 0xF0) >> 4) * 10 + (bcd & 0x0F))
 
+/* Byte fiddling */
+#define LOW_BYTE(x) (x & 0xFF)
+#define HIGH_BYTE(x) ((x >> 8) & 0xFF)
+
 /* Perform 64-bit division through 2 32-bit registers */
 #define div64(n,base) ({ \
     int __res; \
@@ -59,6 +63,14 @@ static inline unsigned char inb(unsigned int port)
     unsigned char b;
     __asm__ __volatile__("inb %w1, %b0" : "=a" (b) : "d" (port));
     return b;
+}
+
+/* Read a word (16 bits) from the given I/O port */
+static inline unsigned short inw(unsigned short port)
+{
+    unsigned short w;
+    __asm__ __volatile__("inw %w1, %w0" : "=a" (w) : "d" (port));
+    return w;
 }
 
 /* Read the current value of the read time-stamp counter on the CPU
