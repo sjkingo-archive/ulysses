@@ -1,5 +1,4 @@
 Import('env')
 objs = Glob('*.c')
 env.Object(objs)
-objs += SConscript(dirs=['fs'])
 Return('objs')
