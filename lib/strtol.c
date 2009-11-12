@@ -70,4 +70,3 @@ long simple_strtol(const char *cp, char **endp, unsigned int base)
 		return -simple_strtoul(cp + 1, endp, base);
 	return simple_strtoul(cp, endp, base);
 }
-

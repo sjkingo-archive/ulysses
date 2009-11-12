@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ulysses/drivers/disk.h>
 #include <ulysses/gdt.h>
 #include <ulysses/kheap.h>
 #include <ulysses/kthread.h>
@@ -36,6 +37,7 @@ void kthreadd(void)
     kthreadd_pid = do_getpid();
     kprintf("kthreadd: running with pid %d\n", kthreadd_pid);
     kthread_create(run_shell, "shell");
+    kthread_create(ata_worker, "ata_worker");
     while (1) kthread_yield(); /* waiting for work */
 }
 

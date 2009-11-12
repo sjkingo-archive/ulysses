@@ -75,5 +75,10 @@ int fseek(FILE *stream, long offset, int whence);
  */
 long ftell(FILE *stream);
 
+/* snprintf()
+ *  Formats the given arguments into the string provided.
+ */
+int snprintf(char *str, size_t size, const char *format, ...);
+
 #endif
 

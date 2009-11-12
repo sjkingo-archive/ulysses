@@ -13,4 +13,5 @@ env.Object(objs)
 loader = env.Object('loader.asm')
 env.Requires(objs, loader)
 
+objs += SConscript(dirs=['drivers/disk'])
 Return('objs')

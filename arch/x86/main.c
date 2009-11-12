@@ -20,6 +20,7 @@
 #include <ulysses/cmos.h>
 #include <ulysses/cpuid.h>
 #include <ulysses/cputest.h>
+#include <ulysses/drivers/disk.h>
 #include <ulysses/gdt.h>
 #include <ulysses/idt.h>
 #include <ulysses/isr.h>
@@ -132,6 +133,7 @@ void _kmain_x86(void *mdb, unsigned int magic, unsigned int initial_stack)
     init_timer(TIMER_FREQ);
     init_keyboard();
     test_cpu_bugs();
+    init_ata();
 
     /* We've finished low-level setup */
     startup_time =rdtsc() - start_time;

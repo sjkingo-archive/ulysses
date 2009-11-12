@@ -314,3 +314,15 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 	*str = '\0';
 	return str - buf;
 }
+
+int snprintf(char *str, size_t size, const char *format, ...)
+{
+	va_list args;
+	int bytes;
+
+	va_start(args, format);
+	bytes = vsprintf(str, format, args);
+	va_end(args);
+
+	return bytes;
+}

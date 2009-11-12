@@ -20,6 +20,7 @@
 #include <ulysses/callnr.h>
 #include <ulysses/cputest.h>
 #include <ulysses/exec.h>
+#include <ulysses/drivers/disk.h>
 #include <ulysses/gdt.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
@@ -328,6 +329,7 @@ struct shell_command cmds[] = {
     { "init", &cmd_init, NULL, "Set up the init process." },
     { "ksyms", &cmd_ksyms, NULL, "Dump the kernel symbols and their "
             "addresses." },
+    { "lsata", &dump_drives, NULL, "Dump information on detected ata drives." },
     
     { NULL, NULL, NULL, NULL }, /* sentinel entry; don't remove */
 };
