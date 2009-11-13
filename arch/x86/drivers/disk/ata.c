@@ -31,6 +31,9 @@
 #define NUM_DRIVES 2
 static struct drive *drives[NUM_DRIVES];
 
+#define READ_INCREM 256
+#define IGNORE_OVERFLOW 1
+
 static flag_t ataInit = FALSE;
 
 /* init_drive()
@@ -110,14 +113,39 @@ int read_ata(struct drive *d, int block, char *buffer, size_t size)
         return FALSE;
     }
 
+    /* Arrrr pirates beware!
+     *
+     * There is a known buffer overflow here when size < READ_INCREM (which
+     * should be 256). This happens because the ATA controller does not support
+     * reading less than 256 bytes at a time, and since we can't resize buffer
+     * (yet), we must resort to overflowing the end of it. Due to this, you
+     * should make sure size is *always* > 256 - otherwise unexpected behaviour
+     * may result from calling this function.
+     *
+     * You have been warrrrrrrned. If you really like disregarding warnings,
+     * set IGNORE_OVERFLOW to 1 to disable the following message.
+     */
+    if (size < READ_INCREM) {
+#if !IGNORE_OVERFLOW
+        kprintf("read_ata(): warning: possible buffer overflow - requested "
+                "size %d\n", size);
+#endif
+    } else if ((size % READ_INCREM) != 0) {
+        kprintf("read_ata(): warning: size (%d) is not a multiple of %d\n", 
+                size, READ_INCREM);
+    }
+
     /* Calculate where the block lies on disk */
     sector = block % d->sectors + 1;
     cyl = block / (d->heads * d->sectors);
     head = (block / d->sectors) % d->heads;
 
+    kprintf("read_ata(): going to read from C%d H%d S%d\n", cyl, head, sector);
+    CLI; /* we can't be interrupted while seeking/reading */
+
     /* Seek the disk */
-    outb(ATA_SECTOR_COUNT_REG, 1);
-    outb(ATA_SECTOR_NUM_REG, sector);
+    outb(ATA_SECTOR_COUNT_REG, 1); /* always 1 sector */
+    outb(ATA_SECTOR_NUM_REG, (unsigned char)sector);
     outb(ATA_CYL_LOW_REG, LOW_BYTE(cyl));
     outb(ATA_CYL_HIGH_REG, HIGH_BYTE(cyl));
     if (d->num == 0) {
@@ -130,15 +158,17 @@ int read_ata(struct drive *d, int block, char *buffer, size_t size)
 
     /* Check for error in seeking */
     if (inb(ATA_STATUS_REG) & ATA_STATUS_DRIVE_ERROR) {
-        kprintf("error reading: %d\n", inb(ATA_STATUS_REG));
+        kprintf("read_ata(): error seeking\n");
+        STI;
         return FALSE;
     }
 
-    /* Populate the buffer */
-    for (i = 0; i < 256; i++) {
+    /* Read a full sector */
+    for (i = 0; i < READ_INCREM; i++) {
         buf[i] = inw(ATA_DATA_REG);
     }
 
+    STI;
     return TRUE;
 }
 
@@ -179,4 +209,12 @@ void ata_worker(void)
     while (1) {
         kthread_yield();
     }
+}
+
+struct drive *get_drive(int drive)
+{
+    if (drive < 0 || drive >= NUM_DRIVES) {
+        return NULL;
+    }
+    return drives[drive];
 }

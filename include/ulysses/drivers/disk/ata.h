@@ -60,5 +60,6 @@ void init_ata(void);
 void dump_drives(void);
 void ata_worker(void);
 int read_ata(struct drive *d, int block, char *buffer, size_t size);
+struct drive *get_drive(int drive);
 
 #endif
