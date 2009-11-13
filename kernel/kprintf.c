@@ -72,8 +72,20 @@ void do_kdebug(const char *file, int line, const char *func,
     va_list args;
 
     va_start(args, fmt);
-    bytes = vsprintf(buf, fmt, args);
+    vsprintf(buf, fmt, args);
     va_end(args);
 
     kprintf("DEBUG at %s:%d in %s(): %s\n", file, line, func, buf);
+}
+
+void do_kwarn(const char *func, const char *fmt, ...)
+{
+    char buf[1024];
+    va_list args;
+
+    va_start(args, fmt);
+    vsprintf(buf, fmt, args);
+    va_end(args);
+
+    kprintf("%s(): %s\n", func, buf);
 }
