@@ -69,7 +69,7 @@ pid_t kexec(const char *name)
     /* Load the file off the initrd */
     f = load_file(name);
     if (f == NULL) {
-        kprintf("kexec: `%s` not found in initrd\n", name);
+        kwarn("`%s` not found in initrd\n", name);
         return -1;
     }
     
@@ -77,7 +77,7 @@ pid_t kexec(const char *name)
     task_t *task = new_task(name);
     elf = load_elf(f, task->page_dir, TRUE, FALSE);
     if (elf == NULL) {
-        kprintf("kexec: `%s` is not a valid executable\n", name);
+        kwarn("`%s` is not a valid executable\n", name);
         free_task(task);
         return -1;
     }

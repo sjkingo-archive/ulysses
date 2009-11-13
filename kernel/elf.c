@@ -99,11 +99,10 @@ static unsigned int move_sections(struct file *f, struct elf_header *elf, page_d
     unsigned int i;
 
     if (elf->e_phnum > 64) {
-        kprintf("elf: %s has too many program headers, aborting move\n", 
-                f->name);
+        kwarn("%s has too many program headers, aborting move\n", f->name);
         return FALSE;
     } else if (elf->e_phnum == 0) {
-        kprintf("elf: %s does not have any program headers, aborting move\n", 
+        kwarn("%s does not have any program headers, aborting move\n", 
                 f->name);
         return FALSE;
     }
@@ -207,7 +206,7 @@ static flag_t apply_relocation(struct elf_header *elf,
     /* Extract the symbol's name */
     char *sym_name = get_symbol_string(data, table->st_name);
     if (sym_name == NULL) {
-        kprintf("apply_relocation: symbol name was not found in ELF "
+        kwarn("apply_relocation: symbol name was not found in ELF "
                 "string table\n");
         return FALSE;
     }
@@ -221,7 +220,7 @@ static flag_t apply_relocation(struct elf_header *elf,
     /* Resolve the symbol */
     symbol_t *s = get_trace_symbol(sym_name);
     if (s == NULL) {
-        kprintf("apply_relocation: unresolved symbol %s\n", sym_name);
+        kwarn("apply_relocation: unresolved symbol %s\n", sym_name);
         return FALSE;
     }
 
@@ -233,7 +232,7 @@ static flag_t apply_relocation(struct elf_header *elf,
             *location += (unsigned int)s->addr - (unsigned int)location;
             break;
         default:
-            kprintf("apply_relocation: unknown relocation type %d\n", 
+            kwarn("apply_relocation: unknown relocation type %d\n", 
                     ELF32_R_TYPE(rel->r_info));
             return FALSE;
     }
@@ -428,7 +427,7 @@ struct elf_header *load_elf(struct file *f, page_dir_t *dir, flag_t move,
 {
     struct elf_header *elf = parse_elf(f);
     if (elf == NULL) {
-        kprintf("elf: %s is not a valid 32-bit ELF binary\n", f->name);
+        kwarn("%s is not a valid 32-bit ELF binary\n", f->name);
         return NULL;
     }
 
@@ -451,13 +450,13 @@ void load_kernel_symbols(void)
     struct file *f;
     f = load_file("kernel");
     if (f == NULL) {
-        kprintf("load_kernel: kernel not found in initrd\n");
+        kwarn("kernel not found in initrd\n");
         return;
     }
 
     struct elf_header *elf = parse_elf(f);
     if (elf == NULL) {
-        kprintf("load_kernel: %s is not a valid 32-bit ELF binary\n", f->name);
+        kwarn("%s is not a valid 32-bit ELF binary\n", f->name);
         return;
     }
 

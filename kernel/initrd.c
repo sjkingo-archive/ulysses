@@ -108,8 +108,8 @@ struct file *load_file(char *name)
     f->data = kmalloc(node->size);
     f->size = read_fs(node, 0, node->size, f->data);
     if (f->size != node->size) {
-        kprintf("load_file(): Warning: read %d bytes of %s when node " 
-                "reported length of %d bytes\n", f->size, f->name, node->size);
+        kwarn("read %d bytes of %s when node reported length of %d bytes\n", 
+                f->size, f->name, node->size);
         return NULL;
     }
     
@@ -121,7 +121,7 @@ void setup_initrd(void)
     unsigned int i, loc;
 
     if (kern.mbi->mods_count == 0) {
-        kprintf("initrd: boot module not found\n");
+        kwarn("boot module not found\n");
         return;
     }
 

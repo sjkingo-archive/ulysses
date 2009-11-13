@@ -38,20 +38,20 @@ void load_module(const char *name)
 
     f = load_file((char *)name);
     if (f == NULL) {
-        kprintf("load_module: %s not found in the initrd\n", name);
+        kwarn("%s not found in the initrd\n", name);
         return;
     }
     
     elf = load_elf(f, get_kernel_dir(), FALSE, TRUE);
     if (elf == NULL) {
-        kprintf("load_module: %s was not a valid executable\n", name);
+        kwarn("%s was not a valid executable\n", name);
         return;
     }
 
     /* Find and populate the init_module symbol */
     if ((init_sym.addr = find_symbol(f, elf, "init_module")) == -1) {
-        kprintf("load_module: %s is not a valid kernel module "
-                "(init_module symbol not found)\n", name);
+        kwarn("%s is not a valid kernel module (init_module symbol not "
+                "found)\n", name);
         return;
     } else {
         init_sym.name = "init_module";
@@ -61,8 +61,8 @@ void load_module(const char *name)
 
     /* Find and populate the cleanup_module symbol */
     if ((cleanup_sym.addr = find_symbol(f, elf, "cleanup_module")) == -1) {
-        kprintf("load_module: %s is not a valid kernel module "
-                "(cleanup_module symbol not found)\n", name);
+        kwarn("%s is not a valid kernel module (cleanup_module symbol not "
+                "found)\n", name);
         return;
     } else {
         cleanup_sym.name = "cleanup_module";
