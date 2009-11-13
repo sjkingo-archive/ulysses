@@ -7,12 +7,6 @@
 
 #include <sys/types.h>
 
-/* sanity_check()
- *  Perform a sanity check of the kernel's data structures and physical memory
- *  locations. If anything fails the check, a panic() will be issued.
- */
-void sanity_check(void);
-
 /* print_startup()
  *  Output kernel information.
  */

@@ -186,10 +186,6 @@ void keyboard_handler(registers_t *regs)
             kthread_create(run_shell, "shell");
             return;
 
-        case KB_F9:
-            sanity_check();
-            return;
-
         case KB_F10:
             panic("F10 pressed");
 

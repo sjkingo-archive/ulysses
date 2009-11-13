@@ -33,21 +33,6 @@
 /* Time to do low-level setup */
 extern unsigned long long startup_time;
 
-/* just kidding Dijkstra */
-#define COMEFROM goto
-void sanity_check(void)
-{
-    /* ... maybe not */
-#ifdef COMEFROM
-    COMEFROM pass; /* default to passing */
-    COMEFROM fail; /* to keep the compiler happy */
-    fail:
-        panic("Kernel sanity check failed");
-    pass:
-#endif
-        return; /* so we don't have an empty label */
-}
-
 void print_startup(void)
 {
 #ifndef __GNUC__

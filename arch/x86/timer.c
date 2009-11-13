@@ -43,8 +43,6 @@ void timer_tick(registers_t *regs)
     /* Update the kernel's second counter every second (1000 ms) */
     if ((kern.current_time_offset.tv_msec % 1000) == 0) {
         kern.current_time_offset.tv_sec++;
-        sanity_check();
-
         if (kern.flags.debug_ticks) {
             kprintf("timer_tick(): %lds (%ldms) has passed since PIT init\n", 
                     kern.current_time_offset.tv_sec,
