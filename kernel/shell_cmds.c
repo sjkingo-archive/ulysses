@@ -21,6 +21,7 @@
 #include <ulysses/cputest.h>
 #include <ulysses/exec.h>
 #include <ulysses/drivers/disk.h>
+#include <ulysses/fs.h>
 #include <ulysses/gdt.h>
 #include <ulysses/initrd.h>
 #include <ulysses/kernel.h>
@@ -294,6 +295,19 @@ static void cmd_ksyms(void)
     dump_syms();
 }
 
+static void cmd_mount(char **args)
+{
+    unsigned short disk;
+
+    if (args[0] == NULL || args[1] == NULL || args[3] != NULL) {
+        kprintf("Usage: mount ext2 disk [reserved]\n");
+        return;
+    }
+
+    disk = strtol(args[1], NULL, 10);
+    mount_fs(disk, args[0]);
+}
+
 /* Make sure to update this or the command won't be called! */
 struct shell_command cmds[] = {
     /* Commands that take arguments */
@@ -305,6 +319,7 @@ struct shell_command cmds[] = {
     { "echo", NULL, &cmd_echo, "Display a line of text given by the arguments." },
     { "lmod", NULL, &cmd_lmod, "Load a kernel module." },
     { "kexec", NULL, &cmd_kexec, "Execute a process in the kernel." },
+    { "mount", NULL, &cmd_mount, "Mount a file system." },
 
     /* Commands that take no arguments */
     { "ver", &print_startup, NULL, "Display kernel version." },

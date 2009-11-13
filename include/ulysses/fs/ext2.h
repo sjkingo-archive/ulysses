@@ -165,4 +165,7 @@ struct ext2_fs {
     struct ext2_inode *root_inode;
 };
 
+struct ext2_fs *mount_ext2(int drive);
+struct ext2_fs *verify_ext2(struct drive *d);
+
 #endif

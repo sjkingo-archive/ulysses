@@ -140,14 +140,19 @@ int read_ata(struct drive *d, int block, char *buffer, size_t size)
     cyl = block / (d->heads * d->sectors);
     head = (block / d->sectors) % d->heads;
 
+    if (sector == 0) {
+        kprintf("read_ata(): sector cannot be 0 (block was %d)\n", block);
+        return FALSE;
+    }
+
     kprintf("read_ata(): going to read from C%d H%d S%d\n", cyl, head, sector);
     CLI; /* we can't be interrupted while seeking/reading */
 
     /* Seek the disk */
     outb(ATA_SECTOR_COUNT_REG, 1); /* always 1 sector */
     outb(ATA_SECTOR_NUM_REG, (unsigned char)sector);
-    outb(ATA_CYL_LOW_REG, LOW_BYTE(cyl));
-    outb(ATA_CYL_HIGH_REG, HIGH_BYTE(cyl));
+    outb(ATA_CYL_LOW_REG, (unsigned char)(LOW_BYTE(cyl)));
+    outb(ATA_CYL_HIGH_REG, (unsigned char)(HIGH_BYTE(cyl)));
     if (d->num == 0) {
         outb(ATA_DRIVE_HEAD_REG, ATA_DRIVE_0 | head);
     } else {

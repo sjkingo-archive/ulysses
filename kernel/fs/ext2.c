@@ -1,4 +1,4 @@
-/* arch/x86/drivers/disk/ext2.c - ext2 file system
+/* kernel/fs/ext2.c - ext2 file system
  * part of Ulysses, a tiny operating system
  *
  * Copyright (C) 2008, 2009 Sam Kingston <sam@sjkwi.com.au>
@@ -72,6 +72,13 @@ static struct ext2_inode *ext2_read_inode(struct ext2_fs *fs, unsigned int id)
             "(offset %d)\n", id, group, local_id, block, offset);
     if (!read_ata(fs->d, offset, (void *)i, sizeof(struct ext2_inode))) {
         kprintf("Failed to read inode id %d from block %d\n", id, block);
+        kfree(i);
+        return NULL;
+    }
+
+    /* Make sure the inode is valid */
+    if (i->i_mode == 0) {
+        kprintf("Invalid inode %d at block %d\n", id, block);
         kfree(i);
         return NULL;
     }
@@ -257,6 +264,15 @@ void read_dir(struct ext2_fs *fs, struct ext2_inode *i,
 }
 #endif
 
+struct ext2_fs *mount_ext2(int drive)
+{
+    struct drive *d = get_drive(drive);
+    if (d == NULL) {
+        return NULL;
+    }
+    return verify_ext2(d);
+}
+
 struct ext2_fs *verify_ext2(struct drive *d)
 {
     struct ext2_fs *fs;
@@ -287,6 +303,7 @@ struct ext2_fs *verify_ext2(struct drive *d)
     if (sb->s_rev_level != EXT2_DYNAMIC_REV) {
         kprintf("ext2 file system detected, but it has rev %d "
                 "(only rev 1 supported)\n", sb->s_rev_level);
+        kfree(sb);
         return NULL;
     }
     
@@ -294,6 +311,7 @@ struct ext2_fs *verify_ext2(struct drive *d)
     if (sb->s_creator_os != EXT2_OS_LINUX) {
         kprintf("ext2 file system detected, but it was not created with "
                 "Linux - cannot continue\n");
+        kfree(sb);
         return NULL;
     }
 
@@ -308,6 +326,8 @@ struct ext2_fs *verify_ext2(struct drive *d)
     if (!read_ata(d, to_offset(fs, sb->s_first_data_block + 1), 
             (void *)&fs->groups, sizeof(struct ext2_group) * fs->group_count)) {
         kprintf("Failed to read ext2 groups off disk\n");
+        kfree(sb);
+        kfree(fs);
         return NULL;
     }
 
@@ -317,14 +337,18 @@ struct ext2_fs *verify_ext2(struct drive *d)
             fs->group_count, fs->block_size, sb->s_volume_name);
 
     /* Read the root inode */
-    fs->root_inode = ext2_read_inode(fs, EXT2_ROOT_INO);
-#if 0
+    if ((fs->root_inode = ext2_read_inode(fs, EXT2_ROOT_INO)) == NULL) {
+        kprintf("Failed to read root inode\n");
+        kfree(sb);
+        kfree(fs);
+        return FALSE;
+    }
+
     kprintf("root inode:\n");
     dump_inode(fs->root_inode);
     //read_dir(fs, fs->root_inode, "/");
     //ext2_readdir(fs, fs->root_inode, 524288);
     ext2_lookup(fs, fs->root_inode, "/");
-#endif
 
     return fs;
 }
