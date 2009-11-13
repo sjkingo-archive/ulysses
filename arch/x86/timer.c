@@ -22,6 +22,7 @@
 #include <ulysses/timer.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/stats.h>
 #include <ulysses/util.h>
 
 static unsigned long ticks;
@@ -37,7 +38,7 @@ void timer_tick(registers_t *regs)
      */
     ticks++;
     kern.current_time_offset.tv_msec += tick_interval;
-    update_cpu_time();
+    stats_update_cpu_time();
 
     /* Update the kernel's second counter every second (1000 ms) */
     if ((kern.current_time_offset.tv_msec % 1000) == 0) {

@@ -24,6 +24,7 @@
 #include <ulysses/gdt.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/stats.h>
 #include <ulysses/task.h>
 #include <ulysses/util.h>
 #include <ulysses/util_x86.h>
@@ -207,6 +208,7 @@ task_t *new_task(const char *name)
     t->rgid = 0;
     t->name = (char *)kmalloc(strlen(name) + 1);
     strcpy(t->name, name);
+    t->ring = 0;
     t->esp = 0;
     t->ebp = 0;
     t->eip = (unsigned int)&ring3_exit; /* default to just exiting */
@@ -215,17 +217,16 @@ task_t *new_task(const char *name)
     t->ready = 1;
     t->s_ticks_left = SCHED_QUANTUM;
     t->s_quantum_size = SCHED_QUANTUM;
-    t->cpu_time = 0;
     t->kthread = NULL;
-    t->ring = 0;
-    t->stats_vmem = 0;
     t->next = NULL;
+    new_stats(t->pid);
     setup_stack(t);
     return t;
 }
 
 void free_task(task_t *task)
 {
+    destroy_stats(task->pid);
     kfree(task->name);
     kfree(task->kernel_stack);
     if (task->kthread != NULL) {
@@ -366,24 +367,6 @@ void change_current_task(void)
 void set_current_ring3(void)
 {
     current_task->ring = 3;
-}
-
-void update_cpu_time(void)
-{
-    current_task->cpu_time++;
-}
-
-void stats_vmem_add(unsigned int bytes)
-{
-    if (current_task == NULL) {
-        return;
-    }
-    if (kern.flags.stats) {
-        kprintf("vmem sz: `%s`: old=%ld, +%d, new=%ld\n", current_task->name, 
-                current_task->stats_vmem, bytes, 
-                current_task->stats_vmem + bytes);
-    }
-    current_task->stats_vmem += bytes;
 }
 
 void change_name(const char *new_name)

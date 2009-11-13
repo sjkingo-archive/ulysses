@@ -32,6 +32,7 @@
 #include <ulysses/shell_cmds.h>
 #include <ulysses/sched.h>
 #include <ulysses/shutdown.h>
+#include <ulysses/stats.h>
 #include <ulysses/syscall.h>
 #include <ulysses/task.h>
 #include <ulysses/trace.h>
@@ -95,8 +96,8 @@ static void cmd_ps(void)
     kprintf("PID\tPPID\tUID\tCPU\tVMEM\tSTATE\tNAME\n");
     task_t *t = tasks_queue.head;
     while (t != NULL) {
-        kprintf("%d\t%d\t%d\t%ld\t%ld\t", t->pid, t->ppid, t->uid, t->cpu_time, 
-                t->stats_vmem);
+        kprintf("%d\t%d\t%d\t%ld\t%ld\t", t->pid, t->ppid, t->uid, 
+                stats_get_cpu_time(t->pid), stats_get_virtual_mem(t->pid));
         if (t->kthread == NULL) {
             kprintf("-\t%s", t->name);
         } else {

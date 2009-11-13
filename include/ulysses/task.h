@@ -24,6 +24,7 @@ typedef struct task {
     gid_t rgid; /* real group id */
 
     char *name; /* NULL-terminated process name */
+    int ring;
 
     unsigned int esp; /* current stack pointer */
     unsigned int ebp; /* base stack pointer */
@@ -34,13 +35,8 @@ typedef struct task {
     flag_t ready; /* whether this process is ready to be run */
     unsigned short s_ticks_left; /* number of scheduling ticks left */
     unsigned short s_quantum_size; /* quantum size in ticks */
-    time_t cpu_time; /* time spent on the CPU */
 
     struct kthread *kthread; /* NULL if not a kernel thread */
-
-    int ring;
-
-    unsigned long stats_vmem; /* bytes of virtual memory this process owns */
 
     struct task *next; /* next proc in queue, or NULL if tail */
 } task_t;
