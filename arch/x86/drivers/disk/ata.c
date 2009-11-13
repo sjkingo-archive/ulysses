@@ -145,7 +145,7 @@ int read_ata(struct drive *d, int block, char *buffer, size_t size)
         return FALSE;
     }
 
-    kprintf("read_ata(): going to read from C%d H%d S%d\n", cyl, head, sector);
+    kdebug("going to read from C%d H%d S%d\n", cyl, head, sector);
     CLI; /* we can't be interrupted while seeking/reading */
 
     /* Seek the disk */

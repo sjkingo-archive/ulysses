@@ -64,3 +64,18 @@ int kprintf(const char *fmt, ...)
     kputs(buf);
 	return bytes;
 }
+
+void do_kdebug(const char *file, int line, const char *func, 
+        const char *fmt, ...)
+{
+    char buf[1024];
+    va_list args;
+    int bytes;
+
+    va_start(args, fmt);
+    bytes = vsprintf(buf, fmt, args);
+    va_end(args);
+
+    kprintf("DEBUG at %s:%d in %s(): %s\n", file, line, func, buf);
+    return bytes;
+}
