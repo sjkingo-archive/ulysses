@@ -18,27 +18,37 @@
  */
 
 ENTRY (loader)
-STARTUP (arch/x86/loader.o)
+/*STARTUP (arch/x86/loader.o)*/
 
 SECTIONS {
+    . = 0x00100000;
 
-    .text 0x100000 : {
-        code = .; _code = .; __code = .;
+    .__mbHeader :
+    {
+        *(.__mbHeader)
+    }
+
+    .text ALIGN (0x1000) :
+    {
         *(.text)
-        . = ALIGN(4096);
     }
 
-    .data : {
-        data = .; _data = .; __data = .;
+    .rodata ALIGN (0x1000) :
+    {
+        *(.rodata*)
+    }
+
+    .data ALIGN (0x1000) :
+    {
         *(.data)
-        *(.rodata)
-        . = ALIGN(4096);
     }
 
-    .bss : {
-        bss = .; _bss = .; __bss = .;
+    .bss :
+    {
+        sbss = .;
+        *(COMMON)
         *(.bss)
-        . = ALIGN(4096);
+        ebss = .;
     }
 
     end = .; _end = .; __end = .;

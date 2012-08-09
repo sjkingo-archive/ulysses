@@ -6,7 +6,7 @@ if [ "$1" = "gdb" ]; then
     debug="-s -S"
 fi
 
-qemu $debug \
+qemu-system-i386 $debug \
     -d cpu_reset \
     -cdrom ../boot/kernel.iso \
     -boot d \

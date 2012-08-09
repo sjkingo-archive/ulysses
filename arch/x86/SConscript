@@ -3,15 +3,16 @@ Import('env')
 # We need to remove loader.o from the returned objs since
 # it is order-dependant
 asm = Glob('*.asm', strings=True)
-if 'loader.asm' in asm:
-    asm.remove('loader.asm')
+if '0_loader.asm' in asm:
+    asm.remove('0_loader.asm')
 
 objs = Glob('*.c') + env.File(asm)
 env.Object(objs)
 
 # loader.o is still a dep
-loader = env.Object('loader.asm')
-env.Requires(objs, loader)
+loader = env.Object('0_loader.asm')
+objs = [loader] + objs
+#env.Requires(objs, loader)
 
 objs += SConscript(dirs=['drivers/disk'])
 Return('objs')
